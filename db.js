@@ -1,9 +1,17 @@
 const mongoose = require('mongoose');
 
+const connectToDB = async () => {
+    await mongoose.connect('mongodb+srv://linkedin-hot-leads:ilXR2tTqnF2XDQlW@linkedin-db.tt3ronc.mongodb.net/?retryWrites=true&w=majority', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }).catch((err) => { console.trace(err) });
+}
 
 const main = async () => {
     try {
-        await mongoose.connect('mongodb+srv://linkedin-hot-leads:ilXR2tTqnF2XDQlW@linkedin-db.tt3ronc.mongodb.net/?retryWrites=true&w=majority');
+        await connectToDB();
+
+        mongoose.connection.readyState === 1 ? console.log("Connected to MongoDB") : await connectToDB();
 
         if (!mongoose.modelNames().includes("Cookie")) {
             const cookieSchema = new mongoose.Schema({
