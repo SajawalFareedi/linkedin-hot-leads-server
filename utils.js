@@ -46,7 +46,7 @@ async function handleCookies(data) {
 
     } catch (err) {
         console.trace(err);
-    }
+    };
 };
 
 module.exports = { handleCookies };
