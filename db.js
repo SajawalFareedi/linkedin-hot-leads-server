@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const connectToDB = async () => {
-    await mongoose.connect('mongodb+srv://linkedin-hot-leads:ilXR2tTqnF2XDQlW@linkedin-db.tt3ronc.mongodb.net/?retryWrites=true&w=majority')
+    await mongoose.connect('mongodb+srv://linkedin-hot-leads:ilXR2tTqnF2XDQlW@linkedin-db.tt3ronc.mongodb.net/?retryWrites=true&w=majority',
+        { connectTimeoutMS: 120000, socketTimeoutMS: 150000 })
         .catch((err) => { console.trace(err) });
 }
 
