@@ -1,5 +1,16 @@
 const mongoose = require('mongoose');
-const utils = require('./utils');
+// const utils = require('./utils');
+const { connectToDB } = require("./db");
+
+let CRON_STATUS = 0;
+
+async function cron(userID) {
+    try {
+        
+    } catch (error) {
+        console.trace(error);
+    };
+};
 
 async function getAllUpdatedCookies() {
     try {
@@ -26,7 +37,28 @@ function findCookieForUser(id, cookies) {
 
 async function main() {
     try {
-        
+
+        if (CRON_STATUS === 1) { return }; // Avoid multiple execution of the script at the same time
+
+        CRON_STATUS = 1;
+
+        let cookies = [];
+
+        console.log("Checking MongoDB Connection...");
+
+        if (mongoose.connection.readyState !== 1) { await connectToDB() };
+
+        console.log("Starting to check for updates...");
+
+        const Cookie = mongoose.connection.model("Cookie");
+        const _cookies = await Cookie.find().exec();
+
+        for (let i = 0; i < _cookies.length; i++) {
+            const ck = _cookies[i];
+
+            console.log("Cookie: ", ck);
+        };
+
     } catch (error) {
         console.trace(error);
     };

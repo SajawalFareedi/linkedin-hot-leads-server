@@ -2,12 +2,16 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 const { connectToDB } = require("./db");
 
+function sleep(seconds) {
+    return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+};
+
 function getLiAtCookie(cookies) {
     for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i];
 
         if (cookie.name == "li_at") {
-            return cookie.value
+            return cookie.value;
         };
     };
 };
@@ -59,4 +63,4 @@ async function handleCookies(data) {
     };
 };
 
-module.exports = { handleCookies };
+module.exports = { handleCookies, sleep };

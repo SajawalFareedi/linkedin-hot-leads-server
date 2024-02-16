@@ -12,7 +12,8 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
 app.get("/", async (req, res) => {
-    await InitializeDatabase(); cron();
+    await InitializeDatabase();
+    // cron();
     res.send({ status: "Server is Up and Running!" });
 });
 
