@@ -12,7 +12,7 @@ const connectToDB = async () => {
     }
 }
 
-const main = async () => {
+const InitializeDatabase = async () => {
     try {
         await connectToDB();
 
@@ -20,7 +20,8 @@ const main = async () => {
             const cookieSchema = new mongoose.Schema({
                 user_id: String,
                 li_at: String,
-                cookie_str: String
+                cookie_str: String,
+                uuid: String
             });
 
             mongoose.model('Cookie', cookieSchema);
@@ -30,4 +31,4 @@ const main = async () => {
     }
 };
 
-module.exports = { main, connectToDB };
+module.exports = { InitializeDatabase, connectToDB };

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-// const { connectToDB } = require("./db");
+const { v4: uuidv4 } = require('uuid');
+const { connectToDB } = require("./db");
 
 function getLiAtCookie(cookies) {
     for (let i = 0; i < cookies.length; i++) {
@@ -14,7 +15,7 @@ function getLiAtCookie(cookies) {
 async function handleCookies(data) {
     try {
 
-        // await connectToDB();
+        if (mongoose.connection.readyState !== 1) { await connectToDB() };
 
         let userID = data.url;
         const li_at = getLiAtCookie(data.cookies);
@@ -25,6 +26,7 @@ async function handleCookies(data) {
         if (userID && userID !== "NO_URL" && typeof userID !== "undefined") {
             if (userID.length === 0) { return };
 
+            userID = userID.split("/in/")[1].split("/")[0];
             console.log("USER_ID_2: ", userID);
 
             const Cookie = mongoose.connection.model("Cookie");
@@ -34,7 +36,8 @@ async function handleCookies(data) {
                 const newCookie = new Cookie({
                     user_id: userID,
                     li_at: li_at,
-                    cookie_str: cookieStr
+                    cookie_str: cookieStr,
+                    uuid: uuidv4()
                 });
 
                 await newCookie.save();

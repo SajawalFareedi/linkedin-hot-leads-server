@@ -1,6 +1,5 @@
-const { main } = require("./db");
-// require("./cron")();
-
+const { InitializeDatabase } = require("./db");
+const cron = require("./cron");
 const express = require("express");
 const utils = require('./utils');
 const cors = require("cors");
@@ -13,7 +12,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
 app.get("/", async (req, res) => {
-    await main();
+    await InitializeDatabase(); cron();
     res.send({ status: "Server is Up and Running!" });
 });
 
@@ -27,4 +26,3 @@ app.post("/", (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
