@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
 
 const connectToDB = async () => {
-    await mongoose.connect('mongodb+srv://linkedin-hot-leads:ilXR2tTqnF2XDQlW@linkedin-db.tt3ronc.mongodb.net/?retryWrites=true&w=majority', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }).catch((err) => { console.trace(err) });
+    await mongoose.connect('mongodb+srv://linkedin-hot-leads:ilXR2tTqnF2XDQlW@linkedin-db.tt3ronc.mongodb.net/?retryWrites=true&w=majority')
+        .catch((err) => { console.trace(err) });
 }
 
 const main = async () => {
