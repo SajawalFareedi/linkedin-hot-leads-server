@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// const { connectToDB } = require("./db");
 
 function getLiAtCookie(cookies) {
     for (let i = 0; i < cookies.length; i++) {
@@ -12,6 +13,9 @@ function getLiAtCookie(cookies) {
 
 async function handleCookies(data) {
     try {
+
+        // await connectToDB();
+
         let userID = data.url;
         const li_at = getLiAtCookie(data.cookies);
         const cookieStr = JSON.stringify(data.cookies);

