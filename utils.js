@@ -20,8 +20,12 @@ async function handleCookies(data) {
         const li_at = getLiAtCookie(data.cookies);
         const cookieStr = JSON.stringify(data.cookies);
 
+        console.log("USER_ID_1: ", userID);
+
         if (userID && userID !== "NO_URL" && typeof userID !== "undefined") {
             if (userID.length === 0) { return };
+
+            console.log("USER_ID_2: ", userID);
 
             const Cookie = mongoose.connection.model("Cookie");
             const alreadyExists = await Cookie.find({ user_id: userID }).exec();
@@ -41,12 +45,11 @@ async function handleCookies(data) {
                 if (alreadyExists[0].li_at !== li_at) {
                     await Cookie.updateOne({ user_id: userID }, { li_at: li_at, cookie_str: cookieStr }).exec();
                     console.log("Cookie Updated: ", userID, li_at);
-                };
-                // else {
-                //     console.log("No Change in Cookie: ", userID);
-                // }
+                } else {
+                    console.log("No Change in Cookie: ", userID);
+                }
             };
-        };
+        }
 
     } catch (err) {
         console.trace(err);
