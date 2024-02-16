@@ -1,11 +1,10 @@
 require("./db")();
+// require("./cron")();
 
 const express = require("express");
 const utils = require('./utils');
 const cors = require("cors");
 const app = express();
-
-require("./cron")();
 
 const PORT = process.env.PORT || 3000
 
