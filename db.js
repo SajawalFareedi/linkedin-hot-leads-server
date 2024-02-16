@@ -12,7 +12,7 @@ const main = async () => {
     try {
         await connectToDB();
 
-        mongoose.connection.readyState === 1 ? console.log("Connected to MongoDB") : await connectToDB();
+        mongoose.connection.readyState === 1 ? console.info("Connected to MongoDB") : await connectToDB();
 
         if (!mongoose.modelNames().includes("Cookie")) {
             const cookieSchema = new mongoose.Schema({

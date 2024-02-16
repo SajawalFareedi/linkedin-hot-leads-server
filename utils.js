@@ -19,7 +19,7 @@ async function handleCookies(data) {
         if (userID && userID !== "NO_URL" && typeof userID !== "undefined") {
             if (userID.length === 0) { return };
 
-            const Cookie = mongoose.connection.model("Cookie");
+            const Cookie = mongoose.connection.model("Cookie", null, "cookies");
             const alreadyExists = await Cookie.find({ user_id: userID }).exec();
 
             if (alreadyExists.length === 0) {
