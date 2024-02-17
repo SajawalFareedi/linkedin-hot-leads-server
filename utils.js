@@ -12,13 +12,15 @@ async function keepTheServerRunning() {
 
         while (true) {
             if (mongoose.connection.readyState !== 1) {
-                await db.InitializeDatabase();
-                // cron();
-            };
+                try {
+                    await db.InitializeDatabase();
+                    // cron();
+                } catch (error) { }
 
+            };
             await sleep(30);
         }
-        
+
     } catch (error) {
         console.trace(error);
     }
