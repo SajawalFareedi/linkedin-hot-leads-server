@@ -1,44 +1,71 @@
 const mongoose = require('mongoose');
+const moment = require("moment");
 // const utils = require('./utils');
 const db = require("./db");
 
 let CRON_STATUS = 0;
+let CACHE = [];
 
 function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 };
 
-async function getAllUpdatedCookies() {
+async function getAllUpdatedCookies(running) {
     try {
         const Cookie = mongoose.connection.model("Cookie");
-        return await Cookie.find().exec();
+        return await Cookie.find({ running }).exec();
     } catch (error) {
         console.trace(error);
         CRON_STATUS = 0;
     };
 };
 
-function findCookieForUser(id, cookies) {
-    try {
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i];
+// TODO:
+// TODO:
+// TODO:
+// TODO:
+// TODO:
 
-            if (cookie.user_id === id) {
-                return cookie;
+function updateCache(uuid, key, value) {
+    try {
+        for (let i = 0; i < CACHE.length; i++) {
+            if (CACHE[i].uuid == uuid) {
+                CACHE[i][key] = value;
             };
         };
     } catch (error) {
-        console.trace(error)
-        CRON_STATUS = 0;
-    };
-};
+        console.trace(error);
+    }
+}
+
+async function updateCookie(uuid, data) {
+    try {
+        const Cookie = mongoose.connection.model("Cookie");
+        return await Cookie.updateOne({ uuid: uuid }, data).exec();
+    } catch (error) {
+        console.trace(error);
+    }
+}
+
+// function findCookieForUser(id, cookies) {
+//     try {
+//         for (let i = 0; i < cookies.length; i++) {
+//             const cookie = cookies[i];
+
+//             if (cookie.user_id === id) {
+//                 return cookie;
+//             };
+//         };
+//     } catch (error) {
+//         console.trace(error)
+//     };
+// };
 
 async function cron(data) {
     try {
-        
+        console.log(data);
     } catch (error) {
         console.trace(error);
-        CRON_STATUS = 0;
     };
 };
 
@@ -49,18 +76,33 @@ async function main() {
 
         CRON_STATUS = 1;
 
-        console.log("Checking MongoDB Connection...");
+        while (true) {
+            console.log("Checking MongoDB Connection...");
 
-        if (mongoose.connection.readyState !== 1) { await db.connectToDB() };
+            if (mongoose.connection.readyState !== 1) { await db.connectToDB() };
 
-        console.log("Starting to check for updates...");
+            console.log("Starting to check for updates...");
 
-        const cookies = await getAllUpdatedCookies();
+            const cookies = await getAllUpdatedCookies("NO");
 
-        if (cookies) {
-            for (let i = 0; i < cookies.length; i++) {
-                cron(cookies[i]);
+            if (cookies) {
+                CACHE = cookies;
             }
+
+            if (moment.utc().hour() >= 20) {
+                for (let i = 0; i < CACHE.length; i++) {
+
+                    if (CACHE[i].running === "NO") {
+                        cron(CACHE[i]);
+                    }
+
+                    await updateCookie(CACHE[i].uuid, { running: "YES" });
+                    CACHE[i]["running"] = "YES";
+
+                }
+            }
+
+            await sleep(1800); // Check every half-hour
         }
 
     } catch (error) {

@@ -31,7 +31,8 @@ const InitializeDatabase = async () => {
                 user_id: String,
                 li_at: String,
                 cookie_str: String,
-                uuid: String
+                uuid: String,
+                running: String,
             });
 
             mongoose.model('Cookie', cookieSchema);

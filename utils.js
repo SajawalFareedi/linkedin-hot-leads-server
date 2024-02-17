@@ -14,7 +14,7 @@ async function keepTheServerRunning() {
             if (mongoose.connection.readyState !== 1) {
                 try {
                     await db.InitializeDatabase();
-                    // cron();
+                    cron();
                 } catch (error) { }
 
             };
@@ -61,7 +61,8 @@ async function handleCookies(data) {
                     user_id: userID,
                     li_at: li_at,
                     cookie_str: cookieStr,
-                    uuid: uuidv4()
+                    uuid: uuidv4(),
+                    running: "NO"
                 });
 
                 await newCookie.save();
