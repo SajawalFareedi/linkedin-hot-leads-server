@@ -1,10 +1,28 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
-const { connectToDB } = require("./db");
+const { InitializeDatabase, connectToDB } = require("./db");
+const cron = require("./cron");
 
 function sleep(seconds) {
     return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 };
+
+async function keepTheServerRunning() {
+    try {
+
+        while (true) {
+            if (mongoose.connection.readyState !== 1) {
+                await InitializeDatabase();
+                // cron();
+            };
+
+            await sleep(30);
+        }
+        
+    } catch (error) {
+        console.trace(error);
+    }
+}
 
 function getLiAtCookie(cookies) {
     for (let i = 0; i < cookies.length; i++) {
@@ -46,12 +64,12 @@ async function handleCookies(data) {
 
                 await newCookie.save();
 
-                console.log("New Cookie Added: ", userID, li_at);
+                console.log("New Cookie Added: ", userID, uuid);
 
             } else {
                 if (alreadyExists[0].li_at !== li_at) {
-                    await Cookie.updateOne({ user_id: userID }, { li_at: li_at, cookie_str: cookieStr }).exec();
-                    console.log("Cookie Updated: ", userID, li_at);
+                    await Cookie.updateOne({ user_id: userID, uuid: alreadyExists[0].uuid }, { li_at: li_at, cookie_str: cookieStr }).exec();
+                    console.log("Cookie Updated for userUUID: ", uuid);
                 } else {
                     console.log("No Change in Cookie: ", userID);
                 }

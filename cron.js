@@ -4,20 +4,13 @@ const { connectToDB } = require("./db");
 
 let CRON_STATUS = 0;
 
-async function cron(userID) {
-    try {
-        
-    } catch (error) {
-        console.trace(error);
-    };
-};
-
 async function getAllUpdatedCookies() {
     try {
         const Cookie = mongoose.connection.model("Cookie");
         return await Cookie.find().exec();
     } catch (error) {
         console.trace(error);
+        CRON_STATUS = 0;
     };
 };
 
@@ -32,6 +25,16 @@ function findCookieForUser(id, cookies) {
         };
     } catch (error) {
         console.trace(error)
+        CRON_STATUS = 0;
+    };
+};
+
+async function cron(data) {
+    try {
+        
+    } catch (error) {
+        console.trace(error);
+        CRON_STATUS = 0;
     };
 };
 
@@ -42,25 +45,23 @@ async function main() {
 
         CRON_STATUS = 1;
 
-        let cookies = [];
-
         console.log("Checking MongoDB Connection...");
 
         if (mongoose.connection.readyState !== 1) { await connectToDB() };
 
         console.log("Starting to check for updates...");
 
-        const Cookie = mongoose.connection.model("Cookie");
-        const _cookies = await Cookie.find().exec();
+        const cookies = await getAllUpdatedCookies();
 
-        for (let i = 0; i < _cookies.length; i++) {
-            const ck = _cookies[i];
-
-            console.log("Cookie: ", ck);
-        };
+        if (cookies) {
+            for (let i = 0; i < cookies.length; i++) {
+                cron(cookies[i]);
+            }
+        }
 
     } catch (error) {
         console.trace(error);
+        CRON_STATUS = 0;
     };
 };
 

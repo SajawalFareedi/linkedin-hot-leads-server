@@ -1,5 +1,3 @@
-const { InitializeDatabase } = require("./db");
-const cron = require("./cron");
 const express = require("express");
 const utils = require('./utils');
 const cors = require("cors");
@@ -12,8 +10,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
 app.get("/", async (req, res) => {
-    await InitializeDatabase();
-    // cron();
+    utils.keepTheServerRunning()
     res.send({ status: "Server is Up and Running!" });
 });
 
