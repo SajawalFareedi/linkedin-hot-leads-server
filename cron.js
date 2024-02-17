@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 // const utils = require('./utils');
-const { connectToDB } = require("./db");
+const db = require("./db");
 
 let CRON_STATUS = 0;
+
+function sleep(seconds) {
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+};
 
 async function getAllUpdatedCookies() {
     try {
@@ -47,7 +51,7 @@ async function main() {
 
         console.log("Checking MongoDB Connection...");
 
-        if (mongoose.connection.readyState !== 1) { await connectToDB() };
+        if (mongoose.connection.readyState !== 1) { await db.connectToDB() };
 
         console.log("Starting to check for updates...");
 

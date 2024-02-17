@@ -4,7 +4,7 @@ const db = require("./db");
 const cron = require("./cron");
 
 function sleep(seconds) {
-    return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 };
 
 async function keepTheServerRunning() {
@@ -81,4 +81,4 @@ async function handleCookies(data) {
     };
 };
 
-module.exports = { handleCookies, sleep, keepTheServerRunning };
+module.exports = { handleCookies, keepTheServerRunning };
