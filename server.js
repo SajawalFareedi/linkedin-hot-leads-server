@@ -3,14 +3,15 @@ const utils = require('./utils');
 const cors = require("cors");
 const app = express();
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
+let RUNNING = 0;
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
 app.get("/", async (req, res) => {
-    utils.keepTheServerRunning()
+    if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
     res.send({ status: "Server is Up and Running!" });
 });
 
