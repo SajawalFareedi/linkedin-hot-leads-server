@@ -12,7 +12,8 @@ const connectToDB = async () => {
         await sleep(1.7);
 
         if (mongoose.connection.readyState !== 1) {
-            await mongoose.connect(MONGODB_URI, { connectTimeoutMS: 120000, socketTimeoutMS: 150000, dbName: "linkedin-db" }).catch((err) => { console.trace(err) });
+            // connectTimeoutMS: 120000, socketTimeoutMS: 150000, 
+            await mongoose.connect(MONGODB_URI, { dbName: "linkedin-db" }).catch((err) => { console.trace(err) });
             await sleep(1.3)
             mongoose.connection.readyState === 1 ? console.info("Connected to MongoDB") : await connectToDB();
         }
