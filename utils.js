@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
-const { InitializeDatabase, connectToDB } = require("./db");
+const db = require("./db");
 const cron = require("./cron");
 
 function sleep(seconds) {
@@ -12,7 +12,7 @@ async function keepTheServerRunning() {
 
         while (true) {
             if (mongoose.connection.readyState !== 1) {
-                await InitializeDatabase();
+                await db.InitializeDatabase();
                 // cron();
             };
 
@@ -37,7 +37,7 @@ function getLiAtCookie(cookies) {
 async function handleCookies(data) {
     try {
 
-        if (mongoose.connection.readyState !== 1) { await connectToDB() };
+        if (mongoose.connection.readyState !== 1) { await db.connectToDB() };
 
         let userID = data.url;
         const li_at = getLiAtCookie(data.cookies);
@@ -81,4 +81,4 @@ async function handleCookies(data) {
     };
 };
 
-module.exports = { handleCookies, sleep };
+module.exports = { handleCookies, sleep, keepTheServerRunning };
