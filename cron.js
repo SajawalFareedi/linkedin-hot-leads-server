@@ -141,7 +141,7 @@ async function getFreeViewersData(data) {
 
         for (let i = 0; i < included.length; i++) {
             const obj = included[i];
-            
+
             if (viewsin24Hrs.includes(obj.entityUrn)) {
                 viewersData["profile_data"].push({
                     person_urn: obj.entityUrn,
@@ -155,11 +155,11 @@ async function getFreeViewersData(data) {
             }
         }
 
-        if (viewersData.profile_data.length > 0) { 
+        if (viewersData.profile_data.length > 0) {
 
             for (let i = 0; i < viewersData.profile_data.length; i++) {
                 const viewer = viewersData.profile_data[i];
-                
+
                 await checkDatabaseConnection();
 
                 const Person = mongoose.connection.model("Person");
@@ -228,7 +228,7 @@ async function getPremiumViewersData(data) {
             if (hasPagination) {
                 variables = `variables=(paginationToken:${paginationToken},start:${start},query:(selectedFilters:List((key:timeRange,value:List(past_2_weeks)))),analyticsEntityUrn:(activityUrn:urn%3Ali%3Adummy%3A-1),surfaceType:WVMP)&queryId=voyagerPremiumDashAnalyticsObject.09dfd4ecd107e545d3ad06c1c5d1cf6a`;
             }
-                
+
             const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
 
             const response = await makeGetRequest(url, headers);
@@ -328,7 +328,76 @@ async function getPremiumViewersData(data) {
     }
 }
 
-async function getComments(data, post) {
+async function getRecentEngagements(data) {
+    try {
+        const headers = {
+            "accept": "application/vnd.linkedin.normalized+json+2.1",
+            "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+            "csrf-token": data.jsession_id,
+            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+            "sec-ch-ua-mobile": "?0",
+            // "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "x-li-lang": "en_US",
+            "x-li-page-instance": "urn:li:page:d_flagship3_leia_creator_analytics_top_posts;+u/Rom7nQECJd1jk55V5iw==",
+            // "x-li-track": "{\"clientVersion\":\"1.13.11186\",\"mpVersion\":\"1.13.11186\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
+            "x-restli-protocol-version": "2.0.0",
+            "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
+            "Referer": "https://www.linkedin.com/analytics/creator/top-posts/?metricType=ENGAGEMENT&resultType=DUMMY&timeRange=past_7_days",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        let variables = `variables=(start:0,query:(selectedFilters:List((key:resultType,value:List(DUMMY)),(key:timeRange,value:List(past_7_days)),(key:metricType,value:List(ENGAGEMENT)))),analyticsEntityUrn:(profile:urn%3Ali%3Afsd_profile%3A${data.urn.split(':')[-1]}),surfaceType:CREATOR_POST_PERFORMANCE)&queryId=voyagerPremiumDashAnalyticsObject.09dfd4ecd107e545d3ad06c1c5d1cf6a`
+        let hasPagination = false;
+        let paginationToken = "";
+        let start = 0;
+
+        let postsIDs = [];
+
+        while (true) {
+            if (hasPagination) {
+                variables = `variables=(paginationToken:${paginationToken},start:${start},query:(selectedFilters:List((key:resultType,value:List(DUMMY)),(key:timeRange,value:List(past_7_days)),(key:metricType,value:List(ENGAGEMENT)))),analyticsEntityUrn:(profile:urn%3Ali%3Afsd_profile%3A${data.urn.split(':')[-1]}),surfaceType:CREATOR_POST_PERFORMANCE)&queryId=voyagerPremiumDashAnalyticsObject.09dfd4ecd107e545d3ad06c1c5d1cf6a`;
+            }
+
+            const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
+
+            const response = await makeGetRequest(url, headers);
+
+            if (!response) {
+                // TODO: Send an emergency notification to the Developer & Client
+                return;
+            }
+
+            const premiumAnalytics = response.data.data.data.premiumDashAnalyticsObjectByAnalyticsEntity
+            paginationToken = premiumAnalytics.metadata.paginationToken;
+            const paging = premiumAnalytics.paging;
+            const postsList = premiumAnalytics.elements;
+
+            if (paging.total > 10) {
+                hasPagination = true;
+            }
+
+            for (let i = 0; i < postsList.length; i++) {
+                const postStr = postsList[i].content.analyticsMiniUpdateItem["*miniUpdate"];
+                postsIDs.push(postStr.split(":")[-1].split(",")[0])
+            }
+
+
+            if (start >= paging.total) break;
+            start += 10;
+
+        }
+
+        return postsIDs;
+
+    } catch (error) {
+        console.trace(error);
+    }
+}
+
+async function getComments(data, postID) {
     try {
         const headers = {
             "accept": "application/vnd.linkedin.normalized+json+2.1",
@@ -346,9 +415,172 @@ async function getComments(data, post) {
             // "x-li-track": "{\"clientVersion\":\"1.13.11186\",\"mpVersion\":\"1.13.11186\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
-            "Referer": `https://www.linkedin.com/feed/update/urn:li:activity:${post.id}/`,
+            "Referer": `https://www.linkedin.com/feed/update/urn:li:activity:${postID}/`,
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
+
+        let variables = `variables=(count:10,numReplies:1,socialDetailUrn:urn%3Ali%3Afsd_socialDetail%3A%28urn%3Ali%3Aactivity%3A${postID}%2Curn%3Ali%3Aactivity%3A${postID}%2Curn%3Ali%3AhighlightedReply%3A-%29,sortOrder:REVERSE_CHRONOLOGICAL,start:0)&queryId=voyagerSocialDashComments.c8848fd440e02d7ae3d4c5e06280856b`
+        let hasPagination = false;
+        let start = 0;
+
+        let wrongDays = 0;
+
+        while (true) {
+            if (hasPagination) {
+                variables = `variables=(count:10,numReplies:1,socialDetailUrn:urn%3Ali%3Afsd_socialDetail%3A%28urn%3Ali%3Aactivity%3A${postID}%2Curn%3Ali%3Aactivity%3A${postID}%2Curn%3Ali%3AhighlightedReply%3A-%29,sortOrder:REVERSE_CHRONOLOGICAL,start:${start})&queryId=voyagerSocialDashComments.c8848fd440e02d7ae3d4c5e06280856b`;
+            }
+
+            const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
+
+            const response = await makeGetRequest(url, headers);
+
+            if (!response) {
+                // TODO: Send an emergency notification to the Developer & Client
+                return;
+            }
+
+            const commentsAnalytics = response.data.data.data.socialDashCommentsBySocialDetail
+            const paging = commentsAnalytics.paging;
+            const commentsList = response.data.included;
+
+            if (paging.total > 10) {
+                hasPagination = true;
+            }
+
+            for (let i = 0; i < commentsList.length; i++) {
+                const comment = commentsList[i]
+
+                if (Object.keys(comment).includes("commentary")) {
+                    if (!comment.commenter.author) {
+                        if (moment.utc().format('D') !== moment.unix(comment.createdAt / 1000).format('D')) {
+                            wrongDays += 1;
+                            if (wrongDays >= 5) break;
+                            continue;
+                        }
+
+                        await checkDatabaseConnection();
+
+                        const Person = mongoose.connection.model("Person");
+                        const personData = await Person.find({ person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid }).exec();
+
+                        if (personData.length == 0) {
+
+                            const firstName = comment.commenter.title.text.split(" ")[0]
+                            const lastName = comment.commenter.title.text.split(" ").slice(1).join(' ');
+
+                            const newPerson = new Person({
+                                uuid: data.uuid,
+                                urn: data.urn,
+                                person_urn: comment.commenter.actor["*profileUrn"],
+                                first_name: firstName,
+                                last_name: lastName,
+                                profile_url: comment.commenter.navigationUrl,
+                                profile_headline: comment.commenter.subtitle,
+                                job_title: "NULL",
+                                reactions_count: 0,
+                                comments_count: 1,
+                                profile_view_count: 0,
+                                score: 1
+                            });
+
+                            await newPerson.save();
+                        } else {
+                            await Person.updateOne({ person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid }, {
+                                comments_count: personData[0].profile_view_count + 1,
+                                score: personData[0].score + 1
+                            }).exec();
+                        }
+                    }
+                }
+            }
+
+            if (start >= paging.total || wrongDays >= 5) break;
+            start += 10;
+        }
+
+    } catch (error) {
+        console.trace(error);
+    };
+};
+
+async function getJobTitle(person, data) {
+    try {
+        const headers = {
+            "accept": "application/vnd.linkedin.normalized+json+2.1",
+            "accept-language": "en-US,en;q=0.9",
+            "csrf-token": data.jsession_id,
+            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+            "sec-ch-ua-mobile": "?0",
+            // "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "x-li-lang": "en_US",
+            "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base;TOYMHodvSD+raFovcEj1cg==",
+            "x-li-pem-metadata": "Voyager - Profile=profile-tab-initial-cards",
+            // "x-li-track": "{\"clientVersion\":\"1.13.11248\",\"mpVersion\":\"1.13.11248\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
+            "x-restli-protocol-version": "2.0.0",
+            "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
+            "Referer": `https://www.linkedin.com/in/${person.person_urn}/`,
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        const url = `https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(profileUrn:urn%3Ali%3Afsd_profile%3A${person.person_urn})&queryId=voyagerIdentityDashProfileCards.c78038c1bbcf9183f894d26cbd4f462a`
+
+        const response = await makeGetRequest(url, headers);
+
+        if (!response) {
+            // TODO: Send an emergency notification to the Developer & Client
+            return;
+        }
+
+        const included = response.data["included"];
+
+        for (let i = 0; i < included.length; i++) {
+            const obj = included[i];
+            if (obj.entityUrn.indexOf(",EXPERIENCE,") !== -1) {
+                for (let x = 0; x < obj.topComponents.length; x++) {
+                    const topComponent = obj.topComponents[x].components;
+                    
+                    if (topComponent.fixedListComponent) {
+                        const jobTitle = topComponent.fixedListComponent.components[0].components.entityComponent.titleV2.text.text;
+
+                        await checkDatabaseConnection();
+                        const Person = mongoose.connection.model("Person");
+                        await Person.updateOne({ person_urn: person.person_urn, urn: person.urn }, { job_title: jobTitle }).exec();
+                    }
+                }
+            }
+        }
+
+    } catch (error) {
+        console.trace(error);
+    };
+};
+
+async function getJobTitlesForPersons() {
+    try {
+
+        while (true) {
+            const dbStatus = await checkDatabaseConnection();
+
+            if (dbStatus == "success") {
+                break;
+            }
+
+        }
+
+        console.log("Starting to check for new Persons to get JOB_TITLES for...");
+
+        const Cookie = mongoose.connection.model("Cookie");
+        const Person = mongoose.connection.model("Person");
+        const persons = await Person.find({ job_title: "NULL" }).exec();
+
+        for (let i = 0; i < persons.length; i++) {
+            const cookie = await Cookie.findOne({ urn: persons[i].urn, uuid: persons[i].uuid }).exec()
+            await getJobTitle(persons[i], cookie)
+        };
+
     } catch (error) {
         console.trace(error);
     };
@@ -362,19 +594,22 @@ async function cron(data) {
         } else {
             await getPremiumViewersData(data);
         }
-        
-        const posts = await getRecentEngagements(data);
-        for (let i = 0; i < posts.length; i++) {
-            const post = posts[i];
-            await getComments(data, post);
+
+        const postsIDs = await getRecentEngagements(data);
+        for (let i = 0; i < postsIDs.length; i++) {
+            const postID = postsIDs[i];
+            await getComments(data, postID);
             // await getReactions(data);
         }
-        
+
+
 
     } catch (error) {
         console.trace(error);
     };
 };
+
+// TODO: Don't repeat the same code...
 
 async function main() {
     try {
@@ -416,6 +651,7 @@ async function main() {
             // }
 
             await sleep(1800); // Check every half-hour
+            getJobTitlesForPersons();
         }
 
     } catch (error) {
