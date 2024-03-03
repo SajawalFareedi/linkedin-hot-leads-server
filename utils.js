@@ -195,6 +195,7 @@ async function handleCookies(data) {
         if (mongoose.connection.readyState !== 1) { await keepTheServerRunning() };
 
         let userID = data.url;
+        let userEmail = data.email;
         const li_at = getCookie(data.cookies, "li_at");
         const jsession_id = getCookie(data.cookies, "JSESSIONID").split('"').join("");
 
@@ -218,6 +219,7 @@ async function handleCookies(data) {
                 const newCustomer = new Customer({
                     urn: customerInfo.urn,
                     name: customerInfo.name,
+                    email: userEmail,
                     profile_url: `https://www.linkedin.com/in/${userID}`,
                     user_id: userID,
                     uuid: newUUID,
@@ -245,7 +247,7 @@ async function handleCookies(data) {
                     await Cookie.updateOne({ user_id: userID, uuid: alreadyExists[0].uuid }, { li_at: li_at, jsession_id: jsession_id }).exec();
                     console.log("Cookie Updated for UUID: ", alreadyExists[0].uuid);
                 } else {
-                    console.log("No Change in Cookie: ", userID);
+                    console.log("No Change in Cookie: ", userID, userEmail);
                 }
             };
         }

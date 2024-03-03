@@ -1,9 +1,20 @@
 const mongoose = require('mongoose');
 const moment = require("moment");
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const nodemailer = require('nodemailer');
+const { unlinkSync } = require("fs");
 const { makeGetRequest, checkDatabaseConnection } = require('./utils');
 
 let CRON_STATUS = 0;
 let CACHE = [];
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'sajawalfareedi448@gmail.com',
+        pass: 'gndxwareinrzjras'
+    }
+});
 
 function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
@@ -19,18 +30,6 @@ async function getAllUpdatedCookies(running) {
     };
 };
 
-function updateCache(uuid, key, value) {
-    try {
-        for (let i = 0; i < CACHE.length; i++) {
-            if (CACHE[i].uuid == uuid) {
-                CACHE[i][key] = value;
-            };
-        };
-    } catch (error) {
-        console.trace(error);
-    }
-}
-
 async function updateCookie(uuid, data) {
     try {
         const Cookie = mongoose.connection.model("Cookie");
@@ -38,38 +37,34 @@ async function updateCookie(uuid, data) {
     } catch (error) {
         console.trace(error);
     }
-}
+};
 
-// function findCookieForUser(id, cookies) {
-//     try {
-//         for (let i = 0; i < cookies.length; i++) {
-//             const cookie = cookies[i];
-
-//             if (cookie.user_id === id) {
-//                 return cookie;
-//             };
-//         };
-//     } catch (error) {
-//         console.trace(error)
-//     };
-// };
-
-function isWithin24Hrs(dateString) {
+function isWithin24Hrs(dateString, isPost) {
     try {
 
-        if (dateString.split(" ").length > 3) {
-            return false;
-        };
+        if (!isPost) {
+            if (dateString.split(" ").length > 3) {
+                return false;
+            };
 
-        // const num = dateString.split(" ")[1].match(/\d+/g);
-        const date = dateString.split(" ")[1].match(/[a-zA-Z]+/g);
+            // const num = dateString.split(" ")[1].match(/\d+/g);
+            const date = dateString.split(" ")[1].match(/[a-zA-Z]+/g);
 
-        if (date == "h" || date == "s" || date == "m") {
-            return true;
-        };
-        // else if (date[1] == "d" && date[0] == "1") {
-        //     return true;
-        // }
+            if (date == "h" || date == "s" || date == "m") {
+                return true;
+            };
+            // else if (date[1] == "d" && date[0] == "1") {
+            //     return true;
+            // }
+        } else {
+            const num = dateString.split(" ")[1].match(/\d+/g);
+            const date = dateString.split(" • ")[0].match(/[a-zA-Z]+/g);
+
+            if ((date == "h" || date == "s" || date == "m") && (parseInt(num) <= moment.utc().hour())) {
+                return true;
+            };
+        }
+
 
     } catch (error) {
         console.trace(error);
@@ -332,24 +327,24 @@ async function getRecentEngagements(data) {
     try {
         const headers = {
             "accept": "application/vnd.linkedin.normalized+json+2.1",
-            "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+            "accept-language": "en-US,en;q=0.9",
             "csrf-token": data.jsession_id,
-            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+            // "sec-ch-ua": "\"Chromium\";v=\"122\", \"Not(A:Brand\";v=\"24\", \"Google Chrome\";v=\"122\"",
             "sec-ch-ua-mobile": "?0",
             // "sec-ch-ua-platform": "\"Windows\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "x-li-lang": "en_US",
-            "x-li-page-instance": "urn:li:page:d_flagship3_leia_creator_analytics_top_posts;+u/Rom7nQECJd1jk55V5iw==",
-            // "x-li-track": "{\"clientVersion\":\"1.13.11186\",\"mpVersion\":\"1.13.11186\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
+            "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base_recent_activity_content_view;rZo8oOd3TJ2HB6VGXLR0qw==",
+            // "x-li-track": "{\"clientVersion\":\"1.13.11688\",\"mpVersion\":\"1.13.11688\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
-            "Referer": "https://www.linkedin.com/analytics/creator/top-posts/?metricType=ENGAGEMENT&resultType=DUMMY&timeRange=past_7_days",
+            "Referer": `https://www.linkedin.com/in/${data.urn.split(':')[-1]}/recent-activity/all/`,
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        let variables = `variables=(start:0,query:(selectedFilters:List((key:resultType,value:List(DUMMY)),(key:timeRange,value:List(past_7_days)),(key:metricType,value:List(ENGAGEMENT)))),analyticsEntityUrn:(profile:urn%3Ali%3Afsd_profile%3A${data.urn.split(':')[-1]}),surfaceType:CREATOR_POST_PERFORMANCE)&queryId=voyagerPremiumDashAnalyticsObject.09dfd4ecd107e545d3ad06c1c5d1cf6a`
+        let variables = `variables=(count:20,start:0,profileUrn:urn%3Ali%3Afsd_profile%3A${data.urn.split(':')[-1]})&queryId=voyagerFeedDashProfileUpdates.53c3a4bd255094f16123c5b4ed7ad0dc`
         let hasPagination = false;
         let paginationToken = "";
         let start = 0;
@@ -358,7 +353,7 @@ async function getRecentEngagements(data) {
 
         while (true) {
             if (hasPagination) {
-                variables = `variables=(paginationToken:${paginationToken},start:${start},query:(selectedFilters:List((key:resultType,value:List(DUMMY)),(key:timeRange,value:List(past_7_days)),(key:metricType,value:List(ENGAGEMENT)))),analyticsEntityUrn:(profile:urn%3Ali%3Afsd_profile%3A${data.urn.split(':')[-1]}),surfaceType:CREATOR_POST_PERFORMANCE)&queryId=voyagerPremiumDashAnalyticsObject.09dfd4ecd107e545d3ad06c1c5d1cf6a`;
+                variables = `variables=(count:20,start:${start},profileUrn:urn%3Ali%3Afsd_profile%3A${data.urn.split(':')[-1]},paginationToken:${paginationToken})&queryId=voyagerFeedDashProfileUpdates.53c3a4bd255094f16123c5b4ed7ad0dc`;
             }
 
             const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
@@ -370,23 +365,28 @@ async function getRecentEngagements(data) {
                 return;
             }
 
-            const premiumAnalytics = response.data.data.data.premiumDashAnalyticsObjectByAnalyticsEntity
-            paginationToken = premiumAnalytics.metadata.paginationToken;
-            const paging = premiumAnalytics.paging;
-            const postsList = premiumAnalytics.elements;
+            const feedDash = response.data.data.data.feedDashProfileUpdatesByMemberShareFeed;
+            paginationToken = feedDash.metadata.paginationToken;
+            const paging = feedDash.paging;
+            const postsList = response.data.included;
 
             if (paging.total > 10) {
                 hasPagination = true;
             }
 
             for (let i = 0; i < postsList.length; i++) {
-                const postStr = postsList[i].content.analyticsMiniUpdateItem["*miniUpdate"];
-                postsIDs.push(postStr.split(":")[-1].split(",")[0])
+                const post = postsList[i];
+
+                if (post.commentary) {
+                    if (isWithin24Hrs(post.actor.subDescription.text, true)) {
+                        postsIDs.push(post.entityUrn.split(":")[-1].split(",")[0]);
+                    }
+                }
             }
 
 
             if (start >= paging.total) break;
-            start += 10;
+            start += 20;
 
         }
 
@@ -486,7 +486,7 @@ async function getComments(data, postID) {
                             await newPerson.save();
                         } else {
                             await Person.updateOne({ person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid }, {
-                                comments_count: personData[0].profile_view_count + 1,
+                                comments_count: personData[0].comments_count + 1,
                                 score: personData[0].score + 1
                             }).exec();
                         }
@@ -538,10 +538,11 @@ async function getJobTitle(person, data) {
 
         for (let i = 0; i < included.length; i++) {
             const obj = included[i];
+
             if (obj.entityUrn.indexOf(",EXPERIENCE,") !== -1) {
                 for (let x = 0; x < obj.topComponents.length; x++) {
                     const topComponent = obj.topComponents[x].components;
-                    
+
                     if (topComponent.fixedListComponent) {
                         const jobTitle = topComponent.fixedListComponent.components[0].components.entityComponent.titleV2.text.text;
 
@@ -586,6 +587,101 @@ async function getJobTitlesForPersons() {
     };
 };
 
+async function getReactions(data, postID) {
+    try {
+        const headers = {
+            "accept": "application/vnd.linkedin.normalized+json+2.1",
+            "accept-language": "en-US,en;q=0.9",
+            "csrf-token": data.jsession_id,
+            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+            "sec-ch-ua-mobile": "?0",
+            // "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "x-li-lang": "en_US",
+            "x-li-page-instance": "urn:li:page:d_flagship3_detail_base;1E7brz1+RyGqOmx/Xv/YYA==",
+            // "x-li-track": "{\"clientVersion\":\"1.13.11186\",\"mpVersion\":\"1.13.11186\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
+            "x-restli-protocol-version": "2.0.0",
+            "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
+            "Referer": `https://www.linkedin.com/feed/update/urn:li:activity:${postID}/`,
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        let variables = `variables=(count:10,start:0,threadUrn:urn%3Ali%3Aactivity%3A${postID})&queryId=voyagerSocialDashReactions.56bde53f0c6873eb4870f5a25da96573`
+        let hasPagination = false;
+        let start = 0;
+
+        while (true) {
+            if (hasPagination) {
+                variables = `variables=(count:10,start:${start},threadUrn:urn%3Ali%3Aactivity%3A${postID})&queryId=voyagerSocialDashReactions.56bde53f0c6873eb4870f5a25da96573`;
+            }
+
+            const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
+
+            const response = await makeGetRequest(url, headers);
+
+            if (!response) {
+                // TODO: Send an emergency notification to the Developer & Client
+                return;
+            }
+
+            const reactionsAnalytics = response.data.data.data.socialDashReactionsByReactionType;
+            const paging = reactionsAnalytics.paging;
+            const reactionsList = response.data.included;
+
+            if (paging.total > 10) {
+                hasPagination = true;
+            }
+
+            for (let i = 0; i < reactionsList.length; i++) {
+                const reaction = reactionsList[i];
+
+                if (Object.keys(reaction).includes("actorUrn")) {
+
+                    await checkDatabaseConnection();
+
+                    const Person = mongoose.connection.model("Person");
+                    const personData = await Person.find({ person_urn: reaction.actorUrn, uuid: data.uuid }).exec();
+
+                    if (personData.length == 0) {
+
+                        const firstName = reaction.reactorLockup.title.text.split(" ")[0]
+                        const lastName = reaction.reactorLockup.title.text.split(" ").slice(1).join(' ');
+
+                        const newPerson = new Person({
+                            uuid: data.uuid,
+                            urn: data.urn,
+                            person_urn: reaction.actorUrn,
+                            first_name: firstName,
+                            last_name: lastName,
+                            profile_url: reaction.reactorLockup.navigationUrl,
+                            profile_headline: reaction.reactorLockup.subtitle.text,
+                            job_title: "NULL",
+                            reactions_count: 1,
+                            comments_count: 0,
+                            profile_view_count: 0,
+                            score: 1
+                        });
+
+                        await newPerson.save();
+                    } else {
+                        await Person.updateOne({ person_urn: reaction.actorUrn, uuid: data.uuid }, {
+                            reactions_count: personData[0].reactions_count + 1,
+                            score: personData[0].score + 1
+                        }).exec();
+                    }
+                }
+
+                if (start >= paging.total) break;
+                start += 10;
+            }
+        }
+    } catch (error) {
+        console.trace(error);
+    }
+}
+
 async function cron(data) {
     try {
 
@@ -596,13 +692,12 @@ async function cron(data) {
         }
 
         const postsIDs = await getRecentEngagements(data);
+
         for (let i = 0; i < postsIDs.length; i++) {
             const postID = postsIDs[i];
             await getComments(data, postID);
-            // await getReactions(data);
+            await getReactions(data, postID);
         }
-
-
 
     } catch (error) {
         console.trace(error);
@@ -610,6 +705,98 @@ async function cron(data) {
 };
 
 // TODO: Don't repeat the same code...
+// TODO: try to use customer's timezone
+//! TODO: Fix all of the timing for cron - CRITICAL
+// TODO: Use ENV file for storing credentials
+
+async function sendDataToCustomers() {
+    try {
+        console.log("Sending the data CSV files to customers...");
+        await checkDatabaseConnection();
+
+        const Customer = mongoose.connection.model("Customer");
+        const Person = mongoose.connection.model("Person");
+
+        const customers = await Customer.find().exec();
+        
+        for (let i = 0; i < customers.length; i++) {
+            const customer = customers[i];
+            
+            const persons = await Person.find({ uuid: customer.uuid, urn: customer.urn }).exec();
+            
+            if (!persons || persons.length == 0) {
+                continue
+            } 
+
+            let csvData = [];
+
+            for (let x = 0; x < persons.length; x++) {
+                const person = persons[x];
+                
+                csvData.push(
+                    {
+                        "First Name": person.first_name,
+                        "Last Name": person.last_name,
+                        "Profile Url": person.profile_url,
+                        "Profile Headline": person.profile_headline,
+                        "Job Title": person.job_title,
+                        "Comments Count": person.comments_count,
+                        "Reactions Count": person.reactions_count,
+                        "Profile View Count": person.profile_view_count,
+                        "Score": person.score
+                    }
+                )
+            }
+
+            const csvWriter = createCsvWriter({
+                path: `./csv_files/${customer.uuid}.csv`,
+                header: [
+                    { id: 'First Name', title: 'First Name' },
+                    { id: 'Last Name', title: 'Last Name' },
+                    { id: 'Profile Url', title: 'Profile Url' },
+                    { id: 'Profile Headline', title: 'Profile Headline' },
+                    { id: 'Job Title', title: 'Job Title' },
+                    { id: 'Comments Count"', title: 'Comments Count"' },
+                    { id: 'Reactions Count', title: 'Reactions Count' },
+                    { id: 'Profile View Count', title: 'Profile View Count' },
+                    { id: 'Score', title: 'Score' }
+                ]
+            });
+
+            await csvWriter.writeRecords(csvData);
+
+            // Send email with CSV attachment
+            const mailOptions = {
+                from: 'sajawalfareedi448@gmail.com',
+                to: customer.email,
+                subject: 'Weekly LinkedIn HotLeads Data Extraction Report',
+                text: 'The CSV file with the data is attached.',
+                //html: `
+                //  <h1>Sample Heading Here</h1>
+                //  <p>message here</p>
+                //`,
+                attachments: [
+                    {
+                        filename: 'linkedin_hotleads_data.csv',
+                        path: `./csv_files/${customer.uuid}.csv`
+                    }
+                ]
+            };
+
+            transporter.sendMail(mailOptions, async function (error, info) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    unlinkSync(`./csv_files/${customer.uuid}.csv`);
+                    await Person.deleteMany({ uuid: customer.uuid, urn: customer.urn }).exec();
+                }
+            });
+        }
+
+    } catch (error) {
+        console.trace(error);
+    }
+}
 
 async function main() {
     try {
@@ -619,6 +806,12 @@ async function main() {
         CRON_STATUS = 1;
 
         while (true) {
+
+            if (moment.utc().day() == 7 && moment.utc().hour() >= 17) {
+                // TODO: send all of the data to customer's email
+                await sendDataToCustomers();
+            }
+
             console.log("Checking MongoDB Connection...");
 
             const dbStatus = await checkDatabaseConnection();
@@ -651,7 +844,7 @@ async function main() {
             // }
 
             await sleep(1800); // Check every half-hour
-            getJobTitlesForPersons();
+            await getJobTitlesForPersons();
         }
 
     } catch (error) {
@@ -660,10 +853,7 @@ async function main() {
     };
 };
 
-// getFreeViewersData({
-//     jsession_id: "ajax:4904300844858187340",
-//     li_at: "AQEDATLg72QCzi31AAABjbwE_hkAAAGN4BGCGU0An1A-jTu39cAKAoHxBOc6rBvqjsLsGYxLYIOGTHrlnkyhMFkGBrv90tGD66eFkgRizim_VZZ1JRZdf3PzNZEQfKUlZ7ewk3piDr5Mf0yuvCbJCn0_",
-//     uuid: ""
-// })
 
 // module.exports = main;
+
+console.log(moment.utc().day());

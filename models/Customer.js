@@ -5,6 +5,7 @@ const createModel = () => {
         const customerSchema = new mongoose.Schema({
             urn: String,
             name: String,
+            email: String,
             profile_url: String,
             user_id: String,
             uuid: String,
