@@ -38,7 +38,7 @@ async function keepTheServerRunning() {
                     CookieModel();
                     PersonModel();
                     CustomerModel();
-                    cron();
+                    // cron();
                 } catch (error) { }
 
             };
