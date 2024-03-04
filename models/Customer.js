@@ -9,6 +9,8 @@ const createModel = () => {
             profile_url: String,
             user_id: String,
             uuid: String,
+            added: String,
+            last_ran: String
         });
 
         mongoose.model('Customer', customerSchema);

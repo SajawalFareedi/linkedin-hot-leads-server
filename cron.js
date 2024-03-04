@@ -6,7 +6,7 @@ const { unlinkSync } = require("fs");
 const { makeGetRequest, checkDatabaseConnection } = require('./utils');
 
 let CRON_STATUS = 0;
-let CACHE = [];
+let MAIN_CRON_RUNNING = 0; // Flag to know if the main cron is running
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -28,6 +28,8 @@ async function getAllUpdatedCookies(running) {
         console.trace(error);
         CRON_STATUS = 0;
     };
+
+    return [];
 };
 
 async function updateCookie(uuid, data) {
@@ -38,6 +40,46 @@ async function updateCookie(uuid, data) {
         console.trace(error);
     }
 };
+
+function isWithin7Days(dateString, isPost) {
+    try {
+
+        if (!isPost) {
+
+            if (dateString.split(" ").length > 3) {
+                return false;
+            };
+
+            // const num = dateString.split(" ")[1].match(/\d+/g);
+            const date = dateString.split(" ")[1].match(/[a-zA-Z]+/g);
+
+            if (date == "h" || date == "s" || date == "m" || date == "d") {
+                // if (date == "w") {
+                //     if (parseInt(num) == 1) {
+                //         return true;
+                //     } else {
+                //         return false;
+                //     }
+                // }
+                return true;
+            };
+
+        } else {
+            // const num = dateString.split(" ")[1].match(/\d+/g);
+            const date = dateString.split(" • ")[0].match(/[a-zA-Z]+/g);
+
+            if (date == "h" || date == "s" || date == "m" || date == "d") {
+                return true;
+            };
+        }
+
+
+    } catch (error) {
+        console.trace(error);
+    }
+
+    return false;
+}
 
 function isWithin24Hrs(dateString, isPost) {
     try {
@@ -71,7 +113,67 @@ function isWithin24Hrs(dateString, isPost) {
     }
 
     return false;
-}
+};
+
+async function getJobTitle(person_urn, data) {
+    try {
+        const headers = {
+            "accept": "application/vnd.linkedin.normalized+json+2.1",
+            "accept-language": "en-US,en;q=0.9",
+            "csrf-token": data.jsession_id,
+            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+            "sec-ch-ua-mobile": "?0",
+            // "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "x-li-lang": "en_US",
+            "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base;TOYMHodvSD+raFovcEj1cg==",
+            "x-li-pem-metadata": "Voyager - Profile=profile-tab-initial-cards",
+            // "x-li-track": "{\"clientVersion\":\"1.13.11248\",\"mpVersion\":\"1.13.11248\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
+            "x-restli-protocol-version": "2.0.0",
+            "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
+            "Referer": `https://www.linkedin.com/in/${person_urn}/`,
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        const url = `https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(profileUrn:urn%3Ali%3Afsd_profile%3A${person_urn})&queryId=voyagerIdentityDashProfileCards.c78038c1bbcf9183f894d26cbd4f462a`
+
+        const response = await makeGetRequest(url, headers);
+
+        if (!response) {
+            // TODO: Send an emergency notification to the Developer & Client
+            return;
+        }
+
+        const included = response.data["included"];
+
+        for (let i = 0; i < included.length; i++) {
+            const obj = included[i];
+
+            if (obj.entityUrn.indexOf(",EXPERIENCE,") !== -1) {
+                for (let x = 0; x < obj.topComponents.length; x++) {
+                    const topComponent = obj.topComponents[x].components;
+
+                    if (topComponent.fixedListComponent) {
+                        try {
+                            const jobTitle = topComponent.fixedListComponent.components[0].components.entityComponent.titleV2.text.text;
+                            return jobTitle;
+                        } catch (error) { return "NULL" };
+                        // await checkDatabaseConnection();
+                        // const Person = mongoose.connection.model("Person");
+                        // await Person.updateOne({ person_urn: person.person_urn, urn: person.urn }, { job_title: jobTitle }).exec();
+                    }
+                }
+            }
+        }
+
+    } catch (error) {
+        console.trace(error);
+    };
+
+    return "NULL";
+};
 
 async function getFreeViewersData(data) {
     try {
@@ -161,6 +263,8 @@ async function getFreeViewersData(data) {
                 const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                 if (personData.length == 0) {
+                    const jobTitle = await getJobTitle(viewer.person_urn, data);
+
                     const newPerson = new Person({
                         uuid: viewersData.uuid,
                         urn: viewersData.urn,
@@ -169,7 +273,7 @@ async function getFreeViewersData(data) {
                         last_name: viewer.last_name,
                         profile_url: viewer.profile_url,
                         profile_headline: viewer.profile_headline,
-                        job_title: "NULL",
+                        job_title: jobTitle,
                         reactions_count: 0,
                         comments_count: 0,
                         profile_view_count: viewer.profile_view_count,
@@ -191,7 +295,6 @@ async function getFreeViewersData(data) {
     };
 };
 
-// TODO: Handle Paging
 async function getPremiumViewersData(data) {
     try {
         const headers = {
@@ -289,6 +392,8 @@ async function getPremiumViewersData(data) {
                     const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                     if (personData.length == 0) {
+                        const jobTitle = await getJobTitle(viewer.person_urn, data);
+
                         const newPerson = new Person({
                             uuid: viewersData.uuid,
                             urn: viewersData.urn,
@@ -297,7 +402,7 @@ async function getPremiumViewersData(data) {
                             last_name: viewer.last_name,
                             profile_url: viewer.profile_url,
                             profile_headline: viewer.profile_headline,
-                            job_title: "NULL",
+                            job_title: jobTitle,
                             reactions_count: 0,
                             comments_count: 0,
                             profile_view_count: viewer.profile_view_count,
@@ -324,6 +429,8 @@ async function getPremiumViewersData(data) {
 }
 
 async function getRecentEngagements(data) {
+    let postsIDs = [];
+
     try {
         const headers = {
             "accept": "application/vnd.linkedin.normalized+json+2.1",
@@ -349,8 +456,6 @@ async function getRecentEngagements(data) {
         let paginationToken = "";
         let start = 0;
 
-        let postsIDs = [];
-
         while (true) {
             if (hasPagination) {
                 variables = `variables=(count:20,start:${start},profileUrn:urn%3Ali%3Afsd_profile%3A${data.urn.split(':')[-1]},paginationToken:${paginationToken})&queryId=voyagerFeedDashProfileUpdates.53c3a4bd255094f16123c5b4ed7ad0dc`;
@@ -362,7 +467,7 @@ async function getRecentEngagements(data) {
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
-                return;
+                return postsIDs;
             }
 
             const feedDash = response.data.data.data.feedDashProfileUpdatesByMemberShareFeed;
@@ -378,12 +483,11 @@ async function getRecentEngagements(data) {
                 const post = postsList[i];
 
                 if (post.commentary) {
-                    if (isWithin24Hrs(post.actor.subDescription.text, true)) {
+                    if (isWithin7Days(post.actor.subDescription.text, true)) {
                         postsIDs.push(post.entityUrn.split(":")[-1].split(",")[0]);
                     }
                 }
             }
-
 
             if (start >= paging.total) break;
             start += 20;
@@ -395,6 +499,8 @@ async function getRecentEngagements(data) {
     } catch (error) {
         console.trace(error);
     }
+
+    return postsIDs;
 }
 
 async function getComments(data, postID) {
@@ -423,7 +529,7 @@ async function getComments(data, postID) {
         let hasPagination = false;
         let start = 0;
 
-        let wrongDays = 0;
+        // let wrongDays = 0;
 
         while (true) {
             if (hasPagination) {
@@ -452,11 +558,11 @@ async function getComments(data, postID) {
 
                 if (Object.keys(comment).includes("commentary")) {
                     if (!comment.commenter.author) {
-                        if (moment.utc().format('D') !== moment.unix(comment.createdAt / 1000).format('D')) {
-                            wrongDays += 1;
-                            if (wrongDays >= 5) break;
-                            continue;
-                        }
+                        // if (moment.utc().format('D') !== moment.unix(comment.createdAt / 1000).format('D')) {
+                        //     wrongDays += 1;
+                        //     if (wrongDays >= 5) break;
+                        //     continue;
+                        // }
 
                         await checkDatabaseConnection();
 
@@ -467,6 +573,7 @@ async function getComments(data, postID) {
 
                             const firstName = comment.commenter.title.text.split(" ")[0]
                             const lastName = comment.commenter.title.text.split(" ").slice(1).join(' ');
+                            const jobTitle = await getJobTitle(comment.commenter.actor["*profileUrn"], data);
 
                             const newPerson = new Person({
                                 uuid: data.uuid,
@@ -476,7 +583,7 @@ async function getComments(data, postID) {
                                 last_name: lastName,
                                 profile_url: comment.commenter.navigationUrl,
                                 profile_headline: comment.commenter.subtitle,
-                                job_title: "NULL",
+                                job_title: jobTitle,
                                 reactions_count: 0,
                                 comments_count: 1,
                                 profile_view_count: 0,
@@ -494,7 +601,7 @@ async function getComments(data, postID) {
                 }
             }
 
-            if (start >= paging.total || wrongDays >= 5) break;
+            if (start >= paging.total) break;
             start += 10;
         }
 
@@ -503,89 +610,33 @@ async function getComments(data, postID) {
     };
 };
 
-async function getJobTitle(person, data) {
-    try {
-        const headers = {
-            "accept": "application/vnd.linkedin.normalized+json+2.1",
-            "accept-language": "en-US,en;q=0.9",
-            "csrf-token": data.jsession_id,
-            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
-            "sec-ch-ua-mobile": "?0",
-            // "sec-ch-ua-platform": "\"Windows\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
-            "x-li-lang": "en_US",
-            "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base;TOYMHodvSD+raFovcEj1cg==",
-            "x-li-pem-metadata": "Voyager - Profile=profile-tab-initial-cards",
-            // "x-li-track": "{\"clientVersion\":\"1.13.11248\",\"mpVersion\":\"1.13.11248\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
-            "x-restli-protocol-version": "2.0.0",
-            "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
-            "Referer": `https://www.linkedin.com/in/${person.person_urn}/`,
-            "Referrer-Policy": "strict-origin-when-cross-origin"
-        }
+// async function getJobTitlesForPersons() {
+//     try {
 
-        const url = `https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(profileUrn:urn%3Ali%3Afsd_profile%3A${person.person_urn})&queryId=voyagerIdentityDashProfileCards.c78038c1bbcf9183f894d26cbd4f462a`
+//         while (true) {
+//             const dbStatus = await checkDatabaseConnection();
 
-        const response = await makeGetRequest(url, headers);
+//             if (dbStatus == "success") {
+//                 break;
+//             }
 
-        if (!response) {
-            // TODO: Send an emergency notification to the Developer & Client
-            return;
-        }
+//         }
 
-        const included = response.data["included"];
+//         console.log("Starting to check for new Persons to get JOB_TITLES for...");
 
-        for (let i = 0; i < included.length; i++) {
-            const obj = included[i];
+//         const Cookie = mongoose.connection.model("Cookie");
+//         const Person = mongoose.connection.model("Person");
+//         const persons = await Person.find({ job_title: "NULL" }).exec();
 
-            if (obj.entityUrn.indexOf(",EXPERIENCE,") !== -1) {
-                for (let x = 0; x < obj.topComponents.length; x++) {
-                    const topComponent = obj.topComponents[x].components;
+//         for (let i = 0; i < persons.length; i++) {
+//             const cookie = await Cookie.findOne({ urn: persons[i].urn, uuid: persons[i].uuid }).exec()
+//             await getJobTitle(persons[i], cookie)
+//         };
 
-                    if (topComponent.fixedListComponent) {
-                        const jobTitle = topComponent.fixedListComponent.components[0].components.entityComponent.titleV2.text.text;
-
-                        await checkDatabaseConnection();
-                        const Person = mongoose.connection.model("Person");
-                        await Person.updateOne({ person_urn: person.person_urn, urn: person.urn }, { job_title: jobTitle }).exec();
-                    }
-                }
-            }
-        }
-
-    } catch (error) {
-        console.trace(error);
-    };
-};
-
-async function getJobTitlesForPersons() {
-    try {
-
-        while (true) {
-            const dbStatus = await checkDatabaseConnection();
-
-            if (dbStatus == "success") {
-                break;
-            }
-
-        }
-
-        console.log("Starting to check for new Persons to get JOB_TITLES for...");
-
-        const Cookie = mongoose.connection.model("Cookie");
-        const Person = mongoose.connection.model("Person");
-        const persons = await Person.find({ job_title: "NULL" }).exec();
-
-        for (let i = 0; i < persons.length; i++) {
-            const cookie = await Cookie.findOne({ urn: persons[i].urn, uuid: persons[i].uuid }).exec()
-            await getJobTitle(persons[i], cookie)
-        };
-
-    } catch (error) {
-        console.trace(error);
-    };
-};
+//     } catch (error) {
+//         console.trace(error);
+//     };
+// };
 
 async function getReactions(data, postID) {
     try {
@@ -648,6 +699,7 @@ async function getReactions(data, postID) {
 
                         const firstName = reaction.reactorLockup.title.text.split(" ")[0]
                         const lastName = reaction.reactorLockup.title.text.split(" ").slice(1).join(' ');
+                        const jobTitle = await getJobTitle(reaction.actorUrn, data);
 
                         const newPerson = new Person({
                             uuid: data.uuid,
@@ -657,7 +709,7 @@ async function getReactions(data, postID) {
                             last_name: lastName,
                             profile_url: reaction.reactorLockup.navigationUrl,
                             profile_headline: reaction.reactorLockup.subtitle.text,
-                            job_title: "NULL",
+                            job_title: jobTitle,
                             reactions_count: 1,
                             comments_count: 0,
                             profile_view_count: 0,
@@ -685,18 +737,137 @@ async function getReactions(data, postID) {
 async function cron(data) {
     try {
 
-        if (data.isPremium == "NO") {
-            await getFreeViewersData(data);
-        } else {
-            await getPremiumViewersData(data);
-        }
-
         const postsIDs = await getRecentEngagements(data);
 
         for (let i = 0; i < postsIDs.length; i++) {
             const postID = postsIDs[i];
             await getComments(data, postID);
             await getReactions(data, postID);
+        }
+
+        await updateCookie(data.uuid, { running: "NO" });
+
+
+    } catch (error) {
+        console.trace(error);
+    };
+};
+
+async function sendDataToCustomer(customer) {
+    try {
+        console.log("Sending the data CSV file to customer: ", customer.uuid);
+        await checkDatabaseConnection();
+
+        const Person = mongoose.connection.model("Person");
+        const persons = await Person.find({ uuid: customer.uuid, urn: customer.urn }).exec();
+
+        if (!persons || persons.length == 0) {
+            return
+        }
+
+        let csvData = [];
+
+        for (let x = 0; x < persons.length; x++) {
+            const person = persons[x];
+
+            csvData.push(
+                {
+                    "First Name": person.first_name,
+                    "Last Name": person.last_name,
+                    "Profile Url": person.profile_url,
+                    "Profile Headline": person.profile_headline,
+                    "Job Title": person.job_title,
+                    "Comments Count": person.comments_count,
+                    "Reactions Count": person.reactions_count,
+                    "Profile View Count": person.profile_view_count,
+                    "Score": person.score
+                }
+            )
+        }
+
+        const csvWriter = createCsvWriter({
+            path: `./csv_files/${customer.uuid}.csv`,
+            header: [
+                { id: 'First Name', title: 'First Name' },
+                { id: 'Last Name', title: 'Last Name' },
+                { id: 'Profile Url', title: 'Profile Url' },
+                { id: 'Profile Headline', title: 'Profile Headline' },
+                { id: 'Job Title', title: 'Job Title' },
+                { id: 'Comments Count"', title: 'Comments Count"' },
+                { id: 'Reactions Count', title: 'Reactions Count' },
+                { id: 'Profile View Count', title: 'Profile View Count' },
+                { id: 'Score', title: 'Score' }
+            ]
+        });
+
+        csvData = csvData.sort(function (a, b) { return a["Score"] - b["Score"] }).reverse() // Sort by score in descending order
+        await csvWriter.writeRecords(csvData);
+
+        // Send email with CSV attachment
+        const mailOptions = {
+            from: 'sajawalfareedi448@gmail.com',
+            to: customer.email,
+            subject: 'Weekly LinkedIn HotLeads Data Extraction Report',
+            text: 'The CSV file with the data is attached.',
+            //html: `
+            //  <h1>Sample Heading Here</h1>
+            //  <p>message here</p>
+            //`,
+            attachments: [
+                {
+                    filename: 'linkedin_hotleads_data.csv',
+                    path: `./csv_files/${customer.uuid}.csv`
+                }
+            ]
+        };
+
+        // TODO: Handle the error properly
+        transporter.sendMail(mailOptions, async function (error, info) {
+            if (error) {
+                console.log("Error occured while trying to send the Email to customer: ", customer.uuid);
+                console.trace(error);
+            } else {
+                console.log("Sent the data CSV file to customer: ", customer.uuid);
+                unlinkSync(`./csv_files/${customer.uuid}.csv`);
+                await Person.deleteMany({ uuid: customer.uuid, urn: customer.urn }).exec();
+            }
+        });
+
+    } catch (error) {
+        console.trace(error);
+    }
+};
+
+async function profileViewCron(data) {
+    try {
+        if (data.isPremium == "NO") {
+            await getFreeViewersData(data);
+        } else {
+            await getPremiumViewersData(data);
+        }
+    } catch (error) {
+        console.trace(error);
+    };
+};
+
+async function checkForFinishedCrons() {
+    try {
+
+        console.log("Starting the Finished Crons Checking Process...");
+
+        while (true) {
+            const cookies = await getAllUpdatedCookies("NO");
+            const Customer = mongoose.connection.model("Customer");
+
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i];
+                const customer = await Customer.findOne({ uuid: cookie.uuid, urn: cookie.urn }).exec();
+                await sendDataToCustomer(customer);
+                await Customer.updateOne({ uuid: cookie.uuid, urn: cookie.urn }, { last_ran: moment.utc().format() }).exec();
+            }
+
+            await sleep(30 * 60);  // Wait for 10 minutes before checking again
+
         }
 
     } catch (error) {
@@ -706,145 +877,63 @@ async function cron(data) {
 
 // TODO: Don't repeat the same code...
 // TODO: try to use customer's timezone
-//! TODO: Fix all of the timing for cron - CRITICAL
+//! TODO: Fix all of the timing for cron - CRITICAL - DONE
 // TODO: Use ENV file for storing credentials
-
-async function sendDataToCustomers() {
-    try {
-        console.log("Sending the data CSV files to customers...");
-        await checkDatabaseConnection();
-
-        const Customer = mongoose.connection.model("Customer");
-        const Person = mongoose.connection.model("Person");
-
-        const customers = await Customer.find().exec();
-        
-        for (let i = 0; i < customers.length; i++) {
-            const customer = customers[i];
-            
-            const persons = await Person.find({ uuid: customer.uuid, urn: customer.urn }).exec();
-            
-            if (!persons || persons.length == 0) {
-                continue
-            } 
-
-            let csvData = [];
-
-            for (let x = 0; x < persons.length; x++) {
-                const person = persons[x];
-                
-                csvData.push(
-                    {
-                        "First Name": person.first_name,
-                        "Last Name": person.last_name,
-                        "Profile Url": person.profile_url,
-                        "Profile Headline": person.profile_headline,
-                        "Job Title": person.job_title,
-                        "Comments Count": person.comments_count,
-                        "Reactions Count": person.reactions_count,
-                        "Profile View Count": person.profile_view_count,
-                        "Score": person.score
-                    }
-                )
-            }
-
-            const csvWriter = createCsvWriter({
-                path: `./csv_files/${customer.uuid}.csv`,
-                header: [
-                    { id: 'First Name', title: 'First Name' },
-                    { id: 'Last Name', title: 'Last Name' },
-                    { id: 'Profile Url', title: 'Profile Url' },
-                    { id: 'Profile Headline', title: 'Profile Headline' },
-                    { id: 'Job Title', title: 'Job Title' },
-                    { id: 'Comments Count"', title: 'Comments Count"' },
-                    { id: 'Reactions Count', title: 'Reactions Count' },
-                    { id: 'Profile View Count', title: 'Profile View Count' },
-                    { id: 'Score', title: 'Score' }
-                ]
-            });
-
-            await csvWriter.writeRecords(csvData);
-
-            // Send email with CSV attachment
-            const mailOptions = {
-                from: 'sajawalfareedi448@gmail.com',
-                to: customer.email,
-                subject: 'Weekly LinkedIn HotLeads Data Extraction Report',
-                text: 'The CSV file with the data is attached.',
-                //html: `
-                //  <h1>Sample Heading Here</h1>
-                //  <p>message here</p>
-                //`,
-                attachments: [
-                    {
-                        filename: 'linkedin_hotleads_data.csv',
-                        path: `./csv_files/${customer.uuid}.csv`
-                    }
-                ]
-            };
-
-            transporter.sendMail(mailOptions, async function (error, info) {
-                if (error) {
-                    console.log(error);
-                } else {
-                    unlinkSync(`./csv_files/${customer.uuid}.csv`);
-                    await Person.deleteMany({ uuid: customer.uuid, urn: customer.urn }).exec();
-                }
-            });
-        }
-
-    } catch (error) {
-        console.trace(error);
-    }
-}
+//! TODO: Update Cookie status after it's finished - CRITICAL - DONE
 
 async function main() {
     try {
 
         if (CRON_STATUS === 1) { return }; // Avoid multiple execution of the script at the same time
-
         CRON_STATUS = 1;
 
         while (true) {
 
-            if (moment.utc().day() == 7 && moment.utc().hour() >= 17) {
-                // TODO: send all of the data to customer's email
-                await sendDataToCustomers();
-            }
+            if (moment.utc().hour() == 0) {
+                console.log("Checking MongoDB Connection...");
+                const dbStatus = await checkDatabaseConnection();
+                if (dbStatus == "failure") { continue };
 
-            console.log("Checking MongoDB Connection...");
+                console.log("Starting the Profile View Scraping Process...");
+                const cookies = await getAllUpdatedCookies("NO");
+                for (let i = 0; i < cookies.length; i++) { profileViewCron(cookies[i]) };
+            };
 
-            const dbStatus = await checkDatabaseConnection();
+            if (moment.utc().day() == 7 && moment.utc().hour() == 0 && MAIN_CRON_RUNNING == 0) {
+                try {
+                    console.log("Checking MongoDB Connection...");
+                    const dbStatus = await checkDatabaseConnection();
+                    if (dbStatus == "failure") { continue };
 
-            if (dbStatus == "failure") {
-                continue;
-            }
+                    console.log("Starting the Interaction Scraping Process...");
+                    const cookies = await getAllUpdatedCookies("NO");
 
-            console.log("Starting to check for updates...");
+                    if (cookies.length > 0) {
+                        MAIN_CRON_RUNNING = 1;
 
-            const cookies = await getAllUpdatedCookies("NO");
+                        for (let i = 0; i < cookies.length; i++) {
 
-            if (cookies) {
-                CACHE = cookies;
-            }
+                            if (cookies[i].running === "NO") {
+                                cron(cookies[i]);
+                            }
 
-            // console.log(CACHE);
+                            await updateCookie(cookies[i].uuid, { running: "YES" });
 
-            // if (moment.utc().hour() >= 20) {
-            for (let i = 0; i < CACHE.length; i++) {
+                        };
 
-                if (CACHE[i].running === "NO") {
-                    cron(CACHE[i]);
+                        checkForFinishedCrons();
+                    } else {
+                        MAIN_CRON_RUNNING = 0;
+                    }
+                    
+                } catch (error) {
+                    console.trace(error);
+                    MAIN_CRON_RUNNING = 0
                 }
+            };
 
-                await updateCookie(CACHE[i].uuid, { running: "YES" });
-                CACHE[i]["running"] = "YES";
-
-            }
-            // }
-
-            await sleep(1800); // Check every half-hour
-            await getJobTitlesForPersons();
+            await sleep(5 * 60); // Check after every 5 minutes
+            // await getJobTitlesForPersons();
         }
 
     } catch (error) {
@@ -854,6 +943,4 @@ async function main() {
 };
 
 
-// module.exports = main;
-
-console.log(moment.utc().day());
+module.exports = main;

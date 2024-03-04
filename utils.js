@@ -38,7 +38,7 @@ async function keepTheServerRunning() {
                     CookieModel();
                     PersonModel();
                     CustomerModel();
-                    // cron();
+                    cron();
                 } catch (error) { }
 
             };
@@ -223,6 +223,8 @@ async function handleCookies(data) {
                     profile_url: `https://www.linkedin.com/in/${userID}`,
                     user_id: userID,
                     uuid: newUUID,
+                    added: moment.utc().format(),
+                    last_ran: "NULL"
                 });
 
                 await newCustomer.save();
