@@ -31,17 +31,21 @@ async function checkDatabaseConnection() {
 
 async function keepTheServerRunning() {
     try {
+        console.log("Connecting to MongoDB...");
 
         while (true) {
             if (mongoose.connection.readyState !== 1) {
                 try {
                     await initializeDatabase();
                     cron();
-                } catch (error) { }
+                } catch (error) {
+                    console.trace(error);
+                };
 
             };
+
             await sleep(30);
-        }
+        };
 
     } catch (error) {
         console.trace(error);
