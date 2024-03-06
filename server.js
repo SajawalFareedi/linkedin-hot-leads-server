@@ -5,13 +5,15 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-let RUNNING = 0;
+// let RUNNING = 0;
 
-if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
+// if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
+
+utils.keepTheServerRunning();
 
 app.get("/", async (req, res) => {
     res.send({ status: "Server is Up and Running!" });
