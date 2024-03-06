@@ -40,7 +40,7 @@ async function keepTheServerRunning() {
             };
 
             try {
-                console.log("Doing it...")
+                console.log("Doing it ===", mongoose.connection.readyState, "===")
                 await initializeDatabase();
                 cron();
             } catch (error) {

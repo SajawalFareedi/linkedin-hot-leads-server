@@ -9,15 +9,14 @@ function sleep(seconds) {
 
 const InitializeDatabase = async () => {
     try {
-        await sleep(1.7);
+        if (mongoose.connection.readyState == 1) { return };
+        // connectTimeoutMS: 120000, socketTimeoutMS: 150000, 
 
-        if (mongoose.connection.readyState !== 1) {
-            // connectTimeoutMS: 120000, socketTimeoutMS: 150000, 
-            console.log("Daoing it 2... ")
-            await mongoose.connect(MONGODB_URI, { dbName: "linkedin-db" }).catch((err) => { console.trace(err) });
-            await sleep(1.3)
-            mongoose.connection.readyState === 1 ? console.info("Connected to MongoDB") : await InitializeDatabase();
-        }
+        console.log("Daoing it 2... ");
+
+        await mongoose.connect(MONGODB_URI, { dbName: "linkedin-db" }).catch((err) => { console.trace(err) });
+        mongoose.connection.readyState === 1 ? console.info("Connected to MongoDB") : await InitializeDatabase();
+
     } catch (error) {
         console.trace(error);
     };
