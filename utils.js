@@ -34,17 +34,19 @@ async function keepTheServerRunning() {
         console.log("Connecting to MongoDB...");
 
         while (true) {
-            if (mongoose.connection.readyState !== 1) {
-                try {
-                    await initializeDatabase();
-                    cron();
-                } catch (error) {
-                    console.trace(error);
-                };
 
+            if (mongoose.connection.readyState == 1) {
+                await sleep(30);
             };
 
-            await sleep(30);
+            try {
+                console.log("Doing it...")
+                await initializeDatabase();
+                cron();
+            } catch (error) {
+                console.trace(error);
+            };
+
         };
 
     } catch (error) {
@@ -73,7 +75,7 @@ function getCookie(cookies, name) {
  * @param {string} str 
  * @returns {object}
  */
-function parseJSON(str) { 
+function parseJSON(str) {
     try {
         return JSON.parse(
             str.split(" ").join("")
@@ -122,7 +124,7 @@ async function makeGetRequest(url, headers) {
     }
 
     return response;
- }
+}
 
 const getCustomerInfo = async (data) => {
     const { li_at, jsession_id, userID } = data;

@@ -13,6 +13,7 @@ const InitializeDatabase = async () => {
 
         if (mongoose.connection.readyState !== 1) {
             // connectTimeoutMS: 120000, socketTimeoutMS: 150000, 
+            console.log("Daoing it 2... ")
             await mongoose.connect(MONGODB_URI, { dbName: "linkedin-db" }).catch((err) => { console.trace(err) });
             await sleep(1.3)
             mongoose.connection.readyState === 1 ? console.info("Connected to MongoDB") : await InitializeDatabase();
