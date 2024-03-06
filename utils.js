@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 const axios = require("axios").default;
+const moment = require("moment");
 
 const initializeDatabase = require("./db");
-const CookieModel = require("./models/Cookie");
-const PersonModel = require("./models/Person");
-const CustomerModel = require("./models/Customer");
+const Cookie = require("./models/Cookie");
+// const Person = require("./models/Person");
+const Customer = require("./models/Customer");
 const cron = require("./cron");
 
 function sleep(seconds) {
@@ -35,10 +36,7 @@ async function keepTheServerRunning() {
             if (mongoose.connection.readyState !== 1) {
                 try {
                     await initializeDatabase();
-                    CookieModel();
-                    PersonModel();
-                    CustomerModel();
-                    // cron();
+                    cron();
                 } catch (error) { }
 
             };
@@ -199,17 +197,18 @@ async function handleCookies(data) {
         const li_at = getCookie(data.cookies, "li_at");
         const jsession_id = getCookie(data.cookies, "JSESSIONID").split('"').join("");
 
-        console.log("USER_ID_1: ", userID);
+        // console.log("USER_ID_1: ", userID);
 
         if (userID && userID !== "NO_URL" && typeof userID !== "undefined") {
             if (userID.length === 0) { return };
 
             userID = userID.split("/in/")[1].split("/")[0];
-            console.log("USER_ID_2: ", userID);
+            // console.log("USER_ID_2: ", userID);
 
-            const Customer = mongoose.connection.model("Customer");
-            const Cookie = mongoose.connection.model("Cookie");
+            // const Customer = mongoose.connection.model("Customer");
+            // const Cookie = mongoose.connection.model("Cookie");
             const alreadyExists = await Customer.find({ user_id: userID }).exec();
+            const cookieExists = await Cookie.find({ user_id: userID }).exec();
 
             if (alreadyExists.length === 0) {
                 const newUUID = uuidv4();
@@ -241,13 +240,13 @@ async function handleCookies(data) {
 
                 await newCookie.save();
 
-                console.log("New Customer Added: ", customerInfo.name, customerInfo.urn)
+                console.log("New Customer Added: ", customerInfo.name, userEmail, customerInfo.urn)
                 console.log("New Cookie Added: ", userID, newUUID);
 
             } else {
-                if (alreadyExists[0].li_at !== li_at || alreadyExists[0].jsession_id !== jsession_id) {
-                    await Cookie.updateOne({ user_id: userID, uuid: alreadyExists[0].uuid }, { li_at: li_at, jsession_id: jsession_id }).exec();
-                    console.log("Cookie Updated for UUID: ", alreadyExists[0].uuid);
+                if (cookieExists[0].li_at !== li_at || cookieExists[0].jsession_id !== jsession_id) {
+                    await Cookie.updateOne({ user_id: userID, uuid: cookieExists[0].uuid }, { li_at: li_at, jsession_id: jsession_id }).exec();
+                    console.log("Cookie Updated for UUID: ", cookieExists[0].uuid);
                 } else {
                     console.log("No Change in Cookie: ", userID, userEmail);
                 }

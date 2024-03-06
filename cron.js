@@ -1,9 +1,14 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const moment = require("moment");
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const nodemailer = require('nodemailer');
 const { unlinkSync } = require("fs");
-const { makeGetRequest, checkDatabaseConnection } = require('./utils');
+// const { makeGetRequest, checkDatabaseConnection } = require('./utils');
+const utils = require('./utils');
+
+const Cookie = require("./models/Cookie");
+const Person = require("./models/Person");
+const Customer = require("./models/Customer");
 
 let CRON_STATUS = 0;
 let MAIN_CRON_RUNNING = 0; // Flag to know if the main cron is running
@@ -22,7 +27,7 @@ function sleep(seconds) {
 
 async function getAllUpdatedCookies(running) {
     try {
-        const Cookie = mongoose.connection.model("Cookie");
+        // const Cookie = mongoose.connection.model("Cookie");
         return await Cookie.find({ running }).exec();
     } catch (error) {
         console.trace(error);
@@ -34,7 +39,7 @@ async function getAllUpdatedCookies(running) {
 
 async function updateCookie(uuid, data) {
     try {
-        const Cookie = mongoose.connection.model("Cookie");
+        // const Cookie = mongoose.connection.model("Cookie");
         return await Cookie.updateOne({ uuid: uuid }, data).exec();
     } catch (error) {
         console.trace(error);
@@ -139,7 +144,7 @@ async function getJobTitle(person_urn, data) {
 
         const url = `https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(profileUrn:urn%3Ali%3Afsd_profile%3A${person_urn})&queryId=voyagerIdentityDashProfileCards.c78038c1bbcf9183f894d26cbd4f462a`
 
-        const response = await makeGetRequest(url, headers);
+        const response = await utils.makeGetRequest(url, headers);
 
         if (!response) {
             // TODO: Send an emergency notification to the Developer & Client
@@ -160,7 +165,7 @@ async function getJobTitle(person_urn, data) {
                             const jobTitle = topComponent.fixedListComponent.components[0].components.entityComponent.titleV2.text.text;
                             return jobTitle;
                         } catch (error) { return "NULL" };
-                        // await checkDatabaseConnection();
+                        // await utils.checkDatabaseConnection();
                         // const Person = mongoose.connection.model("Person");
                         // await Person.updateOne({ person_urn: person.person_urn, urn: person.urn }, { job_title: jobTitle }).exec();
                     }
@@ -198,7 +203,7 @@ async function getFreeViewersData(data) {
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        const response = await makeGetRequest(url, headers);
+        const response = await utils.makeGetRequest(url, headers);
 
         if (!response) {
             // TODO: Send an emergency notification to the Developer & Client
@@ -257,9 +262,9 @@ async function getFreeViewersData(data) {
             for (let i = 0; i < viewersData.profile_data.length; i++) {
                 const viewer = viewersData.profile_data[i];
 
-                await checkDatabaseConnection();
+                await utils.checkDatabaseConnection();
 
-                const Person = mongoose.connection.model("Person");
+                // const Person = mongoose.connection.model("Person");
                 const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                 if (personData.length == 0) {
@@ -329,7 +334,7 @@ async function getPremiumViewersData(data) {
 
             const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
 
-            const response = await makeGetRequest(url, headers);
+            const response = await utils.makeGetRequest(url, headers);
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
@@ -386,9 +391,9 @@ async function getPremiumViewersData(data) {
                 for (let i = 0; i < viewersData.profile_data.length; i++) {
                     const viewer = viewersData.profile_data[i];
 
-                    await checkDatabaseConnection();
+                    await utils.checkDatabaseConnection();
 
-                    const Person = mongoose.connection.model("Person");
+                    // const Person = mongoose.connection.model("Person");
                     const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                     if (personData.length == 0) {
@@ -463,7 +468,7 @@ async function getRecentEngagements(data) {
 
             const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
 
-            const response = await makeGetRequest(url, headers);
+            const response = await utils.makeGetRequest(url, headers);
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
@@ -538,7 +543,7 @@ async function getComments(data, postID) {
 
             const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
 
-            const response = await makeGetRequest(url, headers);
+            const response = await utils.makeGetRequest(url, headers);
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
@@ -564,9 +569,9 @@ async function getComments(data, postID) {
                         //     continue;
                         // }
 
-                        await checkDatabaseConnection();
+                        await utils.checkDatabaseConnection();
 
-                        const Person = mongoose.connection.model("Person");
+                        // const Person = mongoose.connection.model("Person");
                         const personData = await Person.find({ person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid }).exec();
 
                         if (personData.length == 0) {
@@ -614,7 +619,7 @@ async function getComments(data, postID) {
 //     try {
 
 //         while (true) {
-//             const dbStatus = await checkDatabaseConnection();
+//             const dbStatus = await utils.checkDatabaseConnection();
 
 //             if (dbStatus == "success") {
 //                 break;
@@ -670,7 +675,7 @@ async function getReactions(data, postID) {
 
             const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
 
-            const response = await makeGetRequest(url, headers);
+            const response = await utils.makeGetRequest(url, headers);
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
@@ -690,9 +695,9 @@ async function getReactions(data, postID) {
 
                 if (Object.keys(reaction).includes("actorUrn")) {
 
-                    await checkDatabaseConnection();
+                    await utils.checkDatabaseConnection();
 
-                    const Person = mongoose.connection.model("Person");
+                    // const Person = mongoose.connection.model("Person");
                     const personData = await Person.find({ person_urn: reaction.actorUrn, uuid: data.uuid }).exec();
 
                     if (personData.length == 0) {
@@ -755,10 +760,10 @@ async function cron(data) {
 
 async function sendDataToCustomer(customer) {
     try {
-        console.log("Sending the data CSV file to customer: ", customer.uuid);
-        await checkDatabaseConnection();
+        console.log("Sending the data CSV file to customer: ", customer.name, customer.email);
+        await utils.checkDatabaseConnection();
 
-        const Person = mongoose.connection.model("Person");
+        // const Person = mongoose.connection.model("Person");
         const persons = await Person.find({ uuid: customer.uuid, urn: customer.urn }).exec();
 
         if (!persons || persons.length == 0) {
@@ -857,7 +862,7 @@ async function checkForFinishedCrons() {
 
         while (true) {
             const cookies = await getAllUpdatedCookies("NO");
-            const Customer = mongoose.connection.model("Customer");
+            // const Customer = mongoose.connection.model("Customer");
 
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i];
@@ -887,11 +892,13 @@ async function main() {
         if (CRON_STATUS === 1) { return }; // Avoid multiple execution of the script at the same time
         CRON_STATUS = 1;
 
+        console.log("Cron is Up & Running!");
+
         while (true) {
 
             if (moment.utc().hour() == 0) {
                 console.log("Checking MongoDB Connection...");
-                const dbStatus = await checkDatabaseConnection();
+                const dbStatus = await utils.checkDatabaseConnection();
                 if (dbStatus == "failure") { continue };
 
                 console.log("Starting the Profile View Scraping Process...");
@@ -902,7 +909,7 @@ async function main() {
             if (moment.utc().day() == 7 && moment.utc().hour() == 0 && MAIN_CRON_RUNNING == 0) {
                 try {
                     console.log("Checking MongoDB Connection...");
-                    const dbStatus = await checkDatabaseConnection();
+                    const dbStatus = await utils.checkDatabaseConnection();
                     if (dbStatus == "failure") { continue };
 
                     console.log("Starting the Interaction Scraping Process...");

