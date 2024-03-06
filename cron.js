@@ -935,8 +935,8 @@ async function main() {
                     
                 } catch (error) {
                     console.trace(error);
-                    MAIN_CRON_RUNNING = 0
-                }
+                    MAIN_CRON_RUNNING = 0;
+                };
             };
 
             await sleep(5 * 60); // Check after every 5 minutes
