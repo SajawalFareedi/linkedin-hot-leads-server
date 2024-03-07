@@ -17,17 +17,17 @@ async function checkDatabaseConnection() {
     try {
         while (true) {
             if (mongoose.connection.readyState !== 1) {
-                await sleep(5)
+                await sleep(5);
             } else {
                 return "success";
-            }
-        }
+            };
+        };
     } catch (error) {
         console.trace(error);
-    }
+    };
 
     return "failure";
-}
+};
 
 async function keepTheServerRunning() {
     try {
@@ -264,12 +264,7 @@ async function handleCookies(data) {
     };
 };
 
-// getCustomerInfo({
-//     li_at: "AQEDAUFujR4FLp7wAAABjb04-9wAAAGN4UV_3E4AoAOnEncfwbAqIbLQve6E-1_UDey0sfzgSfkCs9ZJSoFRNh1O0GXMnKwwWV9MJRti7efhY_PTOiON8fJukweOscEN9-R718Ow0LqQZTZ7b-IY9iSN",
-//     jsession_id: "ajax:2641296221308317633",
-//     userID: "nilsgrammerstorf"
-// }).then((d) => {
-//     console.log(d);
-// })
-
-module.exports = { handleCookies, keepTheServerRunning, makeGetRequest, checkDatabaseConnection };
+module.exports.handleCookies = handleCookies;
+module.exports.keepTheServerRunning = keepTheServerRunning;
+module.exports.makeGetRequest = makeGetRequest;
+module.exports.checkDatabaseConnection = checkDatabaseConnection;
