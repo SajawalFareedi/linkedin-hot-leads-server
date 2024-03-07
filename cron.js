@@ -21,6 +21,16 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// const transporter = nodemailer.createTransport({
+//     host: 'mail.floppyapp.io',
+//     port: 465,
+//     secure: true,
+//     auth: {
+//         user: 'bot@floppyapp.io',
+//         pass: 'password'
+//     }
+// });
+
 function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 };
@@ -893,6 +903,9 @@ async function main() {
         CRON_STATUS = 1;
 
         console.log("Cron is Up & Running!");
+        console.log("Checking MongoDB Connection...");
+        const dbStatus = await utils.checkDatabaseConnection();
+        if (dbStatus == "failure") {  };
 
         while (true) {
 
