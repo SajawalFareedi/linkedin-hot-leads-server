@@ -2,7 +2,7 @@ const express = require("express");
 const utils = require('./utils');
 const logger = require("./logger");
 const cors = require("cors");
-const { unlinkSync, open } = require("fs");
+const { unlinkSync, open, close } = require("fs");
 
 const app = express();
 
@@ -47,7 +47,7 @@ app.get("/delete_log_file", (req, res) => {
 
         open(`./logs/${filename}.log`, "wx", function (err, fd) {
             // handle error
-            fs.close(fd, function (err) { /*handle error*/ });
+            close(fd, function (err) { /*handle error*/ });
         });
 
         res.send({ status: "success" });
@@ -55,7 +55,7 @@ app.get("/delete_log_file", (req, res) => {
         res.status(500).send({ error: error });
     };
     
-})
+});
 
 app.listen(PORT, () => {
     logger.log(2, `Server is running on port ${PORT}`);
