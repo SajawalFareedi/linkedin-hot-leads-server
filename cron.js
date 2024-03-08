@@ -12,6 +12,7 @@ const Customer = require("./models/Customer");
 
 let CRON_STATUS = 0;
 let MAIN_CRON_RUNNING = 0; // Flag to know if the main cron is running
+let PROFILE_CRON_RUNNING = 0;  // Flag for each profile cron
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -174,7 +175,7 @@ async function getJobTitle(person_urn, data) {
                         try {
                             const jobTitle = topComponent.fixedListComponent.components[0].components.entityComponent.titleV2.text.text;
                             return jobTitle;
-                        } catch (error) { return "NULL" };
+                        } catch (error) { return "NO_JOB_TITLE" };
                         // await utils.checkDatabaseConnection();
                         // const Person = mongoose.connection.model("Person");
                         // await Person.updateOne({ person_urn: person.person_urn, urn: person.urn }, { job_title: jobTitle }).exec();
@@ -187,7 +188,7 @@ async function getJobTitle(person_urn, data) {
         console.trace(error);
     };
 
-    return "NULL";
+    return "NO_JOB_TITLE";
 };
 
 async function getFreeViewersData(data) {
@@ -853,13 +854,18 @@ async function sendDataToCustomer(customer) {
     }
 };
 
-async function profileViewCron(data) {
+async function profileViewCron(data, isLastProfile) {
     try {
         if (data.isPremium == "NO") {
             await getFreeViewersData(data);
         } else {
             await getPremiumViewersData(data);
         }
+
+        if (isLastProfile) {
+            PROFILE_CRON_RUNNING = 0;
+        }
+
     } catch (error) {
         console.trace(error);
     };
@@ -906,14 +912,20 @@ async function main() {
 
         while (true) {
 
-            if (moment.utc().hour() == 0) {
+            if (moment.utc().hour() == 0 && moment.utc().minutes() <= 5 && PROFILE_CRON_RUNNING == 0) {
                 console.log("Checking MongoDB Connection...");
                 const dbStatus = await utils.checkDatabaseConnection();
                 if (dbStatus == "failure") { continue };
 
                 console.log("Starting the Profile View Scraping Process...");
                 const cookies = await getAllUpdatedCookies("NO");
-                for (let i = 0; i < cookies.length; i++) { profileViewCron(cookies[i]) };
+
+                PROFILE_CRON_RUNNING = 1;
+
+                for (let i = 0; i < cookies.length; i++) {
+                    const isLastProfile = i >= (cookies.length - 1);
+                    profileViewCron(cookies[i], isLastProfile);
+                };
             };
 
             if (moment.utc().day() == 7 && moment.utc().hour() == 0 && MAIN_CRON_RUNNING == 0) {
