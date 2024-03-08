@@ -1,10 +1,9 @@
-// const mongoose = require('mongoose');
 const moment = require("moment");
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const nodemailer = require('nodemailer');
 const { unlinkSync } = require("fs");
-// const { makeGetRequest, checkDatabaseConnection } = require('./utils');
 const utils = require('./utils');
+const logger = require("./logger");
 
 const Cookie = require("./models/Cookie");
 const Person = require("./models/Person");
@@ -38,10 +37,10 @@ function sleep(seconds) {
 
 async function getAllUpdatedCookies(running) {
     try {
-        // const Cookie = mongoose.connection.model("Cookie");
         return await Cookie.find({ running }).exec();
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
         CRON_STATUS = 0;
     };
 
@@ -50,10 +49,10 @@ async function getAllUpdatedCookies(running) {
 
 async function updateCookie(uuid, data) {
     try {
-        // const Cookie = mongoose.connection.model("Cookie");
         return await Cookie.updateOne({ uuid: uuid }, data).exec();
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 };
 
@@ -66,22 +65,13 @@ function isWithin7Days(dateString, isPost) {
                 return false;
             };
 
-            // const num = dateString.split(" ")[1].match(/\d+/g);
             const date = dateString.split(" ")[1].match(/[a-zA-Z]+/g);
 
             if (date == "h" || date == "s" || date == "m" || date == "d") {
-                // if (date == "w") {
-                //     if (parseInt(num) == 1) {
-                //         return true;
-                //     } else {
-                //         return false;
-                //     }
-                // }
                 return true;
             };
 
         } else {
-            // const num = dateString.split(" ")[1].match(/\d+/g);
             const date = dateString.split(" • ")[0].match(/[a-zA-Z]+/g);
 
             if (date == "h" || date == "s" || date == "m" || date == "d") {
@@ -92,6 +82,7 @@ function isWithin7Days(dateString, isPost) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 
     return false;
@@ -105,15 +96,11 @@ function isWithin24Hrs(dateString, isPost) {
                 return false;
             };
 
-            // const num = dateString.split(" ")[1].match(/\d+/g);
             const date = dateString.split(" ")[1].match(/[a-zA-Z]+/g);
 
             if (date == "h" || date == "s" || date == "m") {
                 return true;
             };
-            // else if (date[1] == "d" && date[0] == "1") {
-            //     return true;
-            // }
         } else {
             const num = dateString.split(" ")[1].match(/\d+/g);
             const date = dateString.split(" • ")[0].match(/[a-zA-Z]+/g);
@@ -126,6 +113,7 @@ function isWithin24Hrs(dateString, isPost) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 
     return false;
@@ -137,16 +125,13 @@ async function getJobTitle(person_urn, data) {
             "accept": "application/vnd.linkedin.normalized+json+2.1",
             "accept-language": "en-US,en;q=0.9",
             "csrf-token": data.jsession_id,
-            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
             "sec-ch-ua-mobile": "?0",
-            // "sec-ch-ua-platform": "\"Windows\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "x-li-lang": "en_US",
             "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base;TOYMHodvSD+raFovcEj1cg==",
             "x-li-pem-metadata": "Voyager - Profile=profile-tab-initial-cards",
-            // "x-li-track": "{\"clientVersion\":\"1.13.11248\",\"mpVersion\":\"1.13.11248\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
             "Referer": `https://www.linkedin.com/in/${person_urn}/`,
@@ -159,7 +144,8 @@ async function getJobTitle(person_urn, data) {
 
         if (!response) {
             // TODO: Send an emergency notification to the Developer & Client
-            return;
+            logger.log(1, "No response from the linkedin api for job title");
+            return "NO_JOB_TITLE";
         }
 
         const included = response.data["included"];
@@ -176,9 +162,6 @@ async function getJobTitle(person_urn, data) {
                             const jobTitle = topComponent.fixedListComponent.components[0].components.entityComponent.titleV2.text.text;
                             return jobTitle;
                         } catch (error) { return "NO_JOB_TITLE" };
-                        // await utils.checkDatabaseConnection();
-                        // const Person = mongoose.connection.model("Person");
-                        // await Person.updateOne({ person_urn: person.person_urn, urn: person.urn }, { job_title: jobTitle }).exec();
                     }
                 }
             }
@@ -186,6 +169,7 @@ async function getJobTitle(person_urn, data) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     };
 
     return "NO_JOB_TITLE";
@@ -198,16 +182,13 @@ async function getFreeViewersData(data) {
             "accept": "application/vnd.linkedin.normalized+json+2.1",
             "accept-language": "en-US,en;q=0.9",
             "csrf-token": data.jsession_id,
-            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
             "sec-ch-ua-mobile": "?0",
-            // "sec-ch-ua-platform": "\"Windows\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "x-li-lang": "en_US",
             "x-li-page-instance": "urn:li:page:d_flagship3_leia_profile_views;WU4AeSW4S6m16ZjWL3nHsw==",
             "x-li-pem-metadata": "Voyager - Premium - WVMP=analytics-card-batch-get",
-            // "x-li-track": "{\"clientVersion\":\"1.13.10994\",\"mpVersion\":\"1.13.10994\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
             "Referer": "https://www.linkedin.com/analytics/profile-views/",
@@ -218,6 +199,7 @@ async function getFreeViewersData(data) {
 
         if (!response) {
             // TODO: Send an emergency notification to the Developer & Client
+            logger.log(1, "No response from linkedin api for  getting free viewer's data.");
             return;
         }
 
@@ -244,8 +226,6 @@ async function getFreeViewersData(data) {
                 }
             }
         }
-
-        // console.log(viewsin24Hrs);
 
         let viewersData = {};
         viewersData["uuid"] = data.uuid;
@@ -274,8 +254,6 @@ async function getFreeViewersData(data) {
                 const viewer = viewersData.profile_data[i];
 
                 await utils.checkDatabaseConnection();
-
-                // const Person = mongoose.connection.model("Person");
                 const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                 if (personData.length == 0) {
@@ -308,6 +286,7 @@ async function getFreeViewersData(data) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     };
 };
 
@@ -317,16 +296,13 @@ async function getPremiumViewersData(data) {
             "accept": "application/vnd.linkedin.normalized+json+2.1",
             "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
             "csrf-token": data.jsession_id,
-            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
             "sec-ch-ua-mobile": "?0",
-            // "sec-ch-ua-platform": "\"Windows\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "x-li-lang": "en_US",
             "x-li-page-instance": "urn:li:page:d_flagship3_leia_profile_views;zR1VyZsJQaWNibtZVPuZ4w==",
             "x-li-pem-metadata": "Voyager - Premium - WVMP=analytics-entity-list-display",
-            // "x-li-track": "{\"clientVersion\":\"1.13.10994\",\"mpVersion\":\"1.13.10994\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
             "Referer": "https://www.linkedin.com/analytics/profile-views/?timeRange=past_2_weeks",
@@ -349,6 +325,7 @@ async function getPremiumViewersData(data) {
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
+                logger.log(1, "No response from linkeidn api for premium viewer's data");
                 return;
             }
 
@@ -404,7 +381,6 @@ async function getPremiumViewersData(data) {
 
                     await utils.checkDatabaseConnection();
 
-                    // const Person = mongoose.connection.model("Person");
                     const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                     if (personData.length == 0) {
@@ -441,6 +417,7 @@ async function getPremiumViewersData(data) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 }
 
@@ -452,15 +429,12 @@ async function getRecentEngagements(data) {
             "accept": "application/vnd.linkedin.normalized+json+2.1",
             "accept-language": "en-US,en;q=0.9",
             "csrf-token": data.jsession_id,
-            // "sec-ch-ua": "\"Chromium\";v=\"122\", \"Not(A:Brand\";v=\"24\", \"Google Chrome\";v=\"122\"",
             "sec-ch-ua-mobile": "?0",
-            // "sec-ch-ua-platform": "\"Windows\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "x-li-lang": "en_US",
             "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base_recent_activity_content_view;rZo8oOd3TJ2HB6VGXLR0qw==",
-            // "x-li-track": "{\"clientVersion\":\"1.13.11688\",\"mpVersion\":\"1.13.11688\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
             "Referer": `https://www.linkedin.com/in/${data.urn.split(':')[-1]}/recent-activity/all/`,
@@ -483,6 +457,7 @@ async function getRecentEngagements(data) {
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
+                logger.log(1, "No response from LinkedIn API for getting recent engagements");
                 return postsIDs;
             }
 
@@ -514,6 +489,7 @@ async function getRecentEngagements(data) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 
     return postsIDs;
@@ -525,16 +501,13 @@ async function getComments(data, postID) {
             "accept": "application/vnd.linkedin.normalized+json+2.1",
             "accept-language": "en-US,en;q=0.9",
             "csrf-token": data.jsession_id,
-            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
             "sec-ch-ua-mobile": "?0",
-            // "sec-ch-ua-platform": "\"Windows\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "x-li-lang": "en_US",
             "x-li-page-instance": "urn:li:page:d_flagship3_detail_base;1E7brz1+RyGqOmx/Xv/YYA==",
             "x-li-pem-metadata": "Voyager - Feed - Comments=load-comments",
-            // "x-li-track": "{\"clientVersion\":\"1.13.11186\",\"mpVersion\":\"1.13.11186\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
             "Referer": `https://www.linkedin.com/feed/update/urn:li:activity:${postID}/`,
@@ -544,8 +517,6 @@ async function getComments(data, postID) {
         let variables = `variables=(count:10,numReplies:1,socialDetailUrn:urn%3Ali%3Afsd_socialDetail%3A%28urn%3Ali%3Aactivity%3A${postID}%2Curn%3Ali%3Aactivity%3A${postID}%2Curn%3Ali%3AhighlightedReply%3A-%29,sortOrder:REVERSE_CHRONOLOGICAL,start:0)&queryId=voyagerSocialDashComments.c8848fd440e02d7ae3d4c5e06280856b`
         let hasPagination = false;
         let start = 0;
-
-        // let wrongDays = 0;
 
         while (true) {
             if (hasPagination) {
@@ -558,6 +529,7 @@ async function getComments(data, postID) {
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
+                logger.log(1, "No response from LinkedIn for comments request");
                 return;
             }
 
@@ -574,15 +546,8 @@ async function getComments(data, postID) {
 
                 if (Object.keys(comment).includes("commentary")) {
                     if (!comment.commenter.author) {
-                        // if (moment.utc().format('D') !== moment.unix(comment.createdAt / 1000).format('D')) {
-                        //     wrongDays += 1;
-                        //     if (wrongDays >= 5) break;
-                        //     continue;
-                        // }
-
                         await utils.checkDatabaseConnection();
 
-                        // const Person = mongoose.connection.model("Person");
                         const personData = await Person.find({ person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid }).exec();
 
                         if (personData.length == 0) {
@@ -623,36 +588,9 @@ async function getComments(data, postID) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     };
 };
-
-// async function getJobTitlesForPersons() {
-//     try {
-
-//         while (true) {
-//             const dbStatus = await utils.checkDatabaseConnection();
-
-//             if (dbStatus == "success") {
-//                 break;
-//             }
-
-//         }
-
-//         console.log("Starting to check for new Persons to get JOB_TITLES for...");
-
-//         const Cookie = mongoose.connection.model("Cookie");
-//         const Person = mongoose.connection.model("Person");
-//         const persons = await Person.find({ job_title: "NULL" }).exec();
-
-//         for (let i = 0; i < persons.length; i++) {
-//             const cookie = await Cookie.findOne({ urn: persons[i].urn, uuid: persons[i].uuid }).exec()
-//             await getJobTitle(persons[i], cookie)
-//         };
-
-//     } catch (error) {
-//         console.trace(error);
-//     };
-// };
 
 async function getReactions(data, postID) {
     try {
@@ -660,15 +598,12 @@ async function getReactions(data, postID) {
             "accept": "application/vnd.linkedin.normalized+json+2.1",
             "accept-language": "en-US,en;q=0.9",
             "csrf-token": data.jsession_id,
-            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
             "sec-ch-ua-mobile": "?0",
-            // "sec-ch-ua-platform": "\"Windows\"",
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "x-li-lang": "en_US",
             "x-li-page-instance": "urn:li:page:d_flagship3_detail_base;1E7brz1+RyGqOmx/Xv/YYA==",
-            // "x-li-track": "{\"clientVersion\":\"1.13.11186\",\"mpVersion\":\"1.13.11186\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
             "Referer": `https://www.linkedin.com/feed/update/urn:li:activity:${postID}/`,
@@ -690,6 +625,7 @@ async function getReactions(data, postID) {
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
+                logger.log(1, "No response from linkedin api for reactions request");
                 return;
             }
 
@@ -708,7 +644,6 @@ async function getReactions(data, postID) {
 
                     await utils.checkDatabaseConnection();
 
-                    // const Person = mongoose.connection.model("Person");
                     const personData = await Person.find({ person_urn: reaction.actorUrn, uuid: data.uuid }).exec();
 
                     if (personData.length == 0) {
@@ -747,6 +682,7 @@ async function getReactions(data, postID) {
         }
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 }
 
@@ -766,15 +702,15 @@ async function cron(data) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     };
 };
 
 async function sendDataToCustomer(customer) {
     try {
-        console.log("Sending the data CSV file to customer: ", customer.name, customer.email);
+        logger.log(2, `Sending the data CSV file to customer: ${customer.name} - ${customer.email}`);
         await utils.checkDatabaseConnection();
 
-        // const Person = mongoose.connection.model("Person");
         const persons = await Person.find({ uuid: customer.uuid, urn: customer.urn }).exec();
 
         if (!persons || persons.length == 0) {
@@ -825,10 +761,6 @@ async function sendDataToCustomer(customer) {
             to: customer.email,
             subject: 'Weekly LinkedIn HotLeads Data Extraction Report',
             text: 'The CSV file with the data is attached.',
-            //html: `
-            //  <h1>Sample Heading Here</h1>
-            //  <p>message here</p>
-            //`,
             attachments: [
                 {
                     filename: 'linkedin_hotleads_data.csv',
@@ -840,10 +772,12 @@ async function sendDataToCustomer(customer) {
         // TODO: Handle the error properly
         transporter.sendMail(mailOptions, async function (error, info) {
             if (error) {
-                console.log("Error occured while trying to send the Email to customer: ", customer.uuid);
+                logger.log(0, `Error occured while trying to send the Email to customer: ${customer.uuid}`)
                 console.trace(error);
+                logger.log(0, error);
             } else {
-                console.log("Sent the data CSV file to customer: ", customer.uuid);
+                console.log();
+                logger.log(2, `Sent the data CSV file to customer: ${customer.uuid}`);
                 unlinkSync(`./csv_files/${customer.uuid}.csv`);
                 await Person.deleteMany({ uuid: customer.uuid, urn: customer.urn }).exec();
             }
@@ -851,6 +785,7 @@ async function sendDataToCustomer(customer) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 };
 
@@ -868,17 +803,16 @@ async function profileViewCron(data, isLastProfile) {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     };
 };
 
 async function checkForFinishedCrons() {
     try {
-
-        console.log("Starting the Finished Crons Checking Process...");
+        logger.log(2, "Starting the Finished Crons Checking Process...");
 
         while (true) {
             const cookies = await getAllUpdatedCookies("NO");
-            // const Customer = mongoose.connection.model("Customer");
 
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i];
@@ -893,6 +827,7 @@ async function checkForFinishedCrons() {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     };
 };
 
@@ -908,16 +843,16 @@ async function main() {
         if (CRON_STATUS === 1) { return }; // Avoid multiple execution of the script at the same time
         CRON_STATUS = 1;
 
-        console.log("Cron is Up & Running!");
+        logger.log(2, "Cron is Up & Running!");
 
         while (true) {
 
             if (moment.utc().hour() == 0 && moment.utc().minutes() <= 5 && PROFILE_CRON_RUNNING == 0) {
-                console.log("Checking MongoDB Connection...");
+                logger.log(2, "Checking MongoDB Connection...");
                 const dbStatus = await utils.checkDatabaseConnection();
                 if (dbStatus == "failure") { continue };
 
-                console.log("Starting the Profile View Scraping Process...");
+                logger.log(2, "Starting the Profile View Scraping Process...");
                 const cookies = await getAllUpdatedCookies("NO");
 
                 PROFILE_CRON_RUNNING = 1;
@@ -930,11 +865,11 @@ async function main() {
 
             if (moment.utc().day() == 7 && moment.utc().hour() == 0 && MAIN_CRON_RUNNING == 0) {
                 try {
-                    console.log("Checking MongoDB Connection...");
+                    logger.log(2, "Checking MongoDB Connection...")
                     const dbStatus = await utils.checkDatabaseConnection();
                     if (dbStatus == "failure") { continue };
 
-                    console.log("Starting the Interaction Scraping Process...");
+                    logger.log(2, "Starting the Interaction Scraping Process...")
                     const cookies = await getAllUpdatedCookies("NO");
 
                     if (cookies.length > 0) {
@@ -957,16 +892,17 @@ async function main() {
                     
                 } catch (error) {
                     console.trace(error);
+                    logger.log(0, error);
                     MAIN_CRON_RUNNING = 0;
                 };
             };
 
             await sleep(5 * 60); // Check after every 5 minutes
-            // await getJobTitlesForPersons();
         }
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
         CRON_STATUS = 0;
     };
 };

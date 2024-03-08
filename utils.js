@@ -3,9 +3,9 @@ const { v4: uuidv4 } = require('uuid');
 const axios = require("axios").default;
 const moment = require("moment");
 
+const logger = require("./logger");
 const initializeDatabase = require("./db");
 const Cookie = require("./models/Cookie");
-// const Person = require("./models/Person");
 const Customer = require("./models/Customer");
 const cron = require("./cron");
 
@@ -24,6 +24,7 @@ async function checkDatabaseConnection() {
         };
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     };
 
     return "failure";
@@ -31,17 +32,15 @@ async function checkDatabaseConnection() {
 
 async function keepTheServerRunning() {
     try {
-        // console.log("Connecting to MongoDB...");
-
         while (true) {
 
             if (mongoose.connection.readyState !== 1) {
                 try {
-                    // console.log("Doing it ===", mongoose.connection.readyState, "===")
                     await initializeDatabase();
                     cron();
                 } catch (error) {
                     console.trace(error);
+                    logger.log(0, error);
                 };
             };
 
@@ -51,6 +50,7 @@ async function keepTheServerRunning() {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 }
 
@@ -85,6 +85,7 @@ function parseJSON(str) {
         )
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 }
 
@@ -102,6 +103,7 @@ function getIncluded(response) {
         return data.included;
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 }
 
@@ -121,6 +123,7 @@ async function makeGetRequest(url, headers) {
         }
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 
     return response;
@@ -136,9 +139,7 @@ const getCustomerInfo = async (data) => {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "accept-language": "en-US,en;q=0.9",
             "cache-control": "max-age=0",
-            // "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
             "sec-ch-ua-mobile": "?0",
-            // "sec-ch-ua-platform": "\"Windows\"",
             "sec-fetch-dest": "document",
             "sec-fetch-mode": "navigate",
             "sec-fetch-site": "none",
@@ -151,6 +152,7 @@ const getCustomerInfo = async (data) => {
 
         if (!response) {
             // TODO: Send an emergency notification to the Developer & Client
+            logger.log(1, 'Failed to fetch customer info from LinkedIn');
             return return_data;
         }
 
@@ -188,6 +190,7 @@ const getCustomerInfo = async (data) => {
 
     } catch (error) {
         console.trace(error);
+        logger.log(0, error);
     }
 
     return return_data;
@@ -203,16 +206,11 @@ async function handleCookies(data) {
         const li_at = getCookie(data.cookies, "li_at");
         const jsession_id = getCookie(data.cookies, "JSESSIONID").split('"').join("");
 
-        // console.log("USER_ID_1: ", userID);
-
         if (userID && userID !== "NO_URL" && typeof userID !== "undefined") {
             if (userID.length === 0) { return };
 
             userID = userID.split("/in/")[1].split("/")[0];
-            // console.log("USER_ID_2: ", userID);
 
-            // const Customer = mongoose.connection.model("Customer");
-            // const Cookie = mongoose.connection.model("Cookie");
             const alreadyExists = await Customer.find({ user_id: userID }).exec();
             const cookieExists = await Cookie.find({ user_id: userID }).exec();
 
@@ -246,21 +244,22 @@ async function handleCookies(data) {
 
                 await newCookie.save();
 
-                console.log("New Customer Added: ", customerInfo.name, userEmail, customerInfo.urn)
-                console.log("New Cookie Added: ", userID, newUUID);
+                logger.log(2, `New Customer Added: ${customerInfo.name}, ${userEmail}, ${customerInfo.urn}`);
+                logger.log(2, `New Cookie Added: ${userID}, ${newUUID}`);
 
             } else {
                 if (cookieExists[0].li_at !== li_at || cookieExists[0].jsession_id !== jsession_id) {
                     await Cookie.updateOne({ user_id: userID, uuid: cookieExists[0].uuid }, { li_at: li_at, jsession_id: jsession_id }).exec();
-                    console.log("Cookie Updated for UUID: ", cookieExists[0].uuid);
+                    logger.log(2, `Cookie Updated for UUID: ${cookieExists[0].uuid}`);
                 } else {
-                    console.log("No Change in Cookie: ", userID, userEmail);
+                    logger.log(2, `"No Change in Cookie: ${userID}, ${userEmail}`);
                 }
             };
         }
 
     } catch (err) {
         console.trace(err);
+        logger.log(0, err);
     };
 };
 
