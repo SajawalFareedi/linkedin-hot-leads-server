@@ -25,8 +25,15 @@ app.post("/", (req, res) => {
 
 });
 
-// TODO: Create route for downloading log files
+app.get("/download_log_file", (req, res) => {
+    const filename = req.query.filename;
+
+    if (!filename) return res.status(400).send("Missing file path in query params.");
+    if (!["errors", "info", "warnings"].includes(filename)) return res.status(400).send("This provided file is not available.");
+
+    res.download(`./logs/${filename}.log`);
+})
 
 app.listen(PORT, () => {
-    console.log(`\nServer is running on port ${PORT}`);
+    logger.log(2, `\nServer is running on port ${PORT}`);
 });
