@@ -257,7 +257,7 @@ async function getFreeViewersData(data) {
                 const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                 if (personData.length == 0) {
-                    const jobTitle = await getJobTitle(viewer.person_urn, data);
+                    const jobTitle = await getJobTitle(viewer.person_urn.split(":")[-1], data);
 
                     const newPerson = new Person({
                         uuid: viewersData.uuid,
@@ -384,7 +384,7 @@ async function getPremiumViewersData(data) {
                     const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                     if (personData.length == 0) {
-                        const jobTitle = await getJobTitle(viewer.person_urn, data);
+                        const jobTitle = await getJobTitle(viewer.person_urn.split(":")[-1], data);
 
                         const newPerson = new Person({
                             uuid: viewersData.uuid,
@@ -554,7 +554,7 @@ async function getComments(data, postID) {
 
                             const firstName = comment.commenter.title.text.split(" ")[0]
                             const lastName = comment.commenter.title.text.split(" ").slice(1).join(' ');
-                            const jobTitle = await getJobTitle(comment.commenter.actor["*profileUrn"], data);
+                            const jobTitle = await getJobTitle(comment.commenter.actor["*profileUrn"].split(":")[-1], data);
 
                             const newPerson = new Person({
                                 uuid: data.uuid,
@@ -650,7 +650,7 @@ async function getReactions(data, postID) {
 
                         const firstName = reaction.reactorLockup.title.text.split(" ")[0]
                         const lastName = reaction.reactorLockup.title.text.split(" ").slice(1).join(' ');
-                        const jobTitle = await getJobTitle(reaction.actorUrn, data);
+                        const jobTitle = await getJobTitle(reaction.actorUrn.split(":")[-1], data);
 
                         const newPerson = new Person({
                             uuid: data.uuid,
