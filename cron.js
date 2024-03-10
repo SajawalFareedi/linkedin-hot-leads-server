@@ -138,7 +138,7 @@ async function getJobTitle(person_urn, data) {
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        const url = `https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(profileUrn:urn%3Ali%3Afsd_profile%3A${person_urn})&queryId=voyagerIdentityDashProfileCards.c78038c1bbcf9183f894d26cbd4f462a`
+        const url = `https://www.linkedin.com/voyager/api/graphql?variables=(profileUrn:urn%3Ali%3Afsd_profile%3A${person_urn})&queryId=voyagerIdentityDashProfileCards.c78038c1bbcf9183f894d26cbd4f462a`
 
         const response = await utils.makeGetRequest(url, headers);
 
@@ -161,7 +161,9 @@ async function getJobTitle(person_urn, data) {
                         try {
                             const jobTitle = topComponent.fixedListComponent.components[0].components.entityComponent.titleV2.text.text;
                             return jobTitle;
-                        } catch (error) { return "NO_JOB_TITLE" };
+                        } catch (error) {
+                            return "NO_JOB_TITLE"
+                        };
                     }
                 }
             }
@@ -257,7 +259,7 @@ async function getFreeViewersData(data) {
                 const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                 if (personData.length == 0) {
-                    const jobTitle = await getJobTitle(viewer.person_urn.split(":")[-1], data);
+                    const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
 
                     const newPerson = new Person({
                         uuid: viewersData.uuid,
@@ -384,7 +386,7 @@ async function getPremiumViewersData(data) {
                     const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
 
                     if (personData.length == 0) {
-                        const jobTitle = await getJobTitle(viewer.person_urn.split(":")[-1], data);
+                        const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
 
                         const newPerson = new Person({
                             uuid: viewersData.uuid,
@@ -412,6 +414,7 @@ async function getPremiumViewersData(data) {
             }
 
             if (start >= paging.total) break;
+            if (start == 0 && paging.total <= 10) break;
             start += 10;
         }
 
@@ -437,18 +440,18 @@ async function getRecentEngagements(data) {
             "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base_recent_activity_content_view;rZo8oOd3TJ2HB6VGXLR0qw==",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
-            "Referer": `https://www.linkedin.com/in/${data.urn.split(':')[-1]}/recent-activity/all/`,
+            "Referer": `https://www.linkedin.com/in/${data.urn.split(':').at(-1)}/recent-activity/all/`,
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        let variables = `variables=(count:20,start:0,profileUrn:urn%3Ali%3Afsd_profile%3A${data.urn.split(':')[-1]})&queryId=voyagerFeedDashProfileUpdates.53c3a4bd255094f16123c5b4ed7ad0dc`
+        let variables = `variables=(count:20,start:0,profileUrn:urn%3Ali%3Afsd_profile%3A${data.urn.split(':').at(-1)})&queryId=voyagerFeedDashProfileUpdates.53c3a4bd255094f16123c5b4ed7ad0dc`
         let hasPagination = false;
         let paginationToken = "";
         let start = 0;
 
         while (true) {
             if (hasPagination) {
-                variables = `variables=(count:20,start:${start},profileUrn:urn%3Ali%3Afsd_profile%3A${data.urn.split(':')[-1]},paginationToken:${paginationToken})&queryId=voyagerFeedDashProfileUpdates.53c3a4bd255094f16123c5b4ed7ad0dc`;
+                variables = `variables=(count:20,start:${start},profileUrn:urn%3Ali%3Afsd_profile%3A${data.urn.split(':').at(-1)},paginationToken:${paginationToken})&queryId=voyagerFeedDashProfileUpdates.53c3a4bd255094f16123c5b4ed7ad0dc`;
             }
 
             const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
@@ -473,14 +476,15 @@ async function getRecentEngagements(data) {
             for (let i = 0; i < postsList.length; i++) {
                 const post = postsList[i];
 
-                if (post.commentary) {
+                if (post.actor) {
                     if (isWithin7Days(post.actor.subDescription.text, true)) {
-                        postsIDs.push(post.entityUrn.split(":")[-1].split(",")[0]);
+                        postsIDs.push(post.entityUrn.split(":").at(-1).split(",")[0]);
                     }
                 }
             }
 
             if (start >= paging.total) break;
+            if (start == 0 && paging.total <= 20) break;
             start += 20;
 
         }
@@ -518,6 +522,8 @@ async function getComments(data, postID) {
         let hasPagination = false;
         let start = 0;
 
+        // console.log("Getting Comments...");
+
         while (true) {
             if (hasPagination) {
                 variables = `variables=(count:10,numReplies:1,socialDetailUrn:urn%3Ali%3Afsd_socialDetail%3A%28urn%3Ali%3Aactivity%3A${postID}%2Curn%3Ali%3Aactivity%3A${postID}%2Curn%3Ali%3AhighlightedReply%3A-%29,sortOrder:REVERSE_CHRONOLOGICAL,start:${start})&queryId=voyagerSocialDashComments.c8848fd440e02d7ae3d4c5e06280856b`;
@@ -554,7 +560,7 @@ async function getComments(data, postID) {
 
                             const firstName = comment.commenter.title.text.split(" ")[0]
                             const lastName = comment.commenter.title.text.split(" ").slice(1).join(' ');
-                            const jobTitle = await getJobTitle(comment.commenter.actor["*profileUrn"].split(":")[-1], data);
+                            const jobTitle = await getJobTitle(comment.commenter.actor["*profileUrn"].split(":").at(-1), data);
 
                             const newPerson = new Person({
                                 uuid: data.uuid,
@@ -583,6 +589,7 @@ async function getComments(data, postID) {
             }
 
             if (start >= paging.total) break;
+            if (start == 0 && paging.total <= 10) break;
             start += 10;
         }
 
@@ -613,6 +620,8 @@ async function getReactions(data, postID) {
         let variables = `variables=(count:10,start:0,threadUrn:urn%3Ali%3Aactivity%3A${postID})&queryId=voyagerSocialDashReactions.56bde53f0c6873eb4870f5a25da96573`
         let hasPagination = false;
         let start = 0;
+
+        // console.log("Getting Reactions...");
 
         while (true) {
             if (hasPagination) {
@@ -650,7 +659,7 @@ async function getReactions(data, postID) {
 
                         const firstName = reaction.reactorLockup.title.text.split(" ")[0]
                         const lastName = reaction.reactorLockup.title.text.split(" ").slice(1).join(' ');
-                        const jobTitle = await getJobTitle(reaction.actorUrn.split(":")[-1], data);
+                        const jobTitle = await getJobTitle(reaction.actorUrn.split(":").at(-1), data);
 
                         const newPerson = new Person({
                             uuid: data.uuid,
@@ -675,10 +684,11 @@ async function getReactions(data, postID) {
                         }).exec();
                     }
                 }
-
-                if (start >= paging.total) break;
-                start += 10;
             }
+
+            if (start >= paging.total) break;
+            if (start == 0 && paging.total <= 10) break;
+            start += 10;
         }
     } catch (error) {
         console.trace(error);
@@ -689,16 +699,15 @@ async function getReactions(data, postID) {
 async function cron(data) {
     try {
 
+        await updateCookie(data.uuid, { running: "YES" });
         const postsIDs = await getRecentEngagements(data);
 
         for (let i = 0; i < postsIDs.length; i++) {
-            const postID = postsIDs[i];
-            await getComments(data, postID);
-            await getReactions(data, postID);
+            await getComments(data, postsIDs[i]);
+            await getReactions(data, postsIDs[i]);
         }
 
         await updateCookie(data.uuid, { running: "NO" });
-
 
     } catch (error) {
         console.trace(error);
@@ -708,7 +717,6 @@ async function cron(data) {
 
 async function sendDataToCustomer(customer) {
     try {
-        logger.log(2, `Sending the data CSV file to customer: ${customer.name} - ${customer.email}`);
         await utils.checkDatabaseConnection();
 
         const persons = await Person.find({ uuid: customer.uuid, urn: customer.urn }).exec();
@@ -745,7 +753,7 @@ async function sendDataToCustomer(customer) {
                 { id: 'Profile Url', title: 'Profile Url' },
                 { id: 'Profile Headline', title: 'Profile Headline' },
                 { id: 'Job Title', title: 'Job Title' },
-                { id: 'Comments Count"', title: 'Comments Count"' },
+                { id: 'Comments Count', title: 'Comments Count' },
                 { id: 'Reactions Count', title: 'Reactions Count' },
                 { id: 'Profile View Count', title: 'Profile View Count' },
                 { id: 'Score', title: 'Score' }
@@ -757,7 +765,7 @@ async function sendDataToCustomer(customer) {
 
         // Send email with CSV attachment
         const mailOptions = {
-            from: 'sajawalfareedi448@gmail.com',
+            from: 'Floppy App <sajawalfareedi448@gmail.com>',
             to: customer.email,
             subject: 'Weekly LinkedIn HotLeads Data Extraction Report',
             text: 'The CSV file with the data is attached.',
@@ -770,14 +778,14 @@ async function sendDataToCustomer(customer) {
         };
 
         // TODO: Handle the error properly
+        logger.log(2, `Sending the data CSV file to customer: ${customer.name} - ${customer.email}`);
         transporter.sendMail(mailOptions, async function (error, info) {
             if (error) {
                 logger.log(0, `Error occured while trying to send the Email to customer: ${customer.uuid}`)
                 console.trace(error);
                 logger.log(0, error);
             } else {
-                console.log();
-                logger.log(2, `Sent the data CSV file to customer: ${customer.uuid}`);
+                logger.log(2, `Sent the data CSV file to customer: ${customer.name} - ${customer.email}`);
                 unlinkSync(`./csv_files/${customer.uuid}.csv`);
                 await Person.deleteMany({ uuid: customer.uuid, urn: customer.urn }).exec();
             }
@@ -799,6 +807,7 @@ async function profileViewCron(data, isLastProfile) {
 
         if (isLastProfile) {
             PROFILE_CRON_RUNNING = 0;
+            // logger.log(2, "Profile View Scraping finished...")
         }
 
     } catch (error) {
@@ -821,7 +830,7 @@ async function checkForFinishedCrons() {
                 await Customer.updateOne({ uuid: cookie.uuid, urn: cookie.urn }, { last_ran: moment.utc().format() }).exec();
             }
 
-            await sleep(30 * 60);  // Wait for 10 minutes before checking again
+            await sleep(10 * 60);  // Wait for 10 minutes before checking again
 
         }
 
@@ -863,7 +872,7 @@ async function main() {
                 };
             };
 
-            if (moment.utc().day() == 7 && moment.utc().hour() == 0 && MAIN_CRON_RUNNING == 0) {
+            if (moment.utc().day() == 0 && moment.utc().hour() == 0 && MAIN_CRON_RUNNING == 0) {
                 try {
                     logger.log(2, "Checking MongoDB Connection...")
                     const dbStatus = await utils.checkDatabaseConnection();
@@ -875,21 +884,15 @@ async function main() {
                     if (cookies.length > 0) {
                         MAIN_CRON_RUNNING = 1;
 
-                        for (let i = 0; i < cookies.length; i++) {
-
-                            if (cookies[i].running === "NO") {
-                                cron(cookies[i]);
-                            }
-
-                            await updateCookie(cookies[i].uuid, { running: "YES" });
-
-                        };
+                        let crons = [];
+                        for (let i = 0; i < cookies.length; i++) { crons.push(cron(cookies[i])) };
+                        await Promise.allSettled(crons)
 
                         checkForFinishedCrons();
                     } else {
                         MAIN_CRON_RUNNING = 0;
                     }
-                    
+
                 } catch (error) {
                     console.trace(error);
                     logger.log(0, error);

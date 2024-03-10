@@ -57,6 +57,9 @@ app.get("/delete_log_file", (req, res) => {
     
 });
 
+// TODO: Create a route for generating API Keys
+// TODO: Create a route for validating API Keys
+
 app.listen(PORT, () => {
     logger.log(2, `Server is running on port ${PORT}`);
 });

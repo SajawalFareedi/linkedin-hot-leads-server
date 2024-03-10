@@ -1,1 +1,14 @@
 [2024-03-09T00:04:39Z] [ERROR] AxiosError: Request failed with status code 400
+[2024-03-10T06:40:28Z] [ERROR] TypeError: Cannot read properties of null (reading 'metadata')
+[2024-03-10T06:45:31Z] [ERROR] ReferenceError: log is not defined
+[2024-03-10T07:41:00Z] [ERROR] Error: read ECONNRESET
+[2024-03-10T07:41:00Z] [ERROR] Error: getaddrinfo ENOTFOUND www.linkedin.com
+[2024-03-10T07:41:00Z] [ERROR] Error: getaddrinfo ENOTFOUND www.linkedin.com
+[2024-03-10T07:41:39Z] [ERROR] MongoServerSelectionError: getaddrinfo ENOTFOUND ac-jncw8en-shard-00-01.tt3ronc.mongodb.net
+[2024-03-10T07:42:35Z] [ERROR] Error: querySrv ETIMEOUT _mongodb._tcp.linkedin-db.tt3ronc.mongodb.net
+[2024-03-10T07:43:10Z] [ERROR] Error: querySrv ETIMEOUT _mongodb._tcp.linkedin-db.tt3ronc.mongodb.net
+[2024-03-10T07:47:18Z] [ERROR] Error: connect ETIMEDOUT 13.107.42.14:443
+[2024-03-10T07:47:40Z] [ERROR] Error: connect ETIMEDOUT 13.107.42.14:443
+[2024-03-10T07:48:06Z] [ERROR] Error: connect ETIMEDOUT 13.107.42.14:443
+[2024-03-10T07:57:18Z] [ERROR] Error: connect ETIMEDOUT 13.107.42.14:443
+[2024-03-10T07:57:44Z] [ERROR] Error: connect ETIMEDOUT 13.107.42.14:443
