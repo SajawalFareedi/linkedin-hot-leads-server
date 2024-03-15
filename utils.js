@@ -203,6 +203,7 @@ async function handleCookies(data) {
 
         let userID = data.url;
         let userEmail = data.email;
+        const scrapingDay = data.scraping_day;
         const li_at = getCookie(data.cookies, "li_at");
         const jsession_id = getCookie(data.cookies, "JSESSIONID").split('"').join("");
 
@@ -214,7 +215,7 @@ async function handleCookies(data) {
             const alreadyExists = await Customer.find({ user_id: userID }).exec();
             const cookieExists = await Cookie.find({ user_id: userID }).exec();
 
-            if (alreadyExists.length === 0) {
+            if (alreadyExists.length === 0 && scrapingDay !== "NO_DAY") {
                 const newUUID = uuidv4();
 
                 const customerInfo = await getCustomerInfo({ li_at, jsession_id, userID });
@@ -239,7 +240,8 @@ async function handleCookies(data) {
                     uuid: newUUID,
                     urn: customerInfo.urn,
                     isPremium: customerInfo.isPremium,
-                    running: "NO"
+                    running: "NO",
+                    scraping_day: parseInt(scrapingDay)
                 });
 
                 await newCookie.save();

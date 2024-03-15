@@ -1,21 +1,20 @@
-fetch("https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(vanityName:sajawal-chopra-1ba780267)&queryId=voyagerIdentityDashProfiles.895fdb8a5b9db42b70e4cb37c4a44507", {
+fetch("https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(vanityName:avery-linn-0b28192b5)&queryId=voyagerIdentityDashProfiles.a7bb25702ed96a9dc6301e12423eaa75", {
     "headers": {
         "accept": "application/vnd.linkedin.normalized+json+2.1",
-        "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-        "csrf-token": "ajax:2641296221308317633",
-        "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+        "accept-language": "en-US,en;q=0.9",
+        "csrf-token": "ajax:4904300844858187340",
+        "sec-ch-ua": "\"Chromium\";v=\"122\", \"Not(A:Brand\";v=\"24\", \"Google Chrome\";v=\"122\"",
         "sec-ch-ua-mobile": "?0",
         "sec-ch-ua-platform": "\"Windows\"",
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
         "x-li-lang": "en_US",
-        "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base;plIW4jYVQx+zDYrCb6g14Q==",
+        "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base;UnhkMtL4T16o+Km6zXrZcA==",
         "x-li-pem-metadata": "Voyager - Profile=profile-top-card-supplementary",
-        "x-li-track": "{\"clientVersion\":\"1.13.10994\",\"mpVersion\":\"1.13.10994\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
+        "x-li-track": "{\"clientVersion\":\"1.13.12152\",\"mpVersion\":\"1.13.12152\",\"osName\":\"web\",\"timezoneOffset\":5,\"timezone\":\"Asia/Karachi\",\"deviceFormFactor\":\"DESKTOP\",\"mpName\":\"voyager-web\",\"displayDensity\":1,\"displayWidth\":1920,\"displayHeight\":1080}",
         "x-restli-protocol-version": "2.0.0",
-        "cookie": "li_at=AQEDAUFujR4FLp7wAAABjb04-9wAAAGN4UV_3E4AoAOnEncfwbAqIbLQve6E-1_UDey0sfzgSfkCs9ZJSoFRNh1O0GXMnKwwWV9MJRti7efhY_PTOiON8fJukweOscEN9-R718Ow0LqQZTZ7b-IY9iSN; JSESSIONID=\"ajax:2641296221308317633\"",
-        "Referer": "https://www.linkedin.com/in/sajawal-chopra-1ba780267/",
+        "Referer": "https://www.linkedin.com/in/avery-linn-0b28192b5/",
         "Referrer-Policy": "strict-origin-when-cross-origin"
     },
     "body": null,

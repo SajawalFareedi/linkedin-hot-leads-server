@@ -1,0 +1,635 @@
+{
+    "data": {
+        "data": {
+            "$recipeTypes": [
+                "com.linkedin.6d5e727dbfe12b7a6d15b0137cfc9bf8"
+            ],
+            "identityDashProfilesByMemberIdentity": {
+                "*elements": [
+                    "urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo"
+                ],
+                "$recipeTypes": [
+                    "com.linkedin.d60168e7a560040e2548965dcce1745d"
+                ],
+                "$type": "com.linkedin.restli.common.CollectionResponse"
+            },
+            "$type": "com.linkedin.6d5e727dbfe12b7a6d15b0137cfc9bf8"
+        },
+        "extensions": {
+            "webMetadata": {}
+        }
+    },
+    "included": [
+        {
+            "entityUrn": "urn:li:fsd_followingState:urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+            "following": true,
+            "preDashFollowingInfoUrn": "urn:li:fs_followingInfo:urn:li:member:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+            "followerCount": 1,
+            "$recipeTypes": [
+                "com.linkedin.bc8d1e5d37e54c3a6fc5015c99588987"
+            ],
+            "$type": "com.linkedin.voyager.dash.feed.FollowingState"
+        },
+        {
+            "selectedOptionType": "HIGHLIGHTS",
+            "entityUrn": "urn:li:fsd_edgeSetting:urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+            "title": "Manage notifications from Sajawal",
+            "$recipeTypes": [
+                "com.linkedin.5b8664a2ddb8a9d9bf482b1ab884c285"
+            ],
+            "$type": "com.linkedin.voyager.dash.identity.notifications.edgesetting.EdgeSetting"
+        },
+        {
+            "entityUrn": "urn:li:fsd_profileEducation:(ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo,866285107)",
+            "*school": "urn:li:fsd_school:15898",
+            "*company": "urn:li:fsd_company:933321",
+            "schoolName": "University of the Punjab",
+            "$recipeTypes": [
+                "com.linkedin.fb99c25dbb6a2622e85f146144f70500"
+            ],
+            "$type": "com.linkedin.voyager.dash.identity.profile.Education"
+        },
+        {
+            "lastName": "Chopra",
+            "memorialized": false,
+            "profileTopCardCustomAction": {
+                "$recipeTypes": [
+                    "com.linkedin.990e92548848d29bb8241da2cc5bbdad"
+                ],
+                "elements": [],
+                "$type": "com.linkedin.restli.common.CollectionResponse"
+            },
+            "tempStatusEmoji": null,
+            "creatorWebsite": null,
+            "profileDiscoveryDrawerInfo": {
+                "$recipeTypes": [
+                    "com.linkedin.65f6893367312799f4fbf5437fb3bf32"
+                ],
+                "elements": [],
+                "$type": "com.linkedin.restli.common.CollectionResponse"
+            },
+            "profileTopPosition": {
+                "paging": {
+                    "count": 1,
+                    "start": 0,
+                    "total": 0,
+                    "$recipeTypes": [
+                        "com.linkedin.082160e00bdf395139641f7565e8e87f"
+                    ],
+                    "$type": "com.linkedin.restli.common.CollectionMetadata"
+                },
+                "$recipeTypes": [
+                    "com.linkedin.629bfd4673bb422ad4d3a0c53dfbfc35"
+                ],
+                "elements": [],
+                "$type": "com.linkedin.restli.common.CollectionResponse"
+            },
+            "multiLocaleFullNamePronunciationAudio": [],
+            "profileInsight": {
+                "$recipeTypes": [
+                    "com.linkedin.f9bf4fe1f9804989bf5045470a2ef764"
+                ],
+                "elements": [],
+                "$type": "com.linkedin.restli.common.CollectionResponse"
+            },
+            "entityUrn": "urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+            "companyNameOnProfileTopCardShown": true,
+            "headline": "Full-Stack Developer",
+            "publicIdentifier": "sajawal-chopra-1ba780267",
+            "profileStatefulProfileActions": {
+                "secondaryActionResolutionResult": null,
+                "primaryActionResolutionResult": {
+                    "personalizedConnect": null,
+                    "saveToPdf": null,
+                    "shareProfileUrlViaMessage": null,
+                    "saveToPdfUrl": null,
+                    "saveInSalesNavigatorState": null,
+                    "statefulAction": null,
+                    "viewProfileInExternalContext": null,
+                    "statelessAction": null,
+                    "*composeOption": "urn:li:fsd_composeOption:(ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo,NON_SELF_PROFILE_VIEW,EMPTY_CONTEXT_ENTITY_URN)",
+                    "followingState": null,
+                    "report": null,
+                    "ignore": null,
+                    "connection": null,
+                    "shareProfileUrl": null,
+                    "withdraw": null
+                },
+                "trackingIdentifier": null,
+                "supplementaryAction": null,
+                "overflowActionsResolutionResults": [
+                    {
+                        "personalizedConnect": null,
+                        "shareProfileUrlViaMessage": "https://www.linkedin.com/in/sajawal-chopra-1ba780267",
+                        "saveToPdf": null,
+                        "composeOption": null,
+                        "saveToPdfUrl": null,
+                        "saveInSalesNavigatorState": null,
+                        "statefulAction": null,
+                        "viewProfileInExternalContext": null,
+                        "statelessAction": null,
+                        "followingState": null,
+                        "report": null,
+                        "ignore": null,
+                        "connection": null,
+                        "shareProfileUrl": null,
+                        "withdraw": null
+                    },
+                    {
+                        "personalizedConnect": null,
+                        "saveToPdf": null,
+                        "shareProfileUrlViaMessage": null,
+                        "saveToPdfUrl": "https://www.linkedin.com/profile/pdf?id=ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo&locale=en_US&authType=name&authToken=YBkS&disablePdfCompression=true&trk=pdf_pro_full",
+                        "composeOption": null,
+                        "saveInSalesNavigatorState": null,
+                        "statefulAction": null,
+                        "viewProfileInExternalContext": null,
+                        "statelessAction": null,
+                        "followingState": null,
+                        "report": null,
+                        "ignore": null,
+                        "connection": null,
+                        "shareProfileUrl": null,
+                        "withdraw": null
+                    },
+                    {
+                        "personalizedConnect": null,
+                        "saveToPdf": null,
+                        "shareProfileUrlViaMessage": null,
+                        "composeOption": null,
+                        "saveToPdfUrl": null,
+                        "saveInSalesNavigatorState": null,
+                        "statefulAction": null,
+                        "viewProfileInExternalContext": null,
+                        "statelessAction": "APPRECIATE",
+                        "followingState": null,
+                        "report": null,
+                        "ignore": null,
+                        "connection": null,
+                        "shareProfileUrl": null,
+                        "withdraw": null
+                    },
+                    {
+                        "personalizedConnect": null,
+                        "saveToPdf": null,
+                        "shareProfileUrlViaMessage": null,
+                        "composeOption": null,
+                        "saveToPdfUrl": null,
+                        "saveInSalesNavigatorState": null,
+                        "statefulAction": null,
+                        "viewProfileInExternalContext": null,
+                        "statelessAction": "REQUEST_RECOMMENDATION",
+                        "followingState": null,
+                        "report": null,
+                        "ignore": null,
+                        "connection": null,
+                        "shareProfileUrl": null,
+                        "withdraw": null
+                    },
+                    {
+                        "personalizedConnect": null,
+                        "saveToPdf": null,
+                        "shareProfileUrlViaMessage": null,
+                        "composeOption": null,
+                        "saveToPdfUrl": null,
+                        "saveInSalesNavigatorState": null,
+                        "statefulAction": null,
+                        "viewProfileInExternalContext": null,
+                        "statelessAction": "RECOMMEND",
+                        "followingState": null,
+                        "report": null,
+                        "ignore": null,
+                        "connection": null,
+                        "shareProfileUrl": null,
+                        "withdraw": null
+                    },
+                    {
+                        "personalizedConnect": null,
+                        "saveToPdf": null,
+                        "shareProfileUrlViaMessage": null,
+                        "composeOption": null,
+                        "saveToPdfUrl": null,
+                        "saveInSalesNavigatorState": null,
+                        "statefulAction": null,
+                        "viewProfileInExternalContext": null,
+                        "statelessAction": null,
+                        "report": null,
+                        "ignore": null,
+                        "connection": null,
+                        "shareProfileUrl": null,
+                        "*followingState": "urn:li:fsd_followingState:urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+                        "withdraw": null
+                    },
+                    {
+                        "personalizedConnect": null,
+                        "saveToPdf": null,
+                        "shareProfileUrlViaMessage": null,
+                        "composeOption": null,
+                        "saveToPdfUrl": null,
+                        "saveInSalesNavigatorState": null,
+                        "statefulAction": null,
+                        "viewProfileInExternalContext": null,
+                        "statelessAction": null,
+                        "followingState": null,
+                        "report": null,
+                        "ignore": null,
+                        "connection": {
+                            "*memberRelationship": "urn:li:fsd_memberRelationship:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+                            "$recipeTypes": [
+                                "com.linkedin.043da59984cc55723c07d67c6d7bed39"
+                            ],
+                            "$type": "com.linkedin.voyager.dash.relationships.MemberRelationshipWrapper"
+                        },
+                        "shareProfileUrl": null,
+                        "withdraw": null
+                    },
+                    {
+                        "personalizedConnect": null,
+                        "saveToPdf": null,
+                        "shareProfileUrlViaMessage": null,
+                        "composeOption": null,
+                        "saveToPdfUrl": null,
+                        "saveInSalesNavigatorState": null,
+                        "statefulAction": null,
+                        "viewProfileInExternalContext": null,
+                        "statelessAction": null,
+                        "followingState": null,
+                        "report": {
+                            "contentSource": "PROFILE",
+                            "targetUrn": "urn:li:member:1097764126",
+                            "authorProfileId": "ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+                            "$recipeTypes": [
+                                "com.linkedin.194d6d626dc8a47b0e1bad5ce0dd3cce"
+                            ],
+                            "$type": "com.linkedin.voyager.dash.common.semaphore.SemaphoreContext"
+                        },
+                        "ignore": null,
+                        "connection": null,
+                        "shareProfileUrl": null,
+                        "withdraw": null
+                    }
+                ],
+                "$recipeTypes": [
+                    "com.linkedin.cc6922dfb3aaf3b023bb5d734792ab10"
+                ],
+                "$type": "com.linkedin.voyager.dash.identity.profile.actions.ProfileActions"
+            },
+            "fullNamePronunciationAudio": null,
+            "connections": {
+                "paging": {
+                    "count": 1,
+                    "start": 0,
+                    "total": 1,
+                    "$recipeTypes": [
+                        "com.linkedin.082160e00bdf395139641f7565e8e87f"
+                    ],
+                    "$type": "com.linkedin.restli.common.CollectionMetadata"
+                },
+                "*elements": [
+                    "urn:li:fsd_connection:ACoAADLg72QBzrv5WVKEJAY_-5mCgkNvhntZGj0"
+                ],
+                "$recipeTypes": [
+                    "com.linkedin.db98a55482971f4c707b69cb5736b7a1"
+                ],
+                "$type": "com.linkedin.restli.common.CollectionResponse"
+            },
+            "verificationData": null,
+            "imFollowsPromoLegoTrackingId": null,
+            "profileTopEducation": {
+                "paging": {
+                    "count": 1,
+                    "start": 0,
+                    "total": 1,
+                    "$recipeTypes": [
+                        "com.linkedin.082160e00bdf395139641f7565e8e87f"
+                    ],
+                    "$type": "com.linkedin.restli.common.CollectionMetadata"
+                },
+                "*elements": [
+                    "urn:li:fsd_profileEducation:(ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo,866285107)"
+                ],
+                "$recipeTypes": [
+                    "com.linkedin.b8847d9ac033fcb2942c461f4c7cd931"
+                ],
+                "$type": "com.linkedin.restli.common.CollectionResponse"
+            },
+            "educationOnProfileTopCardShown": false,
+            "premiumFeatures": [
+                {
+                    "hasEnabled": false,
+                    "featureName": "PROFILE_CUSTOM_CTA",
+                    "hasAccess": true,
+                    "hasUpsellAccess": false,
+                    "$recipeTypes": [
+                        "com.linkedin.61752b9718551b033bf899d03c4f0b4d"
+                    ],
+                    "$type": "com.linkedin.voyager.dash.identity.profile.ProfilePremiumFeature"
+                },
+                {
+                    "hasEnabled": false,
+                    "featureName": "FEATURED_PROFILE_SECTION",
+                    "hasAccess": true,
+                    "hasUpsellAccess": false,
+                    "$recipeTypes": [
+                        "com.linkedin.61752b9718551b033bf899d03c4f0b4d"
+                    ],
+                    "$type": "com.linkedin.voyager.dash.identity.profile.ProfilePremiumFeature"
+                }
+            ],
+            "$recipeTypes": [
+                "com.linkedin.924bc4e3b7ae93b069977c0f2ebddf6b"
+            ],
+            "$type": "com.linkedin.voyager.dash.identity.profile.Profile",
+            "*edgeSetting": "urn:li:fsd_edgeSetting:urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+            "associatedHashtagsCopy": null,
+            "firstName": "Sajawal",
+            "profilePicture": {
+                "displayImageReferenceResolutionResult": null,
+                "displayImageWithFrameReference": null,
+                "a11yText": "Sajawal Chopra",
+                "frameType": null,
+                "$recipeTypes": [
+                    "com.linkedin.bd6cc222c85bbd7d0e158b3d5abd1a7b"
+                ],
+                "displayImageUrn": null,
+                "$type": "com.linkedin.voyager.dash.identity.profile.PhotoFilterPicture"
+            },
+            "topCardCallouts": {
+                "$recipeTypes": [
+                    "com.linkedin.f00369c26dd480514509121d669ee5f8"
+                ],
+                "elements": [],
+                "$type": "com.linkedin.restli.common.CollectionResponse"
+            },
+            "tempStatus": null,
+            "creatorBadgeStatus": "INELIGIBLE",
+            "location": {
+                "preferredGeoPlace": null,
+                "$recipeTypes": [
+                    "com.linkedin.901219fb7b4cd2665fe0f58bbb648a2c"
+                ],
+                "countryCode": "pk",
+                "postalCode": null,
+                "$type": "com.linkedin.voyager.dash.identity.profile.ProfileLocation"
+            },
+            "*followingState": "urn:li:fsd_followingState:urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+            "tempStatusExpiredAt": null
+        },
+        {
+            "displayText": {
+                "textDirection": "USER_LOCALE",
+                "text": "Message",
+                "attributesV2": [],
+                "accessibilityTextAttributesV2": [],
+                "accessibilityText": null,
+                "$recipeTypes": [
+                    "com.linkedin.9256438968e0b042c1e3d46c6d03caf4"
+                ],
+                "$type": "com.linkedin.voyager.dash.common.text.TextViewModel"
+            },
+            "entityUrn": "urn:li:fsd_composeOption:(ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo,NON_SELF_PROFILE_VIEW,EMPTY_CONTEXT_ENTITY_URN)",
+            "icon": {
+                "attributes": [
+                    {
+                        "scalingType": null,
+                        "detailData": {
+                            "profilePictureWithoutFrame": null,
+                            "profilePictureWithRingStatus": null,
+                            "companyLogo": null,
+                            "icon": "IC_MESSAGES_16DP",
+                            "systemImage": null,
+                            "nonEntityGroupLogo": null,
+                            "vectorImage": null,
+                            "nonEntityProfessionalEventLogo": null,
+                            "profilePicture": null,
+                            "imageUrl": null,
+                            "professionalEventLogo": null,
+                            "nonEntityCompanyLogo": null,
+                            "nonEntitySchoolLogo": null,
+                            "groupLogo": null,
+                            "schoolLogo": null,
+                            "ghostImage": null,
+                            "nonEntityProfilePicture": null
+                        },
+                        "tintColor": null,
+                        "$recipeTypes": [
+                            "com.linkedin.3c7a439113c8ac812fc3879435f41e12"
+                        ],
+                        "tapTargets": [],
+                        "displayAspectRatio": null,
+                        "$type": "com.linkedin.voyager.dash.common.image.ImageAttribute"
+                    }
+                ],
+                "editableAccessibilityText": false,
+                "actionTarget": null,
+                "accessibilityTextAttributes": [],
+                "totalCount": null,
+                "accessibilityText": null,
+                "$recipeTypes": [
+                    "com.linkedin.0e29bd1f8ae11ca791ce665e6d47ac92"
+                ],
+                "$type": "com.linkedin.voyager.dash.common.image.ImageViewModel"
+            },
+            "composeNavigationContext": {
+                "*recipient": [
+                    "urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo"
+                ],
+                "paidInMail": false,
+                "messageRequestContextUrn": null,
+                "targetUrl": null,
+                "$recipeTypes": [
+                    "com.linkedin.c507bf88f3d502a7aac417701ab4e811"
+                ],
+                "existingConversation": null,
+                "$type": "com.linkedin.voyager.dash.messaging.compose.ComposeNavigationContext"
+            },
+            "composeOptionType": "CONNECTION_MESSAGE",
+            "textStartIcon": {
+                "attributes": [
+                    {
+                        "scalingType": null,
+                        "detailData": {
+                            "profilePictureWithoutFrame": null,
+                            "profilePictureWithRingStatus": null,
+                            "companyLogo": null,
+                            "icon": "IC_MESSAGES_16DP",
+                            "systemImage": null,
+                            "nonEntityGroupLogo": null,
+                            "vectorImage": null,
+                            "nonEntityProfessionalEventLogo": null,
+                            "profilePicture": null,
+                            "imageUrl": null,
+                            "professionalEventLogo": null,
+                            "nonEntityCompanyLogo": null,
+                            "nonEntitySchoolLogo": null,
+                            "groupLogo": null,
+                            "schoolLogo": null,
+                            "ghostImage": null,
+                            "nonEntityProfilePicture": null
+                        },
+                        "tintColor": null,
+                        "$recipeTypes": [
+                            "com.linkedin.3c7a439113c8ac812fc3879435f41e12"
+                        ],
+                        "tapTargets": [],
+                        "displayAspectRatio": null,
+                        "$type": "com.linkedin.voyager.dash.common.image.ImageAttribute"
+                    }
+                ],
+                "editableAccessibilityText": false,
+                "actionTarget": null,
+                "accessibilityTextAttributes": [],
+                "totalCount": null,
+                "accessibilityText": null,
+                "$recipeTypes": [
+                    "com.linkedin.0e29bd1f8ae11ca791ce665e6d47ac92"
+                ],
+                "$type": "com.linkedin.voyager.dash.common.image.ImageViewModel"
+            },
+            "$recipeTypes": [
+                "com.linkedin.bc2922f5a22a40bd45671cc599c6781b"
+            ],
+            "$type": "com.linkedin.voyager.dash.messaging.compose.ComposeOption"
+        },
+        {
+            "entityUrn": "urn:li:fsd_company:933321",
+            "name": "University of the Punjab",
+            "logoResolutionResult": {
+                "url": null,
+                "vectorImage": {
+                    "digitalmediaAsset": "urn:li:digitalmediaAsset:C4E0BAQEUoJmNVvDExw",
+                    "attribution": null,
+                    "$recipeTypes": [
+                        "com.linkedin.9261557ab45de3041dfe177d0f1935b2"
+                    ],
+                    "artifacts": [
+                        {
+                            "width": 200,
+                            "$recipeTypes": [
+                                "com.linkedin.cfb95ed4f6698830baec02fe68bf0851"
+                            ],
+                            "fileIdentifyingUrlPathSegment": "200_200/0/1631344390702?e=1718236800&v=beta&t=Ab-90J6G8uIrUbdXA0Rq3OnWwRNvh_qBPq3KtptHzm4",
+                            "expiresAt": 1718236800000,
+                            "height": 200,
+                            "$type": "com.linkedin.common.VectorArtifact"
+                        },
+                        {
+                            "width": 100,
+                            "$recipeTypes": [
+                                "com.linkedin.cfb95ed4f6698830baec02fe68bf0851"
+                            ],
+                            "fileIdentifyingUrlPathSegment": "100_100/0/1631344390702?e=1718236800&v=beta&t=9kUvcjitfOmQcRUtcQ0Veehm4gh8393oqFUNY5WnWIs",
+                            "expiresAt": 1718236800000,
+                            "height": 100,
+                            "$type": "com.linkedin.common.VectorArtifact"
+                        },
+                        {
+                            "width": 400,
+                            "$recipeTypes": [
+                                "com.linkedin.cfb95ed4f6698830baec02fe68bf0851"
+                            ],
+                            "fileIdentifyingUrlPathSegment": "400_400/0/1631344390702?e=1718236800&v=beta&t=wtIOW1zJeU51jSMimuzlffHgzELBCHveru5ej_dByys",
+                            "expiresAt": 1718236800000,
+                            "height": 400,
+                            "$type": "com.linkedin.common.VectorArtifact"
+                        }
+                    ],
+                    "rootUrl": "https://media.licdn.com/dms/image/C4E0BAQEUoJmNVvDExw/company-logo_",
+                    "$type": "com.linkedin.common.VectorImage"
+                }
+            },
+            "universalName": "university-of-the-punjab",
+            "$recipeTypes": [
+                "com.linkedin.ebcfbdd27e432a470de36c6d11c0377b"
+            ],
+            "url": "https://www.linkedin.com/school/university-of-the-punjab/",
+            "$type": "com.linkedin.voyager.dash.organization.Company"
+        },
+        {
+            "entityUrn": "urn:li:fsd_school:15898",
+            "name": "University of the Punjab",
+            "logoResolutionResult": {
+                "url": null,
+                "vectorImage": {
+                    "digitalmediaAsset": null,
+                    "attribution": null,
+                    "$recipeTypes": [
+                        "com.linkedin.9261557ab45de3041dfe177d0f1935b2"
+                    ],
+                    "artifacts": [
+                        {
+                            "width": 200,
+                            "$recipeTypes": [
+                                "com.linkedin.cfb95ed4f6698830baec02fe68bf0851"
+                            ],
+                            "fileIdentifyingUrlPathSegment": "200_200/0/1631344390702?e=1718236800&v=beta&t=Ab-90J6G8uIrUbdXA0Rq3OnWwRNvh_qBPq3KtptHzm4",
+                            "expiresAt": 1718236800000,
+                            "height": 200,
+                            "$type": "com.linkedin.common.VectorArtifact"
+                        },
+                        {
+                            "width": 100,
+                            "$recipeTypes": [
+                                "com.linkedin.cfb95ed4f6698830baec02fe68bf0851"
+                            ],
+                            "fileIdentifyingUrlPathSegment": "100_100/0/1631344390702?e=1718236800&v=beta&t=9kUvcjitfOmQcRUtcQ0Veehm4gh8393oqFUNY5WnWIs",
+                            "expiresAt": 1718236800000,
+                            "height": 100,
+                            "$type": "com.linkedin.common.VectorArtifact"
+                        },
+                        {
+                            "width": 400,
+                            "$recipeTypes": [
+                                "com.linkedin.cfb95ed4f6698830baec02fe68bf0851"
+                            ],
+                            "fileIdentifyingUrlPathSegment": "400_400/0/1631344390702?e=1718236800&v=beta&t=wtIOW1zJeU51jSMimuzlffHgzELBCHveru5ej_dByys",
+                            "expiresAt": 1718236800000,
+                            "height": 400,
+                            "$type": "com.linkedin.common.VectorArtifact"
+                        }
+                    ],
+                    "rootUrl": "https://media.licdn.com/dms/image/C4E0BAQEUoJmNVvDExw/company-logo_",
+                    "$type": "com.linkedin.common.VectorImage"
+                }
+            },
+            "$recipeTypes": [
+                "com.linkedin.3cf70fe2309a03a88039a69db44c943e"
+            ],
+            "url": "https://www.linkedin.com/school/university-of-the-punjab/",
+            "$type": "com.linkedin.voyager.dash.organization.School"
+        },
+        {
+            "entityUrn": "urn:li:fsd_connection:ACoAADLg72QBzrv5WVKEJAY_-5mCgkNvhntZGj0",
+            "$recipeTypes": [
+                "com.linkedin.3bbc8eb0a527dfd2d76c72a73079e1b0"
+            ],
+            "$type": "com.linkedin.voyager.dash.relationships.Connection"
+        },
+        {
+            "createdAt": 1708584118000,
+            "entityUrn": "urn:li:fsd_connection:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+            "*connectedMemberResolutionResult": "urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+            "$recipeTypes": [
+                "com.linkedin.3bbc8eb0a527dfd2d76c72a73079e1b0"
+            ],
+            "$type": "com.linkedin.voyager.dash.relationships.Connection"
+        },
+        {
+            "entityUrn": "urn:li:fsd_memberRelationship:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+            "memberRelationship": {
+                "self": null,
+                "*connection": "urn:li:fsd_connection:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+                "noConnection": null
+            },
+            "memberRelationshipDataResolutionResult": {
+                "noInvitation": null,
+                "*connection": "urn:li:fsd_connection:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo",
+                "invitation": null
+            },
+            "$recipeTypes": [
+                "com.linkedin.290d9fe959728ff7609fffa48052b4f0"
+            ],
+            "$type": "com.linkedin.voyager.dash.relationships.MemberRelationship"
+        }
+    ]
+}

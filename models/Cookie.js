@@ -8,7 +8,8 @@ const cookie = new mongoose.Schema({
     uuid: String,
     urn: String,
     isPremium: String,
-    running: String
+    running: String,
+    scraping_day: Number
 });
 
 module.exports = mongoose.models.Cookie || mongoose.model('Cookie', cookie);

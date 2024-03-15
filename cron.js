@@ -177,6 +177,73 @@ async function getJobTitle(person_urn, data) {
     return "NO_JOB_TITLE";
 };
 
+async function getConnectionInfo(data) {
+
+    let connectionInfo = { connection_degree: "NULL", is_follower: "NULL", when_connected: "NULL" };
+
+    try {
+        const headers = {
+            "accept": "application/vnd.linkedin.normalized+json+2.1",
+            "accept-language": "en-US,en;q=0.9",
+            "csrf-token": data.jsession_id,
+            "sec-ch-ua-mobile": "?0",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "x-li-lang": "en_US",
+            "x-li-page-instance": "urn:li:page:d_flagship3_profile_view_base;TOYMHodvSD+raFovcEj1cg==",
+            "x-li-pem-metadata": "Voyager - Profile=profile-tab-initial-cards",
+            "x-restli-protocol-version": "2.0.0",
+            "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
+            "Referer": `https://www.linkedin.com/in/${data.user_id}/`,
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        };
+
+        const url = `https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(vanityName:${data.user_id})&queryId=voyagerIdentityDashProfiles.895fdb8a5b9db42b70e4cb37c4a44507`;
+
+        const response = await utils.makeGetRequest(url, headers);
+
+        if (!response) {
+            // TODO: Send an emergency notification to the Developer & Client
+            logger.log(1, "No response from the linkedin api for connection info");
+            return connectionInfo;
+        }
+
+        const included = response.data["included"];
+
+        for (let i = 0; i < included.length; i++) {
+            const obj = included[i];
+
+            if (obj.entityUrn.startsWith("urn:li:fsd_followingState:")) {
+                connectionInfo["is_follower"] = obj.following ? "YES" : "NO";
+            }
+
+            if (obj.entityUrn.startsWith("urn:li:fsd_memberRelationship:")) {
+                if (Object.keys(obj.memberRelationship).includes("*connection")) {
+                    connectionInfo["connection_degree"] = "1st";
+                } else {
+                    if (obj.memberRelationship.noConnection.memberDistance == "DISTANCE_2") {
+                        connectionInfo["connection_degree"] = "2nd";
+                    } else if (obj.memberRelationship.noConnection.memberDistance == "DISTANCE_3") {
+                        connectionInfo["connection_degree"] = "3rd";
+                    } else if (obj.memberRelationship.noConnection.memberDistance == "OUT_OF_NETWORK") {
+                        connectionInfo["connection_degree"] = "3rd+";
+                    }
+                }
+            }
+
+            if (Object.keys(obj).includes("createdAt")) {
+                connectionInfo["when_connected"] = moment(obj.createdAt).format("YYYY-MM-DD");
+            };
+        };
+    } catch (error) {
+        console.trace(error);
+        logger.log(0, error);
+    };
+
+    return connectionInfo;
+}
+
 async function getFreeViewersData(data) {
     try {
         const url = `https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(edgeInsightsAnalyticsCardUrns:List(urn%3Ali%3Afsd_edgeInsightsAnalyticsCard%3A%28WVMP%2Curn%3Ali%3Awvmp%3A1%2CANALYTICS%2CSUMMARY%2CBROWSE_FOR_FREE_VIEWERS%29),query:())&queryId=voyagerPremiumDashAnalyticsCard.7541f19840ff2747a5f828dab60e622a`;
@@ -260,6 +327,7 @@ async function getFreeViewersData(data) {
 
                 if (personData.length == 0) {
                     const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
+                    const connectionInfo = await getConnectionInfo(data);
 
                     const newPerson = new Person({
                         uuid: viewersData.uuid,
@@ -269,6 +337,9 @@ async function getFreeViewersData(data) {
                         last_name: viewer.last_name,
                         profile_url: viewer.profile_url,
                         profile_headline: viewer.profile_headline,
+                        connection_degree: connectionInfo.connection_degree,
+                        is_follower: connectionInfo.is_follower,
+                        when_connected: connectionInfo.when_connected,
                         job_title: jobTitle,
                         reactions_count: 0,
                         comments_count: 0,
@@ -387,6 +458,7 @@ async function getPremiumViewersData(data) {
 
                     if (personData.length == 0) {
                         const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
+                        const connectionInfo = await getConnectionInfo(data);
 
                         const newPerson = new Person({
                             uuid: viewersData.uuid,
@@ -396,6 +468,9 @@ async function getPremiumViewersData(data) {
                             last_name: viewer.last_name,
                             profile_url: viewer.profile_url,
                             profile_headline: viewer.profile_headline,
+                            connection_degree: connectionInfo.connection_degree,
+                            is_follower: connectionInfo.is_follower,
+                            when_connected: connectionInfo.when_connected,
                             job_title: jobTitle,
                             reactions_count: 0,
                             comments_count: 0,
@@ -561,6 +636,7 @@ async function getComments(data, postID) {
                             const firstName = comment.commenter.title.text.split(" ")[0]
                             const lastName = comment.commenter.title.text.split(" ").slice(1).join(' ');
                             const jobTitle = await getJobTitle(comment.commenter.actor["*profileUrn"].split(":").at(-1), data);
+                            const connectionInfo = await getConnectionInfo(data);
 
                             const newPerson = new Person({
                                 uuid: data.uuid,
@@ -570,6 +646,9 @@ async function getComments(data, postID) {
                                 last_name: lastName,
                                 profile_url: comment.commenter.navigationUrl,
                                 profile_headline: comment.commenter.subtitle,
+                                connection_degree: connectionInfo.connection_degree,
+                                is_follower: connectionInfo.is_follower,
+                                when_connected: connectionInfo.when_connected,
                                 job_title: jobTitle,
                                 reactions_count: 0,
                                 comments_count: 1,
@@ -660,6 +739,7 @@ async function getReactions(data, postID) {
                         const firstName = reaction.reactorLockup.title.text.split(" ")[0]
                         const lastName = reaction.reactorLockup.title.text.split(" ").slice(1).join(' ');
                         const jobTitle = await getJobTitle(reaction.actorUrn.split(":").at(-1), data);
+                        const connectionInfo = await getConnectionInfo(data);
 
                         const newPerson = new Person({
                             uuid: data.uuid,
@@ -669,6 +749,9 @@ async function getReactions(data, postID) {
                             last_name: lastName,
                             profile_url: reaction.reactorLockup.navigationUrl,
                             profile_headline: reaction.reactorLockup.subtitle.text,
+                            connection_degree: connectionInfo.connection_degree,
+                            is_follower: connectionInfo.is_follower,
+                            when_connected: connectionInfo.when_connected,
                             job_title: jobTitle,
                             reactions_count: 1,
                             comments_count: 0,
@@ -767,11 +850,11 @@ async function sendDataToCustomer(customer) {
         const mailOptions = {
             from: 'Floppy App <sajawalfareedi448@gmail.com>',
             to: customer.email,
-            subject: 'Weekly LinkedIn HotLeads Data Extraction Report',
-            text: 'The CSV file with the data is attached.',
+            subject: 'We found NEW LEADS on LinkedIn for you 🔥',
+            text: 'The CSV file with your hottest leads on LinkedIn from the last 7 days is attached.\n\nCheck it out now!',
             attachments: [
                 {
-                    filename: 'linkedin_hotleads_data.csv',
+                    filename: 'linkedin_hot_leads.csv',
                     path: `./csv_files/${customer.uuid}.csv`
                 }
             ]
@@ -872,7 +955,7 @@ async function main() {
                 };
             };
 
-            if (moment.utc().day() == 0 && moment.utc().hour() == 0 && MAIN_CRON_RUNNING == 0) {
+            if (MAIN_CRON_RUNNING == 0) {
                 try {
                     logger.log(2, "Checking MongoDB Connection...")
                     const dbStatus = await utils.checkDatabaseConnection();
@@ -885,10 +968,21 @@ async function main() {
                         MAIN_CRON_RUNNING = 1;
 
                         let crons = [];
-                        for (let i = 0; i < cookies.length; i++) { crons.push(cron(cookies[i])) };
-                        await Promise.allSettled(crons)
 
-                        checkForFinishedCrons();
+                        for (let i = 0; i < cookies.length; i++) {
+                            if (moment.utc().day() == cookies[i].scraping_day) {
+                                crons.push(cron(cookies[i]));
+                            }
+                        };
+
+                        if (crons.length > 0) {
+                            checkForFinishedCrons();
+                            await Promise.allSettled(crons);
+                            MAIN_CRON_RUNNING = 0;
+                        } else {
+                            MAIN_CRON_RUNNING = 0;
+                        }
+                        
                     } else {
                         MAIN_CRON_RUNNING = 0;
                     }
