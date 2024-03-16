@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URI")
+}
+
+model api {
+  email   String @db.VarChar
+  api_key String @unique(map: "api_unique") @db.VarChar
+  created String @db.VarChar
+}
+
+model cookie {
+  user_id      String @db.VarChar
+  li_at        String @db.VarChar
+  jsession_id  String @db.VarChar
+  uuid         String @unique(map: "cookie_unique") @db.VarChar
+  urn          String @db.VarChar
+  ispremium    String @db.VarChar
+  running      String @db.VarChar
+  scraping_day Int
+}
+
+model person {
+  uuid               String  @unique(map: "person_unique") @db.VarChar
+  urn                String  @db.VarChar
+  person_urn         String  @db.VarChar
+  first_name         String  @db.VarChar
+  last_name          String  @db.VarChar
+  profile_url        String  @db.VarChar
+  profile_headline   String  @db.VarChar
+  connection_degree  String? @db.VarChar
+  is_follower        String? @db.VarChar
+  when_connected     String? @db.VarChar
+  job_title          String? @db.VarChar
+  reactions_count    Int?
+  comments_count     Int?
+  profile_view_count Int?
+  score              Int?
+}
+
+model customer {
+  urn         String  @db.VarChar
+  name        String  @db.VarChar
+  email       String  @db.VarChar
+  profile_url String  @db.VarChar
+  user_id     String  @db.VarChar
+  uuid        String  @unique(map: "customer_unique") @db.VarChar
+  added       String  @db.VarChar
+  last_ran    String? @db.VarChar
+}

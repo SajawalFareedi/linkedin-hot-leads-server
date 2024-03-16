@@ -1,8 +1,9 @@
+require("dotenv").config();
 const mongoose = require('mongoose');
 const logger = require("./logger");
 
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://linkedin-hot-leads:ilXR2tTqnF2XDQlW@linkedin-db.tt3ronc.mongodb.net/?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI || process.env.LOCAL_MONGODB_URI;
 
 const InitializeDatabase = async () => {
     try {

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const moment = require("moment");
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const nodemailer = require('nodemailer');
@@ -16,8 +18,8 @@ let PROFILE_CRON_RUNNING = 0;  // Flag for each profile cron
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'sajawalfareedi448@gmail.com',
-        pass: 'gndxwareinrzjras'
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
     }
 });
 
@@ -26,8 +28,8 @@ const transporter = nodemailer.createTransport({
 //     port: 465,
 //     secure: true,
 //     auth: {
-//         user: 'bot@floppyapp.io',
-//         pass: 'password'
+//         user: process.env.MAIL_USER // 'bot@floppyapp.io',
+//         pass: process.env.MAIL_PASS // 'password'
 //     }
 // });
 
@@ -957,11 +959,11 @@ async function main() {
 
             if (MAIN_CRON_RUNNING == 0) {
                 try {
-                    logger.log(2, "Checking MongoDB Connection...")
+                    logger.log(2, "Checking MongoDB Connection...");
                     const dbStatus = await utils.checkDatabaseConnection();
                     if (dbStatus == "failure") { continue };
 
-                    logger.log(2, "Starting the Interaction Scraping Process...")
+                    logger.log(2, "Starting the Interaction Scraping Process...");
                     const cookies = await getAllUpdatedCookies("NO");
 
                     if (cookies.length > 0) {
@@ -972,7 +974,7 @@ async function main() {
                         for (let i = 0; i < cookies.length; i++) {
                             if (moment.utc().day() == cookies[i].scraping_day) {
                                 crons.push(cron(cookies[i]));
-                            }
+                            };
                         };
 
                         if (crons.length > 0) {
@@ -981,11 +983,11 @@ async function main() {
                             MAIN_CRON_RUNNING = 0;
                         } else {
                             MAIN_CRON_RUNNING = 0;
-                        }
+                        };
                         
                     } else {
                         MAIN_CRON_RUNNING = 0;
-                    }
+                    };
 
                 } catch (error) {
                     console.trace(error);
@@ -995,7 +997,7 @@ async function main() {
             };
 
             await sleep(5 * 60); // Check after every 5 minutes
-        }
+        };
 
     } catch (error) {
         console.trace(error);

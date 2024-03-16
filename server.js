@@ -1,8 +1,13 @@
+require("dotenv").config();
+
 const express = require("express");
 const utils = require('./utils');
 const logger = require("./logger");
 const cors = require("cors");
+const { v4: uuidv4 } = require('uuid');
+const bcrypt = require("bcrypt");
 const { unlinkSync, open, close } = require("fs");
+const API = require("./models/API");
 
 const app = express();
 
@@ -57,8 +62,35 @@ app.get("/delete_log_file", (req, res) => {
     
 });
 
-// TODO: Create a route for generating API Keys
-// TODO: Create a route for validating API Keys
+app.post("/generate-api", async (req, res) => {
+    const customerEmail = req.body.customerEmail;
+    const securityKey = req.body.securityKey;
+
+    if (securityKey === process.env.SECURITY_KEY) {
+
+        const saltRounds = 10;
+        const token = uuidv4();
+        const hashedToken = await bcrypt.hash(token, saltRounds);
+        const api = new API({ email: customerEmail, api_key: hashedToken });
+        await api.save();
+
+        res.send({ message: "ok", api: hashedToken });
+
+    } else {
+        res.status(403).send({ message: "invalid security key" });
+    };
+});
+
+app.post("/validate-api", async (req, res) => {
+    const licenseKey = req.body.licenseKey;
+    const result = await API.findOne({ api_key: licenseKey }).exec();
+
+    if (result) {
+        res.send({ message: "ok" });
+    } else {
+        res.status(403).send({ message: "error" });
+    }
+});
 
 app.listen(PORT, () => {
     logger.log(2, `Server is running on port ${PORT}`);
