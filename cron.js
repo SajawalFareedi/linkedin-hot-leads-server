@@ -6,10 +6,9 @@ const nodemailer = require('nodemailer');
 const { unlinkSync } = require("fs");
 const utils = require('./utils');
 const logger = require("./logger");
+const { PrismaClient } = require('@prisma/client');
 
-const Cookie = require("./models/Cookie");
-const Person = require("./models/Person");
-const Customer = require("./models/Customer");
+const prisma = new PrismaClient({ log: ["info", "query", "warn", "error"] });
 
 let CRON_STATUS = 0;
 let MAIN_CRON_RUNNING = 0; // Flag to know if the main cron is running
@@ -39,7 +38,7 @@ function sleep(seconds) {
 
 async function getAllUpdatedCookies(running) {
     try {
-        return await Cookie.find({ running }).exec();
+        return await prisma.cookie.findMany({ where: { running: running } });
     } catch (error) {
         console.trace(error);
         logger.log(0, error);
@@ -51,7 +50,7 @@ async function getAllUpdatedCookies(running) {
 
 async function updateCookie(uuid, data) {
     try {
-        return await Cookie.updateOne({ uuid: uuid }, data).exec();
+        return await prisma.cookie.update({ where: { uuid: uuid }, data: data });
     } catch (error) {
         console.trace(error);
         logger.log(0, error);
@@ -323,38 +322,39 @@ async function getFreeViewersData(data) {
 
             for (let i = 0; i < viewersData.profile_data.length; i++) {
                 const viewer = viewersData.profile_data[i];
-
-                await utils.checkDatabaseConnection();
-                const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
+                const personData = await prisma.person.findMany({ where: { person_urn: viewer.person_urn, uuid: viewersData.uuid } });
 
                 if (personData.length == 0) {
                     const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
                     const connectionInfo = await getConnectionInfo(data);
 
-                    const newPerson = new Person({
-                        uuid: viewersData.uuid,
-                        urn: viewersData.urn,
-                        person_urn: viewer.person_urn,
-                        first_name: viewer.first_name,
-                        last_name: viewer.last_name,
-                        profile_url: viewer.profile_url,
-                        profile_headline: viewer.profile_headline,
-                        connection_degree: connectionInfo.connection_degree,
-                        is_follower: connectionInfo.is_follower,
-                        when_connected: connectionInfo.when_connected,
-                        job_title: jobTitle,
-                        reactions_count: 0,
-                        comments_count: 0,
-                        profile_view_count: viewer.profile_view_count,
-                        score: viewer.score
+                    await prisma.person.create({
+                        data: {
+                            uuid: viewersData.uuid,
+                            urn: viewersData.urn,
+                            person_urn: viewer.person_urn,
+                            first_name: viewer.first_name,
+                            last_name: viewer.last_name,
+                            profile_url: viewer.profile_url,
+                            profile_headline: viewer.profile_headline,
+                            connection_degree: connectionInfo.connection_degree,
+                            is_follower: connectionInfo.is_follower,
+                            when_connected: connectionInfo.when_connected,
+                            job_title: jobTitle,
+                            reactions_count: 0,
+                            comments_count: 0,
+                            profile_view_count: viewer.profile_view_count,
+                            score: viewer.score
+                        }
                     });
-
-                    await newPerson.save();
                 } else {
-                    await Person.updateOne({ person_urn: viewer.person_urn, uuid: viewersData.uuid }, {
-                        profile_view_count: viewer.profile_view_count + personData[0].profile_view_count,
-                        score: viewer.score + personData[0].score
-                    }).exec();
+                    await prisma.person.update({
+                        where: { person_urn: viewer.person_urn, uuid: viewersData.uuid },
+                        data: {
+                            profile_view_count: viewer.profile_view_count + personData[0].profile_view_count,
+                            score: viewer.score + personData[0].score
+                        }
+                    });
                 }
             }
         }
@@ -453,39 +453,39 @@ async function getPremiumViewersData(data) {
 
                 for (let i = 0; i < viewersData.profile_data.length; i++) {
                     const viewer = viewersData.profile_data[i];
-
-                    await utils.checkDatabaseConnection();
-
-                    const personData = await Person.find({ person_urn: viewer.person_urn, uuid: viewersData.uuid }).exec();
+                    const personData = await prisma.person.findMany({ where: { person_urn: viewer.person_urn, uuid: viewersData.uuid } });
 
                     if (personData.length == 0) {
                         const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
                         const connectionInfo = await getConnectionInfo(data);
 
-                        const newPerson = new Person({
-                            uuid: viewersData.uuid,
-                            urn: viewersData.urn,
-                            person_urn: viewer.person_urn,
-                            first_name: viewer.first_name,
-                            last_name: viewer.last_name,
-                            profile_url: viewer.profile_url,
-                            profile_headline: viewer.profile_headline,
-                            connection_degree: connectionInfo.connection_degree,
-                            is_follower: connectionInfo.is_follower,
-                            when_connected: connectionInfo.when_connected,
-                            job_title: jobTitle,
-                            reactions_count: 0,
-                            comments_count: 0,
-                            profile_view_count: viewer.profile_view_count,
-                            score: viewer.score
+                        await prisma.person.create({
+                            data: {
+                                uuid: viewersData.uuid,
+                                urn: viewersData.urn,
+                                person_urn: viewer.person_urn,
+                                first_name: viewer.first_name,
+                                last_name: viewer.last_name,
+                                profile_url: viewer.profile_url,
+                                profile_headline: viewer.profile_headline,
+                                connection_degree: connectionInfo.connection_degree,
+                                is_follower: connectionInfo.is_follower,
+                                when_connected: connectionInfo.when_connected,
+                                job_title: jobTitle,
+                                reactions_count: 0,
+                                comments_count: 0,
+                                profile_view_count: viewer.profile_view_count,
+                                score: viewer.score
+                            }
                         });
-
-                        await newPerson.save();
                     } else {
-                        await Person.updateOne({ person_urn: viewer.person_urn, uuid: viewersData.uuid }, {
-                            profile_view_count: viewer.profile_view_count + personData[0].profile_view_count,
-                            score: viewer.score + personData[0].score
-                        }).exec();
+                        await prisma.person.update({
+                            where: { person_urn: viewer.person_urn, uuid: viewersData.uuid },
+                            data: {
+                                profile_view_count: viewer.profile_view_count + personData[0].profile_view_count,
+                                score: viewer.score + personData[0].score
+                            }
+                        })
                     }
                 }
             }
@@ -629,9 +629,7 @@ async function getComments(data, postID) {
 
                 if (Object.keys(comment).includes("commentary")) {
                     if (!comment.commenter.author) {
-                        await utils.checkDatabaseConnection();
-
-                        const personData = await Person.find({ person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid }).exec();
+                        const personData = await prisma.person.findMany({ where: { person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid } });
 
                         if (personData.length == 0) {
 
@@ -640,30 +638,33 @@ async function getComments(data, postID) {
                             const jobTitle = await getJobTitle(comment.commenter.actor["*profileUrn"].split(":").at(-1), data);
                             const connectionInfo = await getConnectionInfo(data);
 
-                            const newPerson = new Person({
-                                uuid: data.uuid,
-                                urn: data.urn,
-                                person_urn: comment.commenter.actor["*profileUrn"],
-                                first_name: firstName,
-                                last_name: lastName,
-                                profile_url: comment.commenter.navigationUrl,
-                                profile_headline: comment.commenter.subtitle,
-                                connection_degree: connectionInfo.connection_degree,
-                                is_follower: connectionInfo.is_follower,
-                                when_connected: connectionInfo.when_connected,
-                                job_title: jobTitle,
-                                reactions_count: 0,
-                                comments_count: 1,
-                                profile_view_count: 0,
-                                score: 1
+                            await prisma.person.create({
+                                data: {
+                                    uuid: data.uuid,
+                                    urn: data.urn,
+                                    person_urn: comment.commenter.actor["*profileUrn"],
+                                    first_name: firstName,
+                                    last_name: lastName,
+                                    profile_url: comment.commenter.navigationUrl,
+                                    profile_headline: comment.commenter.subtitle,
+                                    connection_degree: connectionInfo.connection_degree,
+                                    is_follower: connectionInfo.is_follower,
+                                    when_connected: connectionInfo.when_connected,
+                                    job_title: jobTitle,
+                                    reactions_count: 0,
+                                    comments_count: 1,
+                                    profile_view_count: 0,
+                                    score: 1
+                                }
                             });
-
-                            await newPerson.save();
                         } else {
-                            await Person.updateOne({ person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid }, {
-                                comments_count: personData[0].comments_count + 1,
-                                score: personData[0].score + 1
-                            }).exec();
+                            await prisma.person.update({
+                                where: { person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid },
+                                data: {
+                                    comments_count: personData[0].comments_count + 1,
+                                    score: personData[0].score + 1
+                                }
+                            });
                         }
                     }
                 }
@@ -731,10 +732,7 @@ async function getReactions(data, postID) {
                 const reaction = reactionsList[i];
 
                 if (Object.keys(reaction).includes("actorUrn")) {
-
-                    await utils.checkDatabaseConnection();
-
-                    const personData = await Person.find({ person_urn: reaction.actorUrn, uuid: data.uuid }).exec();
+                    const personData = await prisma.person.findMany({ where: { person_urn: reaction.actorUrn, uuid: data.uuid } });
 
                     if (personData.length == 0) {
 
@@ -743,30 +741,33 @@ async function getReactions(data, postID) {
                         const jobTitle = await getJobTitle(reaction.actorUrn.split(":").at(-1), data);
                         const connectionInfo = await getConnectionInfo(data);
 
-                        const newPerson = new Person({
-                            uuid: data.uuid,
-                            urn: data.urn,
-                            person_urn: reaction.actorUrn,
-                            first_name: firstName,
-                            last_name: lastName,
-                            profile_url: reaction.reactorLockup.navigationUrl,
-                            profile_headline: reaction.reactorLockup.subtitle.text,
-                            connection_degree: connectionInfo.connection_degree,
-                            is_follower: connectionInfo.is_follower,
-                            when_connected: connectionInfo.when_connected,
-                            job_title: jobTitle,
-                            reactions_count: 1,
-                            comments_count: 0,
-                            profile_view_count: 0,
-                            score: 1
+                        await prisma.person.create({
+                            data: {
+                                uuid: data.uuid,
+                                urn: data.urn,
+                                person_urn: reaction.actorUrn,
+                                first_name: firstName,
+                                last_name: lastName,
+                                profile_url: reaction.reactorLockup.navigationUrl,
+                                profile_headline: reaction.reactorLockup.subtitle.text,
+                                connection_degree: connectionInfo.connection_degree,
+                                is_follower: connectionInfo.is_follower,
+                                when_connected: connectionInfo.when_connected,
+                                job_title: jobTitle,
+                                reactions_count: 1,
+                                comments_count: 0,
+                                profile_view_count: 0,
+                                score: 1
+                            }
                         });
-
-                        await newPerson.save();
                     } else {
-                        await Person.updateOne({ person_urn: reaction.actorUrn, uuid: data.uuid }, {
-                            reactions_count: personData[0].reactions_count + 1,
-                            score: personData[0].score + 1
-                        }).exec();
+                        await prisma.person.update({
+                            where: { person_urn: reaction.actorUrn, uuid: data.uuid },
+                            data: {
+                                reactions_count: personData[0].reactions_count + 1,
+                                score: personData[0].score + 1
+                            }
+                        });
                     }
                 }
             }
@@ -802,13 +803,9 @@ async function cron(data) {
 
 async function sendDataToCustomer(customer) {
     try {
-        await utils.checkDatabaseConnection();
+        const persons = await prisma.person.findMany({ where: { uuid: customer.uuid, urn: customer.urn } });
 
-        const persons = await Person.find({ uuid: customer.uuid, urn: customer.urn }).exec();
-
-        if (!persons || persons.length == 0) {
-            return
-        }
+        if (persons.length == 0) { return };
 
         let csvData = [];
 
@@ -821,6 +818,9 @@ async function sendDataToCustomer(customer) {
                     "Last Name": person.last_name,
                     "Profile Url": person.profile_url,
                     "Profile Headline": person.profile_headline,
+                    "Connection Degree": person.connection_degree,
+                    "Is Follower": person.is_follower,
+                    "When Connected": person.when_connected,
                     "Job Title": person.job_title,
                     "Comments Count": person.comments_count,
                     "Reactions Count": person.reactions_count,
@@ -837,6 +837,9 @@ async function sendDataToCustomer(customer) {
                 { id: 'Last Name', title: 'Last Name' },
                 { id: 'Profile Url', title: 'Profile Url' },
                 { id: 'Profile Headline', title: 'Profile Headline' },
+                { id: 'Connection Degree', title: 'Connection Degree' },
+                { id: 'Is Follower', title: 'Is Follower' },
+                { id: 'When Connected', title: 'When Connected' },
                 { id: 'Job Title', title: 'Job Title' },
                 { id: 'Comments Count', title: 'Comments Count' },
                 { id: 'Reactions Count', title: 'Reactions Count' },
@@ -872,7 +875,7 @@ async function sendDataToCustomer(customer) {
             } else {
                 logger.log(2, `Sent the data CSV file to customer: ${customer.name} - ${customer.email}`);
                 unlinkSync(`./csv_files/${customer.uuid}.csv`);
-                await Person.deleteMany({ uuid: customer.uuid, urn: customer.urn }).exec();
+                await prisma.person.deleteMany({ where: { uuid: customer.uuid, urn: customer.urn } });
             }
         });
 
@@ -884,7 +887,7 @@ async function sendDataToCustomer(customer) {
 
 async function profileViewCron(data, isLastProfile) {
     try {
-        if (data.isPremium == "NO") {
+        if (data.ispremium == "NO") {
             await getFreeViewersData(data);
         } else {
             await getPremiumViewersData(data);
@@ -910,9 +913,9 @@ async function checkForFinishedCrons() {
 
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i];
-                const customer = await Customer.findOne({ uuid: cookie.uuid, urn: cookie.urn }).exec();
+                const customer = await prisma.customer.findFirst({ where: { uuid: cookie.uuid, urn: cookie.urn } });
                 await sendDataToCustomer(customer);
-                await Customer.updateOne({ uuid: cookie.uuid, urn: cookie.urn }, { last_ran: moment.utc().format() }).exec();
+                await prisma.customer.update({ where: { uuid: cookie.uuid, urn: cookie.urn }, data: { last_ran: moment.utc().format() } });
             }
 
             await sleep(10 * 60);  // Wait for 10 minutes before checking again
@@ -942,10 +945,6 @@ async function main() {
         while (true) {
 
             if (moment.utc().hour() == 0 && moment.utc().minutes() <= 5 && PROFILE_CRON_RUNNING == 0) {
-                logger.log(2, "Checking MongoDB Connection...");
-                const dbStatus = await utils.checkDatabaseConnection();
-                if (dbStatus == "failure") { continue };
-
                 logger.log(2, "Starting the Profile View Scraping Process...");
                 const cookies = await getAllUpdatedCookies("NO");
 
@@ -959,10 +958,6 @@ async function main() {
 
             if (MAIN_CRON_RUNNING == 0) {
                 try {
-                    logger.log(2, "Checking MongoDB Connection...");
-                    const dbStatus = await utils.checkDatabaseConnection();
-                    if (dbStatus == "failure") { continue };
-
                     logger.log(2, "Starting the Interaction Scraping Process...");
                     const cookies = await getAllUpdatedCookies("NO");
 
@@ -984,7 +979,7 @@ async function main() {
                         } else {
                             MAIN_CRON_RUNNING = 0;
                         };
-                        
+
                     } else {
                         MAIN_CRON_RUNNING = 0;
                     };

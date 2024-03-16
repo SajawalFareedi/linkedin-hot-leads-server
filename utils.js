@@ -1,47 +1,24 @@
-const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 const axios = require("axios").default;
 const moment = require("moment");
-
+const { PrismaClient } = require('@prisma/client');
 const logger = require("./logger");
-const initializeDatabase = require("./db");
-const Cookie = require("./models/Cookie");
-const Customer = require("./models/Customer");
 const cron = require("./cron");
+
+const prisma = new PrismaClient({ log: ["info", "query", "warn", "error"] });
 
 function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 };
 
-async function checkDatabaseConnection() {
-    try {
-        while (true) {
-            if (mongoose.connection.readyState !== 1) {
-                await sleep(5);
-            } else {
-                return "success";
-            };
-        };
-    } catch (error) {
-        console.trace(error);
-        logger.log(0, error);
-    };
-
-    return "failure";
-};
-
 async function keepTheServerRunning() {
     try {
         while (true) {
-
-            if (mongoose.connection.readyState !== 1) {
-                try {
-                    await initializeDatabase();
-                    cron();
-                } catch (error) {
-                    console.trace(error);
-                    logger.log(0, error);
-                };
+            try {
+                cron();
+            } catch (error) {
+                console.trace(error);
+                logger.log(0, error);
             };
 
             await sleep(30);
@@ -51,8 +28,8 @@ async function keepTheServerRunning() {
     } catch (error) {
         console.trace(error);
         logger.log(0, error);
-    }
-}
+    };
+};
 
 /**
  * 
@@ -199,7 +176,7 @@ const getCustomerInfo = async (data) => {
 async function handleCookies(data) {
     try {
 
-        if (mongoose.connection.readyState !== 1) { await keepTheServerRunning() };
+        // if (mongoose.connection.readyState !== 1) { await keepTheServerRunning() };
 
         let userID = data.url;
         let userEmail = data.email;
@@ -212,46 +189,46 @@ async function handleCookies(data) {
 
             userID = userID.split("/in/")[1].split("/")[0];
 
-            const alreadyExists = await Customer.find({ user_id: userID }).exec();
-            const cookieExists = await Cookie.find({ user_id: userID }).exec();
+            const alreadyExists = await prisma.customer.findMany({ where: { user_id: userID } });
+            const cookieExists = await prisma.cookie.findMany({ where: { user_id: userID } });
 
             if (alreadyExists.length === 0 && scrapingDay !== "NO_DAY") {
                 const newUUID = uuidv4();
 
                 const customerInfo = await getCustomerInfo({ li_at, jsession_id, userID });
 
-                const newCustomer = new Customer({
-                    urn: customerInfo.urn,
-                    name: customerInfo.name,
-                    email: userEmail,
-                    profile_url: `https://www.linkedin.com/in/${userID}`,
-                    user_id: userID,
-                    uuid: newUUID,
-                    added: moment.utc().format(),
-                    last_ran: "NULL"
+                await prisma.customer.create({
+                    data: {
+                        urn: customerInfo.urn,
+                        name: customerInfo.name,
+                        email: userEmail,
+                        profile_url: `https://www.linkedin.com/in/${userID}`,
+                        user_id: userID,
+                        uuid: newUUID,
+                        added: moment.utc().format(),
+                        last_ran: "NULL"
+                    }
                 });
 
-                await newCustomer.save();
-
-                const newCookie = new Cookie({
-                    user_id: userID,
-                    li_at: li_at,
-                    jsession_id: jsession_id,
-                    uuid: newUUID,
-                    urn: customerInfo.urn,
-                    isPremium: customerInfo.isPremium,
-                    running: "NO",
-                    scraping_day: parseInt(scrapingDay)
+                await prisma.cookie.create({
+                    data: {
+                        user_id: userID,
+                        li_at: li_at,
+                        jsession_id: jsession_id,
+                        uuid: newUUID,
+                        urn: customerInfo.urn,
+                        ispremium: customerInfo.isPremium,
+                        running: "NO",
+                        scraping_day: parseInt(scrapingDay)
+                    }
                 });
-
-                await newCookie.save();
 
                 logger.log(2, `New Customer Added: ${customerInfo.name}, ${userEmail}, ${customerInfo.urn}`);
                 logger.log(2, `New Cookie Added: ${userID}, ${newUUID}`);
 
             } else {
                 if (cookieExists[0].li_at !== li_at || cookieExists[0].jsession_id !== jsession_id) {
-                    await Cookie.updateOne({ user_id: userID, uuid: cookieExists[0].uuid }, { li_at: li_at, jsession_id: jsession_id }).exec();
+                    await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
                     logger.log(2, `Cookie Updated for UUID: ${cookieExists[0].uuid}`);
                 } else {
                     logger.log(2, `"No Change in Cookie: ${userID}, ${userEmail}`);
@@ -268,4 +245,3 @@ async function handleCookies(data) {
 module.exports.handleCookies = handleCookies;
 module.exports.keepTheServerRunning = keepTheServerRunning;
 module.exports.makeGetRequest = makeGetRequest;
-module.exports.checkDatabaseConnection = checkDatabaseConnection;

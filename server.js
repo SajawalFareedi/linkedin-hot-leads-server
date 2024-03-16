@@ -7,7 +7,9 @@ const cors = require("cors");
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require("bcrypt");
 const { unlinkSync, open, close } = require("fs");
-const API = require("./models/API");
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient({ log: ["info", "query", "warn", "error"] });
 
 const app = express();
 
@@ -59,7 +61,7 @@ app.get("/delete_log_file", (req, res) => {
     } catch (error) {
         res.status(500).send({ error: error });
     };
-    
+
 });
 
 app.post("/generate-api", async (req, res) => {
@@ -71,8 +73,13 @@ app.post("/generate-api", async (req, res) => {
         const saltRounds = 10;
         const token = uuidv4();
         const hashedToken = await bcrypt.hash(token, saltRounds);
-        const api = new API({ email: customerEmail, api_key: hashedToken });
-        await api.save();
+
+        await prisma.api.create({
+            data: {
+                email: customerEmail,
+                api_key: hashedToken,
+            }
+        });
 
         res.send({ message: "ok", api: hashedToken });
 
@@ -83,9 +90,12 @@ app.post("/generate-api", async (req, res) => {
 
 app.post("/validate-api", async (req, res) => {
     const licenseKey = req.body.licenseKey;
-    const result = await API.findOne({ api_key: licenseKey }).exec();
 
-    if (result) {
+    const result = await prisma.api.findMany({
+        where: { api_key: licenseKey }
+    });
+
+    if (result.length > 0) {
         res.send({ message: "ok" });
     } else {
         res.status(403).send({ message: "error" });
