@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client');
 const logger = require("./logger");
 const cron = require("./cron");
 
-const prisma = new PrismaClient({ log: ["info", "query", "warn", "error"] });
+const prisma = new PrismaClient({ log: ["info", "warn", "error"] });
 
 function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));

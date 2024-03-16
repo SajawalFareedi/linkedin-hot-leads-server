@@ -8,7 +8,7 @@ const utils = require('./utils');
 const logger = require("./logger");
 const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient({ log: ["info", "query", "warn", "error"] });
+const prisma = new PrismaClient({ log: ["info", "warn", "error"] });
 
 let CRON_STATUS = 0;
 let MAIN_CRON_RUNNING = 0; // Flag to know if the main cron is running

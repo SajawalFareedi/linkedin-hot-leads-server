@@ -9,7 +9,7 @@ const bcrypt = require("bcrypt");
 const { unlinkSync, open, close } = require("fs");
 const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient({ log: ["info", "query", "warn", "error"] });
+const prisma = new PrismaClient({ log: ["info", "warn", "error"] });
 
 const app = express();
 
