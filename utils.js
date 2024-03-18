@@ -231,7 +231,7 @@ async function handleCookies(data) {
                     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
                     logger.log(2, `Cookie Updated for UUID: ${cookieExists[0].uuid}`);
                 } else {
-                    logger.log(2, `"No Change in Cookie: ${userID}, ${userEmail}`);
+                    logger.log(2, `No Change in Cookie: ${userID}, ${userEmail}`);
                 }
             };
         }

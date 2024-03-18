@@ -24,6 +24,17 @@ model cookie {
   scraping_day Int
 }
 
+model customer {
+  urn         String  @db.VarChar
+  name        String  @db.VarChar
+  email       String  @db.VarChar
+  profile_url String  @db.VarChar
+  user_id     String  @db.VarChar
+  uuid        String  @unique(map: "customer_unique") @db.VarChar
+  added       String  @db.VarChar
+  last_ran    String? @db.VarChar
+}
+
 model person {
   uuid               String  @unique(map: "person_unique") @db.VarChar
   urn                String  @db.VarChar
@@ -40,15 +51,4 @@ model person {
   comments_count     Int?
   profile_view_count Int?
   score              Int?
-}
-
-model customer {
-  urn         String  @db.VarChar
-  name        String  @db.VarChar
-  email       String  @db.VarChar
-  profile_url String  @db.VarChar
-  user_id     String  @db.VarChar
-  uuid        String  @unique(map: "customer_unique") @db.VarChar
-  added       String  @db.VarChar
-  last_ran    String? @db.VarChar
 }

@@ -958,7 +958,7 @@ async function main() {
 
             if (MAIN_CRON_RUNNING == 0) {
                 try {
-                    logger.log(2, "Starting the Interaction Scraping Process...");
+                    logger.log(2, "Checking for customers to scrape today...");
                     const cookies = await getAllUpdatedCookies("NO");
 
                     if (cookies.length > 0) {
@@ -973,6 +973,7 @@ async function main() {
                         };
 
                         if (crons.length > 0) {
+                            logger.log(2, "Starting the Interaction Scraping Process...");
                             checkForFinishedCrons();
                             await Promise.allSettled(crons);
                             MAIN_CRON_RUNNING = 0;

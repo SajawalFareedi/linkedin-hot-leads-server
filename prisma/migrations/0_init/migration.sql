@@ -20,6 +20,18 @@ CREATE TABLE "cookie" (
 );
 
 -- CreateTable
+CREATE TABLE "customer" (
+    "urn" VARCHAR NOT NULL,
+    "name" VARCHAR NOT NULL,
+    "email" VARCHAR NOT NULL,
+    "profile_url" VARCHAR NOT NULL,
+    "user_id" VARCHAR NOT NULL,
+    "uuid" VARCHAR NOT NULL,
+    "added" VARCHAR NOT NULL,
+    "last_ran" VARCHAR
+);
+
+-- CreateTable
 CREATE TABLE "person" (
     "uuid" VARCHAR NOT NULL,
     "urn" VARCHAR NOT NULL,
@@ -38,18 +50,6 @@ CREATE TABLE "person" (
     "score" INTEGER
 );
 
--- CreateTable
-CREATE TABLE "customer" (
-    "urn" VARCHAR NOT NULL,
-    "name" VARCHAR NOT NULL,
-    "email" VARCHAR NOT NULL,
-    "profile_url" VARCHAR NOT NULL,
-    "user_id" VARCHAR NOT NULL,
-    "uuid" VARCHAR NOT NULL,
-    "added" VARCHAR NOT NULL,
-    "last_ran" VARCHAR
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "api_unique" ON "api"("api_key");
 
@@ -57,9 +57,9 @@ CREATE UNIQUE INDEX "api_unique" ON "api"("api_key");
 CREATE UNIQUE INDEX "cookie_unique" ON "cookie"("uuid");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "person_unique" ON "person"("uuid");
-
--- CreateIndex
 CREATE UNIQUE INDEX "customer_unique" ON "customer"("uuid");
 
-Done in 0.67s.
+-- CreateIndex
+CREATE UNIQUE INDEX "person_unique" ON "person"("uuid");
+
+Done in 1.68s.

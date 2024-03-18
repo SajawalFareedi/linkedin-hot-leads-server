@@ -1,0 +1,441 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    background-color: rgba(0, 0, 0, 0.8);
+    margin: 0;
+}
+
+section {
+    color: #7a90ff;
+    padding: 2em 0;
+    min-height: 100%;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    z-index: 10;
+}
+
+input {
+    width: 20%;
+    font-size: 16px;
+    margin: 20px 0 0 0;
+    padding: 20px;
+    outline: none;
+    border: 1px solid #fff;
+    border-radius: 2em;
+    color: #000;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    -ms-border-radius: 2em;
+    -o-border-radius: 2em;
+}
+
+input:focus-visible {
+    border: 1px solid #4097f9;
+}
+
+.submit-button {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 1em 3em 2em 3em;
+    padding: 1em 2em;
+    color: #fff;
+    border: 1px solid #a93bfe;
+    border-radius: 2em;
+    cursor: pointer;
+    background: linear-gradient(135deg, #a93bfe, #584efd);
+    -webkit-transition: background-color 0.3s;
+    transition: background-color 0.3s;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    -ms-border-radius: 2em;
+    -o-border-radius: 2em;
+}
+
+.submit-button:hover {
+    background: #fff;
+    color: #584efd;
+}
+
+.pricing {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-justify-content: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.pricing-item {
+    position: relative;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: stretch;
+    align-items: stretch;
+    text-align: center;
+    -webkit-flex: 0 1 330px;
+    flex: 0 1 330px;
+}
+
+.pricing-action {
+    text-decoration: none;
+    color: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.pricing-action:focus {
+    outline: none;
+}
+
+.pricing-feature-list {
+    text-align: left;
+}
+
+.pricing-palden .pricing-item {
+    font-family: 'Open Sans', sans-serif;
+    cursor: default;
+    color: #84697c;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(46, 59, 125, 0.23);
+    border-radius: 20px 20px 10px 10px;
+    margin: 1em;
+}
+
+@media screen and (min-width: 66.25em) {
+    .pricing-palden .pricing-item {
+        margin: 1em -0.5em;
+    }
+
+    .pricing-palden .pricing__item--featured {
+        margin: 0;
+        z-index: 10;
+        box-shadow: 0 0 20px rgba(46, 59, 125, 0.23);
+    }
+}
+
+.pricing-palden .pricing-deco {
+    border-radius: 10px 10px 0 0;
+    background: linear-gradient(135deg, #4097f9, #0af0c7);
+    padding: 4em 0 9em;
+    position: relative;
+}
+
+.pricing-palden .pricing-deco-img {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 160px;
+}
+
+.pricing-palden .pricing-title {
+    font-size: 0.75em;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    color: #fff;
+}
+
+.pricing-palden .deco-layer {
+    -webkit-transition: -webkit-transform 0.5s;
+    transition: transform 0.5s;
+}
+
+.pricing-palden .pricing-item:hover .deco-layer--1 {
+    -webkit-transform: translate3d(15px, 0, 0);
+    transform: translate3d(15px, 0, 0);
+}
+
+.pricing-palden .pricing-item:hover .deco-layer--2 {
+    -webkit-transform: translate3d(-15px, 0, 0);
+    transform: translate3d(-15px, 0, 0);
+}
+
+.pricing-palden .icon {
+    font-size: 2.5em;
+}
+
+.pricing-palden .pricing-price {
+    font-size: 5em;
+    font-weight: bold;
+    padding: 0;
+    color: #fff;
+    margin: 0 0 0.25em 0;
+    line-height: 0.75;
+}
+
+.pricing-palden .pricing-currency {
+    font-size: 0.15em;
+    vertical-align: top;
+}
+
+.pricing-palden .pricing-period {
+    font-size: 0.15em;
+    padding: 0 0 0 0.5em;
+    font-style: italic;
+}
+
+.pricing-palden .pricing__sentence {
+    font-weight: bold;
+    margin: 0 0 1em 0;
+    padding: 0 0 0.5em;
+}
+
+.pricing-palden .pricing-feature-list {
+    margin: 0;
+    padding: 0.25em 0 2.5em;
+    list-style: none;
+    text-align: center;
+}
+
+.pricing-palden .pricing-feature {
+    padding: 1em 0;
+}
+
+.pricing-palden .pricing-action {
+    font-weight: bold;
+    margin: auto 3em 2em 3em;
+    padding: 1em 2em;
+    color: #fff;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #a93bfe, #584efd);
+    -webkit-transition: background-color 0.3s;
+    transition: background-color 0.3s;
+}
+
+.pricing-action:hover,
+.pricing-action:focus {
+    background: #fff;
+    color: #584efd;
+    border: 1px solid #584efd;
+}
+
+.pricing-palden .pricing-item--featured .pricing-deco {
+    padding: 5em 0 8.885em 0;
+}
+
+@import url(//fonts.googleapis.com/css?family=Lato:300:400);
+
+.header {
+    position: relative;
+    text-align: center;
+    background-image: radial-gradient(circle at 39% 47%, rgba(107, 107, 107, 0.08) 0%, rgba(107, 107, 107, 0.08) 33.333%, rgba(72, 72, 72, 0.08) 33.333%, rgba(72, 72, 72, 0.08) 66.666%, rgba(36, 36, 36, 0.08) 66.666%, rgba(36, 36, 36, 0.08) 99.999%), radial-gradient(circle at 53% 74%, rgba(182, 182, 182, 0.08) 0%, rgba(182, 182, 182, 0.08) 33.333%, rgba(202, 202, 202, 0.08) 33.333%, rgba(202, 202, 202, 0.08) 66.666%, rgba(221, 221, 221, 0.08) 66.666%, rgba(221, 221, 221, 0.08) 99.999%), radial-gradient(circle at 14% 98%, rgba(184, 184, 184, 0.08) 0%, rgba(184, 184, 184, 0.08) 33.333%, rgba(96, 96, 96, 0.08) 33.333%, rgba(96, 96, 96, 0.08) 66.666%, rgba(7, 7, 7, 0.08) 66.666%, rgba(7, 7, 7, 0.08) 99.999%), linear-gradient(45deg, rgb(97, 14, 117), rgb(20, 32, 127));
+    color: white;
+}
+
+.msg {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.inner-header {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.flex {
+    /*Flexbox for containers*/
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.waves {
+    position: relative;
+    width: 100%;
+    height: 150vh;
+    margin-bottom: -7px;
+    /*Fix for safari gap*/
+    min-height: 100px;
+    max-height: 250px;
+}
+
+/* Animation */
+
+.parallax>use {
+    animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+}
+
+.parallax>use:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 7s;
+}
+
+.parallax>use:nth-child(2) {
+    animation-delay: -3s;
+    animation-duration: 10s;
+}
+
+.parallax>use:nth-child(3) {
+    animation-delay: -4s;
+    animation-duration: 13s;
+}
+
+.parallax>use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 20s;
+}
+
+@keyframes move-forever {
+    0% {
+        transform: translate3d(-90px, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(85px, 0, 0);
+    }
+}
+
+/*========================================================================================================
+=            FLashing notifications https://github.com/maciejsaw/jQuery-FlashingNotifications            =
+========================================================================================================*/
+.flashing-notifications-wrapper {
+    position: fixed;
+    z-index: 3;
+    width: 100%;
+    height: 0px;
+    box-sizing: border-box;
+
+    * {
+        box-sizing: border-box;
+    }
+}
+
+.flashing-notification {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    max-height: 600px;
+    max-width: 340px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 14px;
+    padding-left: 14px;
+    -webkit-transition: opacity 800ms ease, padding 400ms ease, max-height 800ms ease-out, -webkit-transform 500ms ease-out;
+    transition: opacity 800ms ease, max-height 800ms ease-out, -webkit-transform 500ms ease-out;
+    transition: transform 500ms ease-out, opacity 800ms ease, max-height 800ms ease-out;
+    transition: transform 500ms ease-out, opacity 800ms ease, max-height 800ms ease-out, -webkit-transform 500ms ease-out;
+}
+
+.flashing-notification.is-transparent {
+    max-height: 0px;
+    opacity: 0;
+    -webkit-transform: translate(0px, -100%);
+    -ms-transform: translate(0px, -100%);
+    transform: translate(0px, -100%);
+}
+
+.flashing-notification.is-transparent.is-hidden {
+    display: none;
+}
+
+.flashing-notification__box {
+    position: relative;
+    display: block;
+    min-height: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 14px 60px 17px 46px;
+    border-radius: 5px;
+    background-color: #464c55;
+    box-shadow: 0 15px 65px -9px rgba(46, 51, 58, .85);
+    color: #fff;
+}
+
+.flashing-notification__box.is-green-success {
+    background-color: #107c2e;
+}
+
+.flashing-notification__box.is-red-error {
+    background-color: #ff3b20;
+}
+
+.flashing-notification__icon-holder {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: 40px;
+    height: 19px;
+    padding-top: 10px;
+    padding-left: 11px;
+}
+
+.flashing-notification__text {
+    font-size: 14px;
+}
+
+.flashing-notification__icon {
+    width: 24px;
+    height: 24px;
+    text-align: center;
+}
+
+.flashing-notification__icon.is-info-icon {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0Ni4wMyA0NS45MiI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiNmZmY7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT5pbmZvLWljb24td2hpdGU8L3RpdGxlPjxnIGlkPSJMYXllcl8yIiBkYXRhLW5hbWU9IkxheWVyIDIiPjxnIGlkPSJMYXllcl8xLTIiIGRhdGEtbmFtZT0iTGF5ZXIgMSI+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNi43NCw2Ljc0QTIyLjE3LDIyLjE3LDAsMCwxLDIzLDAsMjIuMTksMjIuMTksMCwwLDEsMzkuMjksNi43NCwyMi4xMiwyMi4xMiwwLDAsMSw0NiwyM2EyMi4xMiwyMi4xMiwwLDAsMS02Ljc0LDE2LjIyQTIyLjE5LDIyLjE5LDAsMCwxLDIzLDQ1LjkyLDIyLjE3LDIyLjE3LDAsMCwxLDYuNzQsMzkuMTgsMjIuMTIsMjIuMTIsMCwwLDEsMCwyMywyMi4xMiwyMi4xMiwwLDAsMSw2Ljc0LDYuNzRaTTEwLDM2YTE3LjcsMTcuNywwLDAsMCwxMyw1LjM5QTE3LjY3LDE3LjY3LDAsMCwwLDM2LDM2YTE3Ljc3LDE3Ljc3LDAsMCwwLDUuMzktMTNBMTcuNzcsMTcuNzcsMCwwLDAsMzYsOS45MiwxNy42NywxNy42NywwLDAsMCwyMyw0LjUzLDE3LjcsMTcuNywwLDAsMCwxMCw5LjkyLDE3Ljc3LDE3Ljc3LDAsMCwwLDQuNjMsMjMsMTcuNzcsMTcuNzcsMCwwLDAsMTAsMzZaTTIwLjcsMTYuMDZWMTEuNDNoNC42M3Y0LjYzWm0wLDE4LjQzVjIwLjdoNC42M1YzNC40OVoiLz48L2c+PC9nPjwvc3ZnPg==");
+    background-position: 50% 50%;
+    background-size: 20px;
+    background-repeat: no-repeat;
+}
+
+.flashing-notification__icon.is-close-icon {
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMy4wOSAzMi45OCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiNmZmY7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT5jbG9zZS1pY29uLXdoaXRlPC90aXRsZT48ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIj48ZyBpZD0iTGF5ZXJfMS0yIiBkYXRhLW5hbWU9IkxheWVyIDEiPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTMzLjA5LDMuMzIsMTkuODEsMTYuNDksMzMuMDksMjkuNjYsMjkuNzcsMzMsMTYuNDksMTkuODEsMy4zMiwzMywwLDI5LjY2LDEzLjE3LDE2LjQ5LDAsMy4zMiwzLjMyLDAsMTYuNDksMTMuMTcsMjkuNzcsMFoiLz48L2c+PC9nPjwvc3ZnPg==");
+    background-position: 50% 50%;
+    background-size: 15px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    margin: auto;
+    width: 34px;
+    height: 34px;
+}
+
+.flashing-notification__icon.is-close-icon:hover {
+    background-color: hsla(0, 0%, 100%, .15);
+}
+
+.flashing-notification__icon.is-close-icon:active {
+    background-color: rgba(0, 0, 0, .35);
+}
+
+.flashing-notification__icon.is-check {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OC41IDM2Ljk5Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmZjt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPmNoZWNrLXdoaXRlPC90aXRsZT48ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIj48ZyBpZD0iTGF5ZXJfMS0yIiBkYXRhLW5hbWU9IkxheWVyIDEiPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE1LjM5LDI5LjM2LDQ0Ljc1LDAsNDguNSwzLjg4LDE1LjM5LDM3LDAsMjEuNmwzLjg4LTMuODhaIi8+PC9nPjwvZz48L3N2Zz4=");
+    background-position: 50% 50%;
+    background-size: 20px;
+    background-repeat: no-repeat;
+}
+
+.flashing-notification__icon.is-error {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OS44IDQzIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmZjt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPmVycm9yLWljb24td2hpdGU8L3RpdGxlPjxnIGlkPSJMYXllcl8yIiBkYXRhLW5hbWU9IkxheWVyIDIiPjxnIGlkPSJMYXllcl8xLTIiIGRhdGEtbmFtZT0iTGF5ZXIgMSI+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMCw0MywyNSwwLDQ5LjgsNDNaTTI3LjE4LDI3LjE4VjE4LjA1SDIyLjYxdjkuMTNabTAsOVYzMS42NEgyMi42MVYzNi4yWiIvPjwvZz48L2c+PC9zdmc+");
+    background-position: 50% 50%;
+    background-size: 20px;
+    background-repeat: no-repeat;
+}
+
+.flashing-notification__icon-on-right-holder {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    width: 40px;
+    height: 44px;
+    padding-top: 6px;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+.flashing-notification__padding-wrapper {
+    padding-top: 16px;
+}
+
+/*=====  End of FLashing notifications https://github.com/maciejsaw/jQuery-FlashingNotifications  ======*/
