@@ -7,6 +7,7 @@ const cors = require("cors");
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require("bcrypt");
 const moment = require("moment");
+const nodemailer = require("nodemailer");
 const { unlinkSync, open, close } = require("fs");
 const { PrismaClient } = require('@prisma/client');
 const Stripe = require("stripe").default;
@@ -14,6 +15,23 @@ const Stripe = require("stripe").default;
 const stripe = new Stripe(process.env.STRIPE_API_KEY);
 const prisma = new PrismaClient({ log: ["info", "warn", "error"] });
 const app = express();
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
+    }
+});
+
+// const transporter = nodemailer.createTransport({
+//     host: 'mail.floppyapp.io',
+//     port: 465,
+//     secure: true,
+//     auth: {
+//         user: process.env.MAIL_USER // 'bot@floppyapp.io',
+//         pass: process.env.MAIL_PASS // 'password'
+//     }
+// });
 
 const PORT = process.env.PORT || 3000;
 
@@ -54,10 +72,10 @@ app.get("/success", async (req, res) => {
     const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
 
     if (typeof session.customer !== "string") {
-        email = session.customer.email
+        email = session.customer.email;
     } else {
         const customer = await stripe.customers.retrieve(session.customer);
-        email = customer.email
+        email = customer.email;
     };
 
     const customerExists = await prisma.api.findFirst({ where: { email: email } });
@@ -77,7 +95,22 @@ app.get("/success", async (req, res) => {
             }
         });
 
-        // TODO: Send an email too
+        const mailOptions = {
+            from: 'Floppy App <sajawalfareedi448@gmail.com>',
+            to: email,
+            subject: 'Your Floppy App License Key',
+            text: `Thanks for buying Floppy App! Here's your License Key: ${hashedToken.substring(10, 45) }`,
+        };
+
+        // TODO: Handle the error properly
+        transporter.sendMail(mailOptions, async function (error, info) {
+            if (error) {
+                logger.log(0, `Error occured while trying to send the API Key Email to customer: ${email}`)
+                console.trace(error);
+                logger.log(0, error);
+            }
+        });
+
         res.render("success", { api_key: hashedToken.substring(10, 45) });
     }
 });
@@ -111,7 +144,7 @@ app.post("/create-checkout-session", async (req, res) => {
         console.trace(error);
         logger.log(0, error);
         res.status(500).send({ message: "Error creating checkout session." });
-    }
+    };
 });
 
 app.get("/download_log_file", (req, res) => {
@@ -133,7 +166,7 @@ app.get("/delete_log_file", (req, res) => {
         unlinkSync(`./logs/${filename}.log`);
 
         open(`./logs/${filename}.log`, "wx", function (err, fd) {
-            // handle error
+            // TODO: handle error
             close(fd, function (err) { /*handle error*/ });
         });
 

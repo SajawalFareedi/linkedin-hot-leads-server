@@ -14,14 +14,15 @@ model api {
 }
 
 model cookie {
-  user_id      String @db.VarChar
-  li_at        String @db.VarChar
-  jsession_id  String @db.VarChar
-  uuid         String @unique(map: "cookie_unique") @db.VarChar
-  urn          String @db.VarChar
-  ispremium    String @db.VarChar
-  running      String @db.VarChar
-  scraping_day Int
+  user_id           String  @db.VarChar
+  li_at             String  @db.VarChar
+  jsession_id       String  @db.VarChar
+  uuid              String  @unique(map: "cookie_unique") @db.VarChar
+  urn               String  @db.VarChar
+  ispremium         String  @db.VarChar
+  running           String  @db.VarChar
+  scraping_day      Int
+  last_profile_view String? @db.VarChar
 }
 
 model customer {

@@ -219,7 +219,8 @@ async function handleCookies(data) {
                         urn: customerInfo.urn,
                         ispremium: customerInfo.isPremium,
                         running: "NO",
-                        scraping_day: parseInt(scrapingDay)
+                        scraping_day: parseInt(scrapingDay),
+                        last_profile_view: ""
                     }
                 });
 

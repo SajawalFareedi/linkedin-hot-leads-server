@@ -85,6 +85,14 @@
                         contentType: "application/json",
                         data: JSON.stringify({ customerEmail: email.value }),
                         success: (data, status, xhr) => {
+
+                            if (data.message) {
+                                if (data.message == "already exists") {
+                                    document.getElementById("pay-title").textContent = "Looks like you've already bought the plan. Please use a different email to buy one more.";
+                                    email.value = "";
+                                }
+                            }
+
                             var stripe = Stripe("pk_test_51LZvkbICmfhOJ5j255o2Bdc7kbxg6laAP5JrYWIKRpyFmtiI1B54Ea8VT7A4NELktXA289uSxshfZUzNYuDIO9XG00Uj6oMfli");
                             // return stripe.redirectToCheckout({ sessionId: data.id });
                             document.getElementById("pay-title").textContent = "Redirecting to Stripe for Secure Checkout...";

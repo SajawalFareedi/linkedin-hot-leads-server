@@ -36,9 +36,15 @@ function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 };
 
-async function getAllUpdatedCookies(running) {
+async function getCookies(filters = null) {
     try {
-        return await prisma.cookie.findMany({ where: { running: running } });
+
+        if (!filters) {
+            return await prisma.cookie.findMany();
+        } else {
+            return await prisma.cookie.findMany({ where: filters });
+        }
+
     } catch (error) {
         console.trace(error);
         logger.log(0, error);
@@ -893,6 +899,11 @@ async function profileViewCron(data, isLastProfile) {
             await getPremiumViewersData(data);
         }
 
+        await prisma.cookie.update({
+            where: { uuid: data.uuid },
+            data: { last_profile_view: moment.utc().format() }
+        });
+
         if (isLastProfile) {
             PROFILE_CRON_RUNNING = 0;
             // logger.log(2, "Profile View Scraping finished...")
@@ -909,7 +920,7 @@ async function checkForFinishedCrons() {
         logger.log(2, "Starting the Finished Crons Checking Process...");
 
         while (true) {
-            const cookies = await getAllUpdatedCookies("NO");
+            const cookies = await getCookies({ running: "NO" });
 
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i];
@@ -930,9 +941,6 @@ async function checkForFinishedCrons() {
 
 // TODO: Don't repeat the same code...
 // TODO: try to use customer's timezone
-//! TODO: Fix all of the timing for cron - CRITICAL - DONE
-// TODO: Use ENV file for storing credentials
-//! TODO: Update Cookie status after it's finished - CRITICAL - DONE
 
 async function main() {
     try {
@@ -944,22 +952,31 @@ async function main() {
 
         while (true) {
 
-            if (moment.utc().hour() == 0 && moment.utc().minutes() <= 5 && PROFILE_CRON_RUNNING == 0) {
+            if (PROFILE_CRON_RUNNING == 0) {
                 logger.log(2, "Starting the Profile View Scraping Process...");
-                const cookies = await getAllUpdatedCookies("NO");
+                const cookies = await getCookies();
 
                 PROFILE_CRON_RUNNING = 1;
 
                 for (let i = 0; i < cookies.length; i++) {
                     const isLastProfile = i >= (cookies.length - 1);
-                    profileViewCron(cookies[i], isLastProfile);
+
+                    if (cookies[i].last_profile_view) {
+                        if (cookies[i].last_profile_view.length > 0) {
+                            if (moment(cookies[i].last_profile_view).day() !== moment.utc().day()) {
+                                profileViewCron(cookies[i], isLastProfile);
+                            }
+                        }
+                    } else {
+                        profileViewCron(cookies[i], isLastProfile);
+                    }
                 };
             };
 
             if (MAIN_CRON_RUNNING == 0) {
                 try {
                     logger.log(2, "Checking for customers to scrape today...");
-                    const cookies = await getAllUpdatedCookies("NO");
+                    const cookies = await getCookies({ running: "NO" });
 
                     if (cookies.length > 0) {
                         MAIN_CRON_RUNNING = 1;
