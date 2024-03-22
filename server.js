@@ -35,9 +35,7 @@ const transporter = nodemailer.createTransport({
 
 const PORT = process.env.PORT || 3000;
 
-// let RUNNING = 0;
-
-// if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
+// let RUNNING = 0; if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
 
 app.set("view engine", "ejs");
 

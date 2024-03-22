@@ -41,17 +41,16 @@ async function getCookies(filters = null) {
 
         if (!filters) {
             return await prisma.cookie.findMany();
-        } else {
-            return await prisma.cookie.findMany({ where: filters });
-        }
+        };
+
+        return await prisma.cookie.findMany({ where: filters });
 
     } catch (error) {
         console.trace(error);
         logger.log(0, error);
-        CRON_STATUS = 0;
     };
 
-    return [];
+    return null;
 };
 
 async function updateCookie(uuid, data) {
@@ -60,7 +59,7 @@ async function updateCookie(uuid, data) {
     } catch (error) {
         console.trace(error);
         logger.log(0, error);
-    }
+    };
 };
 
 function isWithin7Days(dateString, isPost) {
@@ -115,13 +114,13 @@ function isWithin24Hrs(dateString, isPost) {
             if ((date == "h" || date == "s" || date == "m") && (parseInt(num) <= moment.utc().hour())) {
                 return true;
             };
-        }
+        };
 
 
     } catch (error) {
         console.trace(error);
         logger.log(0, error);
-    }
+    };
 
     return false;
 };
@@ -143,9 +142,9 @@ async function getJobTitle(person_urn, data) {
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
             "Referer": `https://www.linkedin.com/in/${person_urn}/`,
             "Referrer-Policy": "strict-origin-when-cross-origin"
-        }
+        };
 
-        const url = `https://www.linkedin.com/voyager/api/graphql?variables=(profileUrn:urn%3Ali%3Afsd_profile%3A${person_urn})&queryId=voyagerIdentityDashProfileCards.c78038c1bbcf9183f894d26cbd4f462a`
+        const url = `https://www.linkedin.com/voyager/api/graphql?variables=(profileUrn:urn%3Ali%3Afsd_profile%3A${person_urn})&queryId=voyagerIdentityDashProfileCards.c78038c1bbcf9183f894d26cbd4f462a`;
 
         const response = await utils.makeGetRequest(url, headers);
 
@@ -169,12 +168,12 @@ async function getJobTitle(person_urn, data) {
                             const jobTitle = topComponent.fixedListComponent.components[0].components.entityComponent.titleV2.text.text;
                             return jobTitle;
                         } catch (error) {
-                            return "NO_JOB_TITLE"
+                            return "NO_JOB_TITLE";
                         };
-                    }
-                }
-            }
-        }
+                    };
+                };
+            };
+        };
 
     } catch (error) {
         console.trace(error);
@@ -811,7 +810,7 @@ async function sendDataToCustomer(customer) {
     try {
         const persons = await prisma.person.findMany({ where: { uuid: customer.uuid, urn: customer.urn } });
 
-        if (persons.length == 0) { return };
+        if (persons.length == 0) return;
 
         let csvData = [];
 
@@ -893,6 +892,7 @@ async function sendDataToCustomer(customer) {
 
 async function profileViewCron(data, isLastProfile) {
     try {
+
         if (data.ispremium == "NO") {
             await getFreeViewersData(data);
         } else {
@@ -906,7 +906,6 @@ async function profileViewCron(data, isLastProfile) {
 
         if (isLastProfile) {
             PROFILE_CRON_RUNNING = 0;
-            // logger.log(2, "Profile View Scraping finished...")
         }
 
     } catch (error) {
@@ -922,16 +921,18 @@ async function checkForFinishedCrons() {
         while (true) {
             const cookies = await getCookies({ running: "NO" });
 
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i];
-                const customer = await prisma.customer.findFirst({ where: { uuid: cookie.uuid, urn: cookie.urn } });
-                await sendDataToCustomer(customer);
-                await prisma.customer.update({ where: { uuid: cookie.uuid, urn: cookie.urn }, data: { last_ran: moment.utc().format() } });
+            if (cookies.length > 0) {
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i];
+                    const customer = await prisma.customer.findFirst({ where: { uuid: cookie.uuid, urn: cookie.urn } });
+                    await sendDataToCustomer(customer);
+                    await prisma.customer.update({ where: { uuid: cookie.uuid, urn: cookie.urn }, data: { last_ran: moment.utc().format() } });
+                }
             }
 
-            await sleep(10 * 60);  // Wait for 10 minutes before checking again
+            await sleep(40);  // Wait for 40 seconds before checking again
 
-        }
+        };
 
     } catch (error) {
         console.trace(error);
@@ -940,7 +941,8 @@ async function checkForFinishedCrons() {
 };
 
 // TODO: Don't repeat the same code...
-// TODO: try to use customer's timezone
+// TODO: try to use customer's timezone...
+// TODO: Reset running status if an error occurs...
 
 async function main() {
     try {
@@ -956,20 +958,22 @@ async function main() {
                 logger.log(2, "Starting the Profile View Scraping Process...");
                 const cookies = await getCookies();
 
-                PROFILE_CRON_RUNNING = 1;
+                if (cookies.length > 0) {
+                    PROFILE_CRON_RUNNING = 1;
 
-                for (let i = 0; i < cookies.length; i++) {
-                    const isLastProfile = i >= (cookies.length - 1);
+                    for (let i = 0; i < cookies.length; i++) {
+                        const isLastProfile = i >= (cookies.length - 1);
 
-                    if (cookies[i].last_profile_view) {
-                        if (cookies[i].last_profile_view.length > 0) {
-                            if (moment(cookies[i].last_profile_view).day() !== moment.utc().day()) {
-                                profileViewCron(cookies[i], isLastProfile);
+                        if (cookies[i].last_profile_view) {
+                            if (cookies[i].last_profile_view.length > 0) {
+                                if (moment.utc().hour() == 0 && moment(cookies[i].last_profile_view).day() !== moment.utc().day()) {
+                                    profileViewCron(cookies[i], isLastProfile);
+                                }
                             }
-                        }
-                    } else {
-                        profileViewCron(cookies[i], isLastProfile);
-                    }
+                        } else {
+                            profileViewCron(cookies[i], isLastProfile);
+                        };
+                    };
                 };
             };
 
@@ -997,10 +1001,7 @@ async function main() {
                         } else {
                             MAIN_CRON_RUNNING = 0;
                         };
-
-                    } else {
-                        MAIN_CRON_RUNNING = 0;
-                    };
+                    }
 
                 } catch (error) {
                     console.trace(error);
@@ -1009,7 +1010,7 @@ async function main() {
                 };
             };
 
-            await sleep(5 * 60); // Check after every 5 minutes
+            await sleep(600); // Check after every 10 minutes
         };
 
     } catch (error) {

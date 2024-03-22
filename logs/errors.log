@@ -60,3 +60,213 @@ error: Environment variable not found: POSTGRESQL_URI.
    | 
 
 Validation Error Count: 1
+[2024-03-21T13:34:17Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 9)
+[2024-03-21T13:34:17Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:17Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 9)
+[2024-03-21T13:34:17Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:17Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 9)
+[2024-03-21T13:34:17Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:17Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 9)
+[2024-03-21T13:34:17Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:17Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 9)
+[2024-03-21T13:34:17Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:17Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 9)
+[2024-03-21T13:34:17Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:17Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 9)
+[2024-03-21T13:34:17Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:17Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:43:40
+
+  40 try {
+  41 
+  42     if (!filters) {
+→ 43         return await prisma.cookie.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 9)
+[2024-03-21T13:34:17Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:26Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 9)
+[2024-03-21T13:34:26Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:33Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:33Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:33Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:33Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:33Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:33Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:33Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:33Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:33Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:33Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:33Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:33Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:33Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:33Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:35Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:35Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:35Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:35Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-03-21T13:34:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:46:36
+
+  43     return await prisma.cookie.findMany();
+  44 };
+  45 
+→ 46 return await prisma.cookie.findMany(
+Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`
+
+Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
+[2024-03-21T13:34:38Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
