@@ -554,3 +554,18 @@
 [2024-03-21T18:01:00Z] [INFO] Checking for customers to scrape today...
 [2024-03-21T18:01:00Z] [INFO] Starting the Interaction Scraping Process...
 [2024-03-21T18:01:00Z] [INFO] Starting the Finished Crons Checking Process...
+[2024-03-22T09:32:23Z] [INFO] Server is running on port 3000
+[2024-03-22T09:49:39Z] [INFO] Server is running on port 3000
+[2024-03-22T09:58:51Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra-1ba780267/, robertfire448@gmail.com
+[2024-03-22T09:58:56Z] [INFO] New Customer Added: Sajawal Chopra, robertfire448@gmail.com, urn:li:fsd_profile:ACoAAEFujR4BIB92hysxrDCN14ZlVIgxLj3_Bbo
+[2024-03-22T09:58:56Z] [INFO] New Cookie Added: sajawal-chopra-1ba780267, 2598b3b0-4623-4dd8-98e5-67a86e213810
+[2024-03-22T10:00:22Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra-1ba780267/, robertfire448@gmail.com
+[2024-03-22T10:00:23Z] [INFO] No Change in Cookie: sajawal-chopra-1ba780267, robertfire448@gmail.com
+[2024-03-22T10:00:53Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra-1ba780267/, robertfire448@gmail.com
+[2024-03-22T10:00:53Z] [INFO] No Change in Cookie: sajawal-chopra-1ba780267, robertfire448@gmail.com
+[2024-03-22T10:01:24Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra-1ba780267/, robertfire448@gmail.com
+[2024-03-22T10:01:24Z] [INFO] No Change in Cookie: sajawal-chopra-1ba780267, robertfire448@gmail.com
+[2024-03-22T10:02:57Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra-1ba780267/, robertfire448@gmail.com
+[2024-03-22T10:02:57Z] [INFO] No Change in Cookie: sajawal-chopra-1ba780267, robertfire448@gmail.com
+[2024-03-22T10:04:03Z] [INFO] Server is running on port 3000
+[2024-03-29T11:02:16Z] [INFO] Server is running on port 3000

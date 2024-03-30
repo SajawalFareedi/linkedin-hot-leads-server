@@ -78,9 +78,7 @@ app.get("/success", async (req, res) => {
 
     const customerExists = await prisma.api.findFirst({ where: { email: email } });
 
-    if (customerExists) {
-        res.render("success", { api_key: customerExists.api_key });
-    } else {
+    if (!customerExists) {
         const saltRounds = 10;
         const token = uuidv4();
         const hashedToken = await bcrypt.hash(token, saltRounds);
@@ -97,7 +95,7 @@ app.get("/success", async (req, res) => {
             from: 'Floppy App <sajawalfareedi448@gmail.com>',
             to: email,
             subject: 'Your Floppy App License Key',
-            text: `Thanks for buying Floppy App! Here's your License Key: ${hashedToken.substring(10, 45) }`,
+            text: `Thanks for buying Floppy App! Here's your License Key: ${hashedToken.substring(10, 45)}`,
         };
 
         // TODO: Handle the error properly
@@ -108,9 +106,9 @@ app.get("/success", async (req, res) => {
                 logger.log(0, error);
             }
         });
+    };
 
-        res.render("success", { api_key: hashedToken.substring(10, 45) });
-    }
+    res.render("success");
 });
 
 app.post("/create-checkout-session", async (req, res) => {

@@ -19,47 +19,11 @@
                 <script src="https://js.stripe.com/v3/"></script>
                 <link rel="stylesheet" href="/stylesheets/index.css">
             </head>
-            <body>
-                <!-- Flashing notifications https://github.com/maciejsaw/jQuery-FlashingNotifications --> 
-                <div class="flashing-notifications-wrapper">
-                    <div js-selector="flashing-notification__success" class="flashing-notification is-transparent is-hidden">
-                        <div class="flashing-notification__padding-wrapper">
-                        <div class="flashing-notification__box is-green-success">
-                            <div class="flashing-notification__icon-on-right-holder">
-                            <div class="flashing-notification__icon-on-right-holder" flashing-notifications__action-close-notification="true">
-                                <div class="flashing-notification__icon is-close-icon"></div>
-                            </div>
-                            </div>
-                            <div class="flashing-notification__icon-holder">
-                            <div class="flashing-notification__icon is-check"></div>
-                            </div>
-                            <div js-selector="flashing-notification-text" style="font-family: 'Open Sans', sans-serif; color: white;" class="flashing-notification__text">Copied!</div>
-                        </div>
-                        </div>
-                    </div>
-                    <div js-selector="flashing-notification__error" class="flashing-notification is-transparent is-hidden">
-                        <div class="flashing-notification__padding-wrapper">
-                        <div class="flashing-notification__box is-red-error">
-                            <div class="flashing-notification__icon-on-right-holder" flashing-notifications__action-close-notification="true">
-                            <div class="flashing-notification__icon is-close-icon"></div>
-                            </div>
-                            <div class="flashing-notification__icon-holder">
-                            <div class="flashing-notification__icon is-error"></div>
-                            </div>
-                            <div js-selector="flashing-notification-text" class="flashing-notification__text">Oops... Something went wrong.</div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End of flashing notifications https://github.com/maciejsaw/jQuery-FlashingNotifications --> 
                 <div class="header" style="display: flex; flex-direction: column; height: 100vh;">
                     <div class="msg">
                         <center>
                             <h1 class="pricing" style="font-size: 2.5em;font-family: 'Open Sans', sans-serif; color: white;">THANKS FOR BUYING FLOPPY APP!</h1>
-                            <span style="font-size: 1.25em; font-family: 'Open Sans', sans-serif; color: white;">Here is your License Key: 
-                                <span id="api_key" demo-button-success style="font-weight: 700; cursor: pointer;" title="Click to copy"> <%= api_key %> </span>
-                            </span>
-                            <input demo-time-input hidden value="3500"></input>
+                            <span style="font-size: 1.25em; font-family: 'Open Sans', sans-serif; color: white;">Please check your email for the License Key.</span>
                         </center>
                     </div>
                     <div style="flex-shrink: 0; margin-bottom: 0.2em;">
@@ -103,122 +67,6 @@
                         </svg>
                     </div>
                 </div>
-                <script>
-
-                    var FlashingNotifications = (function() {
-
-                        var FlashingNotifications__timerOne = {};
-                        var FlashingNotifications__timerTwo = {};
-
-                        function hideNotification(notificationType) {
-                            //find and cache selected html object
-                            var $notificationBox = $('[js-selector="flashing-notification__'+notificationType+'"]');
-
-                            $notificationBox.addClass('is-transparent');
-                            clearTimeout(FlashingNotifications__timerTwo[notificationType]);
-                            FlashingNotifications__timerTwo[notificationType] = setTimeout(function() {
-                                $notificationBox.addClass('is-hidden');
-                            }, 800);
-                        }
-
-                        var closeButtonAlreadyBinded = false;
-                        function bindCloseButton() {
-                            if (closeButtonAlreadyBinded === false) {
-                                $(document).on('click.flashingNotifications', '[flashing-notifications__action-close-notification="true"]', function() {
-                                    closeButtonAlreadyBinded = true;
-                                    var $notificationBox = $(this).closest('[js-selector^="flashing-notification__"]');
-                                    $notificationBox.addClass('is-transparent');
-                                    setTimeout(function() {
-                                        $notificationBox.addClass('is-hidden');
-                                    }, 800);
-                                });
-                            }
-                        }
-                        
-                        function showAndHideNotification(notificationType, htmlToPlaceInsideNotification, timeToWaitBeforeHiding) {
-
-                            //default arguments
-                            if (typeof notificationType === 'undefined' || notificationType === "") {
-                                notificationType = "neutral";
-                            }
-                            if (typeof timeToWaitBeforeHiding === 'undefined' || timeToWaitBeforeHiding === "") {
-                                timeToWaitBeforeHiding = 3500;
-                            }
-                        
-                            //find and cache selected html object
-                            var $notificationBox = $('[js-selector="flashing-notification__'+notificationType+'"]');    
-
-                            var updateNotificationBoxText = function() {
-                                //only update html if argument provided
-                                if (htmlToPlaceInsideNotification !== "" || typeof htmlToPlaceInsideNotification !== 'undefined'); {
-                                    $notificationBox.find('[js-selector="flashing-notification-text"]').html(htmlToPlaceInsideNotification);
-                                }
-                            };
-
-                            var showAndHideNotificationBox = function() {
-                                $notificationBox.removeClass('is-hidden');
-                                setTimeout(function() {
-                                    $notificationBox.removeClass('is-transparent');
-
-                                    clearTimeout(FlashingNotifications__timerOne[notificationType]);
-                                    clearTimeout(FlashingNotifications__timerTwo[notificationType]);
-
-                                    FlashingNotifications__timerOne[notificationType] = setTimeout(function() {
-                                        hideNotification(notificationType);
-                                    }, timeToWaitBeforeHiding);
-
-                                }, 20);
-                            };
-
-                            //If there's already a notification shown, first hide it and then show another one
-                            if ($notificationBox.hasClass('is-hidden') === false && $notificationBox.hasClass('is-transparent') === false) {
-                                hideNotification(notificationType);
-                                setTimeout(function() {
-                                    updateNotificationBoxText();
-                                    showAndHideNotificationBox();
-                                }, 1000);
-                            } else { //else simply show and hide notification
-                                updateNotificationBoxText();
-                                showAndHideNotificationBox();
-                            }
-
-                            bindCloseButton();
-
-                        }
-
-                        function hideAllNotifications() {
-                            hideNotification('success');
-                            hideNotification('error');
-                            hideNotification('neutral');
-                        }
-
-                        //TODO: options to disable hiding or separate method to just show and then automatically enforce X button, option to show and hide X button
-
-                        return {
-                            showAndHideNotification: showAndHideNotification,
-                            hideNotification: hideNotification,
-                            hideAllNotifications: hideAllNotifications
-                        };
-
-                    })();
-                    /*=====  End of FLashing notifications https://github.com/maciejsaw/jQuery-FlashingNotifications  ======*/
-
-
-                    /*Code for demo buttons */
-                    $(document).on('click', '[demo-button]', function() {
-                    FlashingNotifications.showAndHideNotification('neutral', $('[demo-text-input]').val(), $('[demo-time-input]').val());          
-                    });
-                    /*End code for demo buttons*/
-
-                    document.getElementById("api_key").addEventListener("click", () => {
-                        navigator.clipboard.writeText(document.getElementById("api_key").textContent.trim()).then(function () {
-                            FlashingNotifications.showAndHideNotification('success', $('[demo-text-input]').val(), $('[demo-time-input]').val());  
-                        }, function () {
-                            FlashingNotifications.showAndHideNotification('error', "Please copy manually...", $('[demo-time-input]').val());
-                        });
-                    });
-
-                </script>
             </body>
         </html>
     </body>
