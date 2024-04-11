@@ -16,7 +16,8 @@ CREATE TABLE "cookie" (
     "urn" VARCHAR NOT NULL,
     "ispremium" VARCHAR NOT NULL,
     "running" VARCHAR NOT NULL,
-    "scraping_day" INTEGER NOT NULL
+    "scraping_day" INTEGER NOT NULL,
+    "last_profile_view" VARCHAR
 );
 
 -- CreateTable
@@ -60,6 +61,6 @@ CREATE UNIQUE INDEX "cookie_unique" ON "cookie"("uuid");
 CREATE UNIQUE INDEX "customer_unique" ON "customer"("uuid");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "person_unique" ON "person"("uuid");
+CREATE UNIQUE INDEX "person_person_urn_idx" ON "person"("person_urn");
 
-Done in 1.68s.
+Done in 0.72s.

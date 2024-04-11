@@ -37,9 +37,9 @@ model customer {
 }
 
 model person {
-  uuid               String  @unique(map: "person_unique") @db.VarChar
+  uuid               String  @db.VarChar
   urn                String  @db.VarChar
-  person_urn         String  @db.VarChar
+  person_urn         String  @unique(map: "person_person_urn_idx") @db.VarChar
   first_name         String  @db.VarChar
   last_name          String  @db.VarChar
   profile_url        String  @db.VarChar

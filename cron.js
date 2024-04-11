@@ -2,33 +2,41 @@ require("dotenv").config();
 
 const moment = require("moment");
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const nodemailer = require('nodemailer');
-const { unlinkSync } = require("fs");
+// const nodemailer = require('nodemailer');
+const { unlinkSync, readFileSync } = require("fs");
 const utils = require('./utils');
 const logger = require("./logger");
 const { PrismaClient } = require('@prisma/client');
+const sendGridMail = require("@sendgrid/mail");
 
 const prisma = new PrismaClient({ log: ["info", "warn", "error"] });
+sendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 let CRON_STATUS = 0;
 let MAIN_CRON_RUNNING = 0; // Flag to know if the main cron is running
 let PROFILE_CRON_RUNNING = 0;  // Flag for each profile cron
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS
-    }
-});
+// const transporter = nodemailer.createTransport({
+//     host: "smtpout.secureserver.net",
+//     secure: true,
+//     secureConnection: false, // TLS requires secureConnection to be false
+//     tls: {
+//         ciphers: 'SSLv3'
+//     },
+//     requireTLS: true,
+//     port: 465,
+//     debug: true,
+//     auth: {
+//         user: process.env.MAIL_USER,
+//         pass: process.env.MAIL_PASS
+//     }
+// });
 
 // const transporter = nodemailer.createTransport({
-//     host: 'mail.floppyapp.io',
-//     port: 465,
-//     secure: true,
+//     service: 'gmail',
 //     auth: {
-//         user: process.env.MAIL_USER // 'bot@floppyapp.io',
-//         pass: process.env.MAIL_PASS // 'password'
+//         user: process.env.MAIL_USER,
+//         pass: process.env.MAIL_PASS
 //     }
 // });
 
@@ -183,9 +191,9 @@ async function getJobTitle(person_urn, data) {
     return "NO_JOB_TITLE";
 };
 
-async function getConnectionInfo(data) {
+async function getConnectionInfo(data, vanityName) {
 
-    let connectionInfo = { connection_degree: "NULL", is_follower: "NULL", when_connected: "NULL" };
+    let connectionInfo = { connection_degree: "", is_follower: "", when_connected: "" };
 
     try {
         const headers = {
@@ -201,11 +209,11 @@ async function getConnectionInfo(data) {
             "x-li-pem-metadata": "Voyager - Profile=profile-tab-initial-cards",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
-            "Referer": `https://www.linkedin.com/in/${data.user_id}/`,
+            "Referer": `https://www.linkedin.com/in/${vanityName}/`,
             "Referrer-Policy": "strict-origin-when-cross-origin"
         };
 
-        const url = `https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(vanityName:${data.user_id})&queryId=voyagerIdentityDashProfiles.895fdb8a5b9db42b70e4cb37c4a44507`;
+        const url = `https://www.linkedin.com/voyager/api/graphql?includeWebMetadata=true&variables=(vanityName:${vanityName})&queryId=voyagerIdentityDashProfiles.895fdb8a5b9db42b70e4cb37c4a44507`;
 
         const response = await utils.makeGetRequest(url, headers);
 
@@ -228,11 +236,12 @@ async function getConnectionInfo(data) {
                 if (Object.keys(obj.memberRelationship).includes("*connection")) {
                     connectionInfo["connection_degree"] = "1st";
                 } else {
-                    if (obj.memberRelationship.noConnection.memberDistance == "DISTANCE_2") {
+                    const memberDistance = obj.memberRelationship.noConnection.memberDistance;
+                    if (memberDistance == "DISTANCE_2") {
                         connectionInfo["connection_degree"] = "2nd";
-                    } else if (obj.memberRelationship.noConnection.memberDistance == "DISTANCE_3") {
+                    } else if (memberDistance == "DISTANCE_3") {
                         connectionInfo["connection_degree"] = "3rd";
-                    } else if (obj.memberRelationship.noConnection.memberDistance == "OUT_OF_NETWORK") {
+                    } else if (memberDistance == "OUT_OF_NETWORK") {
                         connectionInfo["connection_degree"] = "3rd+";
                     }
                 }
@@ -246,7 +255,7 @@ async function getConnectionInfo(data) {
         console.trace(error);
         logger.log(0, error);
     };
-
+    console.log(connectionInfo);
     return connectionInfo;
 }
 
@@ -331,7 +340,7 @@ async function getFreeViewersData(data) {
 
                 if (personData.length == 0) {
                     const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
-                    const connectionInfo = await getConnectionInfo(data);
+                    const connectionInfo = await getConnectionInfo(data, viewer.profile_url.split("/in/").at(-1).split("/")[0]);
 
                     await prisma.person.create({
                         data: {
@@ -370,6 +379,7 @@ async function getFreeViewersData(data) {
     };
 };
 
+// TODO: Not able to get more than 10 viewers
 async function getPremiumViewersData(data) {
     try {
         const headers = {
@@ -414,6 +424,8 @@ async function getPremiumViewersData(data) {
             const paging = premiumAnalytics.paging;
             const viewerList = premiumAnalytics.elements;
             const included = response.data.included;
+
+            // console.log(JSON.stringify(response.data));
 
             let viewsin24Hrs = [];
 
@@ -462,7 +474,7 @@ async function getPremiumViewersData(data) {
 
                     if (personData.length == 0) {
                         const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
-                        const connectionInfo = await getConnectionInfo(data);
+                        const connectionInfo = await getConnectionInfo(data, viewer.profile_url.split("/in/").at(-1).split("/")[0]);
 
                         await prisma.person.create({
                             data: {
@@ -641,7 +653,7 @@ async function getComments(data, postID) {
                             const firstName = comment.commenter.title.text.split(" ")[0]
                             const lastName = comment.commenter.title.text.split(" ").slice(1).join(' ');
                             const jobTitle = await getJobTitle(comment.commenter.actor["*profileUrn"].split(":").at(-1), data);
-                            const connectionInfo = await getConnectionInfo(data);
+                            const connectionInfo = await getConnectionInfo(data, comment.commenter.commenterProfileId);
 
                             await prisma.person.create({
                                 data: {
@@ -744,7 +756,7 @@ async function getReactions(data, postID) {
                         const firstName = reaction.reactorLockup.title.text.split(" ")[0]
                         const lastName = reaction.reactorLockup.title.text.split(" ").slice(1).join(' ');
                         const jobTitle = await getJobTitle(reaction.actorUrn.split(":").at(-1), data);
-                        const connectionInfo = await getConnectionInfo(data);
+                        const connectionInfo = await getConnectionInfo(data, reaction.actorUrn.split(":").at(-1));
 
                         await prisma.person.create({
                             data: {
@@ -787,29 +799,9 @@ async function getReactions(data, postID) {
     }
 }
 
-async function cron(data) {
-    try {
-
-        await updateCookie(data.uuid, { running: "YES" });
-        const postsIDs = await getRecentEngagements(data);
-
-        for (let i = 0; i < postsIDs.length; i++) {
-            await getComments(data, postsIDs[i]);
-            await getReactions(data, postsIDs[i]);
-        }
-
-        await updateCookie(data.uuid, { running: "NO" });
-
-    } catch (error) {
-        console.trace(error);
-        logger.log(0, error);
-    };
-};
-
 async function sendDataToCustomer(customer) {
     try {
         const persons = await prisma.person.findMany({ where: { uuid: customer.uuid, urn: customer.urn } });
-
         if (persons.length == 0) return;
 
         let csvData = [];
@@ -822,13 +814,13 @@ async function sendDataToCustomer(customer) {
                     "First Name": person.first_name,
                     "Last Name": person.last_name,
                     "Profile Url": person.profile_url,
+                    "Job Title": person.job_title,
                     "Profile Headline": person.profile_headline,
                     "Connection Degree": person.connection_degree,
                     "Is Follower": person.is_follower,
                     "When Connected": person.when_connected,
-                    "Job Title": person.job_title,
-                    "Comments Count": person.comments_count,
                     "Reactions Count": person.reactions_count,
+                    "Comments Count": person.comments_count,
                     "Profile View Count": person.profile_view_count,
                     "Score": person.score
                 }
@@ -841,16 +833,17 @@ async function sendDataToCustomer(customer) {
                 { id: 'First Name', title: 'First Name' },
                 { id: 'Last Name', title: 'Last Name' },
                 { id: 'Profile Url', title: 'Profile Url' },
+                { id: 'Job Title', title: 'Job Title' },
                 { id: 'Profile Headline', title: 'Profile Headline' },
                 { id: 'Connection Degree', title: 'Connection Degree' },
                 { id: 'Is Follower', title: 'Is Follower' },
                 { id: 'When Connected', title: 'When Connected' },
-                { id: 'Job Title', title: 'Job Title' },
-                { id: 'Comments Count', title: 'Comments Count' },
                 { id: 'Reactions Count', title: 'Reactions Count' },
+                { id: 'Comments Count', title: 'Comments Count' },
                 { id: 'Profile View Count', title: 'Profile View Count' },
                 { id: 'Score', title: 'Score' }
-            ]
+            ],
+            encoding: "utf8"
         });
 
         csvData = csvData.sort(function (a, b) { return a["Score"] - b["Score"] }).reverse() // Sort by score in descending order
@@ -858,21 +851,31 @@ async function sendDataToCustomer(customer) {
 
         // Send email with CSV attachment
         const mailOptions = {
-            from: 'Floppy App <sajawalfareedi448@gmail.com>',
+            from: { name: 'Floppy App', email: process.env.MAIL_USER },
             to: customer.email,
             subject: 'We found NEW LEADS on LinkedIn for you 🔥',
-            text: 'The CSV file with your hottest leads on LinkedIn from the last 7 days is attached.\n\nCheck it out now!',
+            text: `
+            The CSV file with your hottest leads on LinkedIn from the last 7 days is attached.
+            
+            Check it out now!
+            `,
             attachments: [
+                // {
+                //     filename: 'linkedin_hot_leads.csv',
+                //     path: `./csv_files/${customer.uuid}.csv`
+                // },
                 {
+                    content: readFileSync(`./csv_files/${customer.uuid}.csv`, { encoding: "base64" }),
                     filename: 'linkedin_hot_leads.csv',
-                    path: `./csv_files/${customer.uuid}.csv`
+                    type: 'text/csv',
                 }
             ]
         };
 
         // TODO: Handle the error properly
         logger.log(2, `Sending the data CSV file to customer: ${customer.name} - ${customer.email}`);
-        transporter.sendMail(mailOptions, async function (error, info) {
+
+        sendGridMail.send(mailOptions, false, async (error, result) => {
             if (error) {
                 logger.log(0, `Error occured while trying to send the Email to customer: ${customer.uuid}`)
                 console.trace(error);
@@ -883,6 +886,18 @@ async function sendDataToCustomer(customer) {
                 await prisma.person.deleteMany({ where: { uuid: customer.uuid, urn: customer.urn } });
             }
         });
+
+        // transporter.sendMail(mailOptions, async function (error, info) {
+        //     if (error) {
+        //         logger.log(0, `Error occured while trying to send the Email to customer: ${customer.uuid}`)
+        //         console.trace(error);
+        //         logger.log(0, error);
+        //     } else {
+        //         logger.log(2, `Sent the data CSV file to customer: ${customer.name} - ${customer.email}`);
+        //         unlinkSync(`./csv_files/${customer.uuid}.csv`);
+        //         await prisma.person.deleteMany({ where: { uuid: customer.uuid, urn: customer.urn } });
+        //     }
+        // });
 
     } catch (error) {
         console.trace(error);
@@ -911,28 +926,25 @@ async function profileViewCron(data, isLastProfile) {
     } catch (error) {
         console.trace(error);
         logger.log(0, error);
+        PROFILE_CRON_RUNNING = 0;
     };
 };
 
-async function checkForFinishedCrons() {
+async function cron(data) {
     try {
-        logger.log(2, "Starting the Finished Crons Checking Process...");
+        await updateCookie(data.uuid, { running: "YES" });
+        const postsIDs = await getRecentEngagements(data);
 
-        while (true) {
-            const cookies = await getCookies({ running: "NO" });
+        for (let i = 0; i < postsIDs.length; i++) {
+            await getComments(data, postsIDs[i]);
+            await getReactions(data, postsIDs[i]);
+        }
 
-            if (cookies.length > 0) {
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i];
-                    const customer = await prisma.customer.findFirst({ where: { uuid: cookie.uuid, urn: cookie.urn } });
-                    await sendDataToCustomer(customer);
-                    await prisma.customer.update({ where: { uuid: cookie.uuid, urn: cookie.urn }, data: { last_ran: moment.utc().format() } });
-                }
-            }
+        await updateCookie(data.uuid, { running: "NO" });
 
-            await sleep(40);  // Wait for 40 seconds before checking again
-
-        };
+        const customer = await prisma.customer.findFirst({ where: { uuid: data.uuid, urn: data.urn } });
+        await sendDataToCustomer(customer);
+        await prisma.customer.update({ where: { uuid: data.uuid, urn: data.urn }, data: { last_ran: moment.utc().format() } });
 
     } catch (error) {
         console.trace(error);
@@ -940,9 +952,38 @@ async function checkForFinishedCrons() {
     };
 };
 
+// async function checkForFinishedCrons() {
+//     try {
+//         logger.log(2, "Starting the Finished Crons Checking Process...");
+
+//         while (true) {
+//             const cookies = await getCookies({ running: "NO" });
+
+//             if (cookies.length > 0) {
+//                 for (let i = 0; i < cookies.length; i++) {
+//                     const cookie = cookies[i];
+//                     const customer = await prisma.customer.findFirst({ where: { uuid: cookie.uuid, urn: cookie.urn } });
+//                     await sendDataToCustomer(customer);
+//                     await prisma.customer.update({ where: { uuid: cookie.uuid, urn: cookie.urn }, data: { last_ran: moment.utc().format() } });
+//                 }
+//             }
+
+//             await sleep(40);  // Wait for 40 seconds before checking again
+
+//         };
+
+//     } catch (error) {
+//         console.trace(error);
+//         logger.log(0, error);
+//     };
+// };
+
+// TODO: See if you can cache the Person data
 // TODO: Don't repeat the same code...
 // TODO: try to use customer's timezone...
 // TODO: Reset "running" status if an error occurs...
+// TODO: Fix the finishedCrons data sending function... if the data is already sent to all customers... then stop the loop... - DONE
+// TODO: Handle last ran logic - DONE
 
 async function main() {
     try {
@@ -953,13 +994,14 @@ async function main() {
         logger.log(2, "Cron is Up & Running!");
 
         while (true) {
-
             if (PROFILE_CRON_RUNNING == 0) {
                 logger.log(2, "Starting the Profile View Scraping Process...");
                 const cookies = await getCookies();
 
                 if (cookies.length > 0) {
                     PROFILE_CRON_RUNNING = 1;
+
+                    let anyCronRunning = false;
 
                     for (let i = 0; i < cookies.length; i++) {
                         const isLastProfile = i >= (cookies.length - 1);
@@ -968,12 +1010,19 @@ async function main() {
                             if (cookies[i].last_profile_view.length > 0) {
                                 if (moment.utc().hour() == 0 && moment(cookies[i].last_profile_view).day() !== moment.utc().day()) {
                                     profileViewCron(cookies[i], isLastProfile);
+                                    anyCronRunning = true;
                                 }
+                            } else {
+                                profileViewCron(cookies[i], isLastProfile);
+                                anyCronRunning = true;
                             }
                         } else {
                             profileViewCron(cookies[i], isLastProfile);
+                            anyCronRunning = true;
                         };
                     };
+
+                    if (!anyCronRunning) { PROFILE_CRON_RUNNING = 0 };
                 };
             };
 
@@ -989,13 +1038,17 @@ async function main() {
 
                         for (let i = 0; i < cookies.length; i++) {
                             if (moment.utc().day() == cookies[i].scraping_day) {
-                                crons.push(cron(cookies[i]));
+                                const customer = await prisma.customer.findFirst({ where: { uuid: cookies[i].uuid } });
+
+                                if (moment.utc().date() !== moment(customer.last_ran).date()) {
+                                    crons.push(cron(cookies[i]));
+                                }
                             };
                         };
 
                         if (crons.length > 0) {
                             logger.log(2, "Starting the Interaction Scraping Process...");
-                            checkForFinishedCrons();
+                            // checkForFinishedCrons();
                             await Promise.allSettled(crons);
                             MAIN_CRON_RUNNING = 0;
                         } else {
@@ -1022,3 +1075,31 @@ async function main() {
 
 
 module.exports = main;
+
+
+const mailOptions = {
+    from: { name: 'Floppy App', email: process.env.MAIL_USER },
+    to: "sajawalfareedi448@gmail.com",
+    subject: 'We found NEW LEADS on LinkedIn for you 🔥',
+    text: `
+    The CSV file with your hottest leads on LinkedIn from the last 7 days is attached.
+            
+    Check it out now!
+    `,
+    attachments: [
+        {
+            content: readFileSync(`./linkedin_hot_leads.csv`, { encoding: "base64" }),
+            filename: 'linkedin_hot_leads.csv',
+            type: 'text/csv',
+        }
+    ]
+};
+
+sendGridMail.send(mailOptions, false, async (error, result) => {
+    if (error) {
+        logger.log(0, `Error occured while trying to send the Email to customer`)
+        console.log(error.response.body)
+    } else {
+        logger.log(2, `Sent the data CSV file to customer`);
+    }
+});

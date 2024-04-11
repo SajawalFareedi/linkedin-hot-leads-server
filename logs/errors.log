@@ -270,3 +270,31 @@ Can't reach database server at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rd
 
 Please make sure your database server is running at `cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com`:`5432`.
 [2024-03-21T13:34:38Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-04-01T10:54:11Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:43:40
+
+  40 try {
+  41 
+  42     if (!filters) {
+→ 43         return await prisma.cookie.findMany(
+The table `public.cookie` does not exist in the current database.
+[2024-04-01T10:54:11Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-04-01T10:57:45Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.cookie.findMany()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\cron.js:43:40
+
+  40 try {
+  41 
+  42     if (!filters) {
+→ 43         return await prisma.cookie.findMany(
+The column `cookie.last_profile_view` does not exist in the current database.
+[2024-04-01T10:57:45Z] [ERROR] TypeError: Cannot read properties of null (reading 'length')
+[2024-04-09T01:03:48Z] [ERROR] ReferenceError: customer is not defined
+[2024-04-09T10:18:36Z] [ERROR] AxiosError: Request failed with status code 400
+[2024-04-09T17:50:41Z] [ERROR] Error occured while trying to send the Email to customer
+[2024-04-09T17:50:41Z] [ERROR] Forbidden (403)
+  The from address does not match a verified Sender Identity. Mail cannot be sent until this error is resolved. Visit https://sendgrid.com/docs/for-developers/sending-email/sender-identity/ to see the Sender Identity requirements
+    from
+    null
+[2024-04-09T17:51:27Z] [ERROR] Error occured while trying to send the Email to customer

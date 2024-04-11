@@ -569,3 +569,62 @@
 [2024-03-22T10:02:57Z] [INFO] No Change in Cookie: sajawal-chopra-1ba780267, robertfire448@gmail.com
 [2024-03-22T10:04:03Z] [INFO] Server is running on port 3000
 [2024-03-29T11:02:16Z] [INFO] Server is running on port 3000
+[2024-04-01T10:54:10Z] [INFO] Cron is Up & Running!
+[2024-04-01T10:54:10Z] [INFO] Starting the Profile View Scraping Process...
+[2024-04-01T10:54:10Z] [INFO] Server is running on port 3000
+[2024-04-01T10:57:44Z] [INFO] Cron is Up & Running!
+[2024-04-01T10:57:44Z] [INFO] Starting the Profile View Scraping Process...
+[2024-04-01T10:57:44Z] [INFO] Server is running on port 3000
+[2024-04-01T11:01:00Z] [INFO] Cron is Up & Running!
+[2024-04-01T11:01:00Z] [INFO] Starting the Profile View Scraping Process...
+[2024-04-01T11:01:00Z] [INFO] Server is running on port 3000
+[2024-04-01T11:01:02Z] [INFO] Checking for customers to scrape today...
+[2024-04-08T23:27:54Z] [INFO] Cron is Up & Running!
+[2024-04-08T23:27:54Z] [INFO] Starting the Profile View Scraping Process...
+[2024-04-08T23:27:56Z] [INFO] Checking for customers to scrape today...
+[2024-04-09T00:49:21Z] [INFO] Cron is Up & Running!
+[2024-04-09T00:49:21Z] [INFO] Starting the Finished Crons Checking Process...
+[2024-04-09T00:49:21Z] [INFO] Server is running on port 3000
+[2024-04-09T00:49:24Z] [INFO] Sending the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:49:28Z] [INFO] Sent the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:50:06Z] [INFO] Sending the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:50:10Z] [INFO] Sent the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:50:47Z] [INFO] Sending the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:50:51Z] [INFO] Sent the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:51:29Z] [INFO] Sending the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:51:32Z] [INFO] Sent the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:52:11Z] [INFO] Sending the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:52:14Z] [INFO] Sent the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:52:52Z] [INFO] Sending the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:52:55Z] [INFO] Sent the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:54:07Z] [INFO] Cron is Up & Running!
+[2024-04-09T00:54:07Z] [INFO] Starting the Finished Crons Checking Process...
+[2024-04-09T00:54:07Z] [INFO] Server is running on port 3000
+[2024-04-09T00:55:47Z] [INFO] Cron is Up & Running!
+[2024-04-09T00:55:47Z] [INFO] Starting the Finished Crons Checking Process...
+[2024-04-09T00:55:47Z] [INFO] Server is running on port 3000
+[2024-04-09T00:57:27Z] [INFO] Cron is Up & Running!
+[2024-04-09T00:57:27Z] [INFO] Starting the Finished Crons Checking Process...
+[2024-04-09T00:57:27Z] [INFO] Server is running on port 3000
+[2024-04-09T00:58:19Z] [INFO] Cron is Up & Running!
+[2024-04-09T00:58:19Z] [INFO] Starting the Finished Crons Checking Process...
+[2024-04-09T00:58:19Z] [INFO] Server is running on port 3000
+[2024-04-09T00:58:45Z] [INFO] Cron is Up & Running!
+[2024-04-09T00:58:45Z] [INFO] Starting the Finished Crons Checking Process...
+[2024-04-09T00:58:45Z] [INFO] Server is running on port 3000
+[2024-04-09T00:59:29Z] [INFO] Sending the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T00:59:32Z] [INFO] Sent the data CSV file to customer: Nils Grammerstorf - ng@aiment.de
+[2024-04-09T01:03:48Z] [INFO] Cron is Up & Running!
+[2024-04-09T01:03:48Z] [INFO] Server is running on port 3000
+[2024-04-09T01:04:18Z] [INFO] Cron is Up & Running!
+[2024-04-09T01:04:18Z] [INFO] Server is running on port 3000
+[2024-04-09T01:04:19Z] [INFO] Starting the Profile View Scraping Process...
+[2024-04-09T01:04:19Z] [INFO] Checking for customers to scrape today...
+[2024-04-09T01:04:20Z] [INFO] Starting the Interaction Scraping Process...
+[2024-04-09T01:04:20Z] [INFO] Starting the Finished Crons Checking Process...
+[2024-04-09T09:59:47Z] [INFO] Cron is Up & Running!
+[2024-04-09T09:59:47Z] [INFO] Starting the Profile View Scraping Process...
+[2024-04-09T09:59:47Z] [INFO] Server is running on port 3000
+[2024-04-09T10:13:05Z] [INFO] Cron is Up & Running!
+[2024-04-09T10:13:05Z] [INFO] Starting the Profile View Scraping Process...
+[2024-04-09T10:13:05Z] [INFO] Server is running on port 3000

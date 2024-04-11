@@ -7,74 +7,71 @@ const cors = require("cors");
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require("bcrypt");
 const moment = require("moment");
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
+const sendGridMail = require("@sendgrid/mail");
 const { unlinkSync, open, close } = require("fs");
 const { PrismaClient } = require('@prisma/client');
-const Stripe = require("stripe").default;
 
-const stripe = new Stripe(process.env.STRIPE_API_KEY);
 const prisma = new PrismaClient({ log: ["info", "warn", "error"] });
 const app = express();
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS
-    }
-});
 
 // const transporter = nodemailer.createTransport({
-//     host: 'mail.floppyapp.io',
-//     port: 465,
-//     secure: true,
+//     service: 'gmail',
 //     auth: {
-//         user: process.env.MAIL_USER // 'bot@floppyapp.io',
-//         pass: process.env.MAIL_PASS // 'password'
+//         user: process.env.MAIL_USER,
+//         pass: process.env.MAIL_PASS
+//     }
+// });
+
+// MAIL_USER = "bot@floppyapp.io",
+// MAIL_PASS = "a#pC$6y&VE5433##"
+
+// const transporter = nodemailer.createTransport({
+//     host: "smtpout.secureserver.net",
+//     // host: "smtp.office365.com",
+//     secure: true,
+//     secureConnection: false, // TLS requires secureConnection to be false
+//     tls: {
+//         ciphers: 'SSLv3'
+//     },
+//     requireTLS: true,
+//     port: 465,
+//     debug: true,
+//     auth: {
+//         user: process.env.MAIL_USER,
+//         pass: process.env.MAIL_PASS
 //     }
 // });
 
 const PORT = process.env.PORT || 3000;
 
-// let RUNNING = 0; if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
+let RUNNING = 0; if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
 
-app.set("view engine", "ejs");
+sendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-app.use(express.static(__dirname + "/public"));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
 app.get("/", (req, res) => {
-    res.render("index", { app_price: 30 });
+    res.send({ status: "Up & Running!" });
 });
 
 app.post("/", (req, res) => {
     logger.log(2, `New Cookies received: ${req.body.url}, ${req.body.email}`);
     utils.handleCookies(req.body);
     res.json("Data recieved successfully!");
-
 });
 
-app.get("/get-app", (req, res) => {
-    res.render("payment", { serverUrl: process.env.BACKEND_URL });
-});
+app.post("/stripe-webhook", async (req, res) => {
+    const event = req.body;
 
-app.get("/success", async (req, res) => {
+    if (event.type !== "customer.created") {
+        return res.send({ message: "ok" });
+    }
 
-    if (!req.query.session_id) {
-        res.send({ message: "No Session Id Provided" });
-        return;
-    };
-
-    let email = "";
-    const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-
-    if (typeof session.customer !== "string") {
-        email = session.customer.email;
-    } else {
-        const customer = await stripe.customers.retrieve(session.customer);
-        email = customer.email;
-    };
+    const customer = event.data.object;
+    const email = customer.email;
 
     const customerExists = await prisma.api.findFirst({ where: { email: email } });
 
@@ -92,55 +89,50 @@ app.get("/success", async (req, res) => {
         });
 
         const mailOptions = {
-            from: 'Floppy App <sajawalfareedi448@gmail.com>',
+            from: { name: 'Floppy App', email: process.env.MAIL_USER },
             to: email,
             subject: 'Your Floppy App License Key',
-            text: `Thanks for buying Floppy App! Here's your License Key: ${hashedToken.substring(10, 45)}`,
+            text: `
+            Thanks for subscribing to Floppy App!
+
+            Here's your License Key: ${hashedToken.substring(10, 45)}
+
+            Complete steps 1-8 to get your first report (Video):
+            1. Download the Floppy Chrome Extension
+            2. Copy the Floppy license key above
+            3. Insert the license key into the Chrome Extension
+            4. Click 'Verify'
+            5. Insert the LinkedIn URL of your profile
+            6. Enter your correct email address to receive the report
+            7. Choose a day you want to receive your report every week
+            8. Click 'Start'
+
+            Your first report will arrive within the next 24 hours.<br>
+            After this, we will send you a report every 7 days on the day you chose.
+
+            Thanks,
+            The Floppy Team
+            `,
         };
 
-        // TODO: Handle the error properly
-        transporter.sendMail(mailOptions, async function (error, info) {
+        sendGridMail.send(mailOptions, false, (error, result) => {
             if (error) {
                 logger.log(0, `Error occured while trying to send the API Key Email to customer: ${email}`)
                 console.trace(error);
                 logger.log(0, error);
             }
         });
+
+        // transporter.sendMail(mailOptions, async function (error, info) {
+        //     if (error) {
+        //         logger.log(0, `Error occured while trying to send the API Key Email to customer: ${email}`)
+        //         console.trace(error);
+        //         logger.log(0, error);
+        //     }
+        // });
     };
 
-    res.render("success");
-});
-
-app.post("/create-checkout-session", async (req, res) => {
-    try {
-        const customerExists = await prisma.api.findFirst({ where: { email: req.body.customerEmail } });
-
-        if (customerExists) {
-            res.send({ message: "already exists" });
-        } else {
-            const customer = await stripe.customers.create({
-                email: req.body.customerEmail
-            });
-
-            const session = await stripe.checkout.sessions.create({
-                customer: customer.id,
-                payment_method_types: ["card"],
-                mode: "subscription",
-                line_items: [{
-                    price: "price_1OvbwCICmfhOJ5j2i47ggBOS",
-                    quantity: 1
-                }],
-                success_url: `${process.env.BACKEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${process.env.BACKEND_URL}/`
-            });
-
-            res.send({ id: session.id, url: session.url });
-        }
-    } catch (error) {
-        console.trace(error);
-        logger.log(0, error);
-        res.status(500).send({ message: "Error creating checkout session." });
-    };
+    res.send({ message: "ok" });
 });
 
 app.get("/download_log_file", (req, res) => {
