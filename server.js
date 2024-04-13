@@ -7,7 +7,6 @@ const cors = require("cors");
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require("bcrypt");
 const moment = require("moment");
-// const nodemailer = require("nodemailer");
 const sendGridMail = require("@sendgrid/mail");
 const { unlinkSync, open, close } = require("fs");
 const { PrismaClient } = require('@prisma/client');
@@ -15,37 +14,9 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient({ log: ["info", "warn", "error"] });
 const app = express();
 
-// const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: process.env.MAIL_USER,
-//         pass: process.env.MAIL_PASS
-//     }
-// });
-
-// MAIL_USER = "bot@floppyapp.io",
-// MAIL_PASS = "a#pC$6y&VE5433##"
-
-// const transporter = nodemailer.createTransport({
-//     host: "smtpout.secureserver.net",
-//     // host: "smtp.office365.com",
-//     secure: true,
-//     secureConnection: false, // TLS requires secureConnection to be false
-//     tls: {
-//         ciphers: 'SSLv3'
-//     },
-//     requireTLS: true,
-//     port: 465,
-//     debug: true,
-//     auth: {
-//         user: process.env.MAIL_USER,
-//         pass: process.env.MAIL_PASS
-//     }
-// });
-
 const PORT = process.env.PORT || 3000;
 
-let RUNNING = 0; if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
+// let RUNNING = 0; if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
 
 sendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -85,6 +56,7 @@ app.post("/stripe-webhook", async (req, res) => {
                 email: email,
                 api_key: hashedToken.substring(10, 45),
                 created: moment.utc().format(),
+                uuid: "NO_UUID"
             }
         });
 
@@ -122,14 +94,6 @@ app.post("/stripe-webhook", async (req, res) => {
                 logger.log(0, error);
             }
         });
-
-        // transporter.sendMail(mailOptions, async function (error, info) {
-        //     if (error) {
-        //         logger.log(0, `Error occured while trying to send the API Key Email to customer: ${email}`)
-        //         console.trace(error);
-        //         logger.log(0, error);
-        //     }
-        // });
     };
 
     res.send({ message: "ok" });
@@ -166,17 +130,22 @@ app.get("/delete_log_file", (req, res) => {
 });
 
 app.post("/validate-api", async (req, res) => {
-    const licenseKey = req.body.licenseKey;
+    const licenseKey = req.body["licenseKey"]
 
-    const result = await prisma.api.findFirst({
-        where: { api_key: licenseKey }
-    });
+    if (licenseKey) {
+        const result = await prisma.api.findFirst({
+            where: { api_key: licenseKey }
+        });
 
-    if (result) {
-        res.json({ message: "ok" });
+        if (result) {
+            res.json({ message: "ok" });
+        } else {
+            res.status(403).send({ message: "error" });
+        }
     } else {
         res.status(403).send({ message: "error" });
     }
+
 });
 
 app.listen(PORT, () => {

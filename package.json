@@ -2,7 +2,7 @@
   "name": "floppy_app",
   "description": "Unlock your hottest leads on LinkedIn: Generate Hot Leads Every Week",
   "private": true,
-  "version": "1.4.3",
+  "version": "1.4.8",
   "main": "server.js",
   "scripts": {
     "build": "prisma generate",

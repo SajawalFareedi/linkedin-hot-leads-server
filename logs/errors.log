@@ -298,3 +298,969 @@ The column `cookie.last_profile_view` does not exist in the current database.
     from
     null
 [2024-04-09T17:51:27Z] [ERROR] Error occured while trying to send the Email to customer
+[2024-04-13T09:29:37Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || cookieExists[0].scraping_day !== scrapingDay) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+              scraping_day: "NO_DAY"
+                            ~~~~~~~~
+            }
+          })
+
+Argument `scraping_day`: Invalid value provided. Expected Int or IntFieldUpdateOperationsInput, provided String.
+[2024-04-13T09:31:56Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || cookieExists[0].scraping_day !== scrapingDay) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+              scraping_day: "NO_DAY"
+                            ~~~~~~~~
+            }
+          })
+
+Argument `scraping_day`: Invalid value provided. Expected Int or IntFieldUpdateOperationsInput, provided String.
+[2024-04-13T09:59:36Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:36Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:36Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:36Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:36Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:36Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:36Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:36Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:36Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:37Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:37Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:37Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T09:59:37Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:07Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:00:08Z] [ERROR] PrismaClientValidationError: 
+Invalid `prisma.cookie.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:245:41
+
+  242     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
+  243     logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+  244 } else if (alreadyExists[0].email !== userEmail || (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY")) {
+→ 245     await prisma.cookie.update({
+            where: {
+              user_id: "sajawal-fareedi",
+              uuid: "05beebdb-ccbb-450d-b9eb-1c82a464f28f"
+            },
+            data: {
+          +   scraping_day: Int
+            }
+          })
+
+Argument `scraping_day` is missing.
+[2024-04-13T10:25:26Z] [ERROR] TypeError: Cannot read properties of undefined (reading 'li_at')
+[2024-04-13T10:39:27Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:41:38Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+[2024-04-13T10:42:03Z] [ERROR] PrismaClientKnownRequestError: 
+Invalid `prisma.customer.update()` invocation in
+C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_app\server\utils.js:250:43
+
+  247 }
+  248 
+  249 if (alreadyExists[0].email !== userEmail) {
+→ 250     await prisma.customer.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.

@@ -2,7 +2,6 @@ require("dotenv").config();
 
 const moment = require("moment");
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-// const nodemailer = require('nodemailer');
 const { unlinkSync, readFileSync } = require("fs");
 const utils = require('./utils');
 const logger = require("./logger");
@@ -15,30 +14,6 @@ sendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 let CRON_STATUS = 0;
 let MAIN_CRON_RUNNING = 0; // Flag to know if the main cron is running
 let PROFILE_CRON_RUNNING = 0;  // Flag for each profile cron
-
-// const transporter = nodemailer.createTransport({
-//     host: "smtpout.secureserver.net",
-//     secure: true,
-//     secureConnection: false, // TLS requires secureConnection to be false
-//     tls: {
-//         ciphers: 'SSLv3'
-//     },
-//     requireTLS: true,
-//     port: 465,
-//     debug: true,
-//     auth: {
-//         user: process.env.MAIL_USER,
-//         pass: process.env.MAIL_PASS
-//     }
-// });
-
-// const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: process.env.MAIL_USER,
-//         pass: process.env.MAIL_PASS
-//     }
-// });
 
 function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
@@ -860,10 +835,7 @@ async function sendDataToCustomer(customer) {
             Check it out now!
             `,
             attachments: [
-                // {
-                //     filename: 'linkedin_hot_leads.csv',
-                //     path: `./csv_files/${customer.uuid}.csv`
-                // },
+
                 {
                     content: readFileSync(`./csv_files/${customer.uuid}.csv`, { encoding: "base64" }),
                     filename: 'linkedin_hot_leads.csv',
@@ -886,18 +858,6 @@ async function sendDataToCustomer(customer) {
                 await prisma.person.deleteMany({ where: { uuid: customer.uuid, urn: customer.urn } });
             }
         });
-
-        // transporter.sendMail(mailOptions, async function (error, info) {
-        //     if (error) {
-        //         logger.log(0, `Error occured while trying to send the Email to customer: ${customer.uuid}`)
-        //         console.trace(error);
-        //         logger.log(0, error);
-        //     } else {
-        //         logger.log(2, `Sent the data CSV file to customer: ${customer.name} - ${customer.email}`);
-        //         unlinkSync(`./csv_files/${customer.uuid}.csv`);
-        //         await prisma.person.deleteMany({ where: { uuid: customer.uuid, urn: customer.urn } });
-        //     }
-        // });
 
     } catch (error) {
         console.trace(error);
@@ -951,32 +911,6 @@ async function cron(data) {
         logger.log(0, error);
     };
 };
-
-// async function checkForFinishedCrons() {
-//     try {
-//         logger.log(2, "Starting the Finished Crons Checking Process...");
-
-//         while (true) {
-//             const cookies = await getCookies({ running: "NO" });
-
-//             if (cookies.length > 0) {
-//                 for (let i = 0; i < cookies.length; i++) {
-//                     const cookie = cookies[i];
-//                     const customer = await prisma.customer.findFirst({ where: { uuid: cookie.uuid, urn: cookie.urn } });
-//                     await sendDataToCustomer(customer);
-//                     await prisma.customer.update({ where: { uuid: cookie.uuid, urn: cookie.urn }, data: { last_ran: moment.utc().format() } });
-//                 }
-//             }
-
-//             await sleep(40);  // Wait for 40 seconds before checking again
-
-//         };
-
-//     } catch (error) {
-//         console.trace(error);
-//         logger.log(0, error);
-//     };
-// };
 
 // TODO: See if you can cache the Person data
 // TODO: Don't repeat the same code...
@@ -1075,31 +1009,3 @@ async function main() {
 
 
 module.exports = main;
-
-
-const mailOptions = {
-    from: { name: 'Floppy App', email: process.env.MAIL_USER },
-    to: "sajawalfareedi448@gmail.com",
-    subject: 'We found NEW LEADS on LinkedIn for you 🔥',
-    text: `
-    The CSV file with your hottest leads on LinkedIn from the last 7 days is attached.
-            
-    Check it out now!
-    `,
-    attachments: [
-        {
-            content: readFileSync(`./linkedin_hot_leads.csv`, { encoding: "base64" }),
-            filename: 'linkedin_hot_leads.csv',
-            type: 'text/csv',
-        }
-    ]
-};
-
-sendGridMail.send(mailOptions, false, async (error, result) => {
-    if (error) {
-        logger.log(0, `Error occured while trying to send the Email to customer`)
-        console.log(error.response.body)
-    } else {
-        logger.log(2, `Sent the data CSV file to customer`);
-    }
-});

@@ -628,3 +628,193 @@
 [2024-04-09T10:13:05Z] [INFO] Cron is Up & Running!
 [2024-04-09T10:13:05Z] [INFO] Starting the Profile View Scraping Process...
 [2024-04-09T10:13:05Z] [INFO] Server is running on port 3000
+[2024-04-12T15:52:46Z] [INFO] Sent the data CSV file to customer
+[2024-04-13T09:07:21Z] [INFO] Server is running on port 3000
+[2024-04-13T09:11:50Z] [INFO] Server is running on port 3000
+[2024-04-13T09:15:42Z] [INFO] Server is running on port 3000
+[2024-04-13T09:17:51Z] [INFO] Server is running on port 3000
+[2024-04-13T09:22:44Z] [INFO] Server is running on port 3000
+[2024-04-13T09:26:06Z] [INFO] Server is running on port 3000
+[2024-04-13T09:26:44Z] [INFO] Server is running on port 3000
+[2024-04-13T09:28:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-fareedi/, sajawalfareedi448@gmail.com
+[2024-04-13T09:28:07Z] [INFO] New Customer Added: Sajawal Fareedi, sajawalfareedi448@gmail.com, urn:li:fsd_profile:ACoAADLg72QBzrv5WVKEJAY_-5mCgkNvhntZGj0
+[2024-04-13T09:29:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-fareedi/, sajawalfareedi448@gmail.com
+[2024-04-13T09:31:55Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-fareedi/, sajawalfareedi448@gmail.com
+[2024-04-13T09:32:18Z] [INFO] Server is running on port 3000
+[2024-04-13T09:32:38Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:34:33Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:35:37Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:35:49Z] [INFO] Server is running on port 3000
+[2024-04-13T09:37:58Z] [INFO] New Cookies received: [object Object]
+[2024-04-13T09:38:00Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:40:42Z] [INFO] New Cookies received: [object Object]
+[2024-04-13T09:40:44Z] [INFO] Updated Info for UUID: 05beebdb-ccbb-450d-b9eb-1c82a464f28f
+[2024-04-13T09:41:38Z] [INFO] Server is running on port 3000
+[2024-04-13T09:44:36Z] [INFO] New Cookies received: {"url":"https://www.linkedin.com/in/sajawal-fareedi/","email":"sajawalfareedi447@gmail.com","cookies":[{"name":"bscookie","value":"\"v=1&202310211240259903b7fa-3402-4202-8dd8-0bee0deec981AQE1mAtVv-peQZb8DBWPNjnQeVpWdjvK\""},{"name":"JSESSIONID","value":"\"ajax:4904300844858187340\""},{"name":"li_theme","value":"light"},{"name":"li_theme_set","value":"app"},{"name":"timezone","value":"Asia/Karachi"},{"name":"li_ep_auth_context","value":"AFhhcHA9YWNjb3VudENlbnRlckh1YixhaWQ9NzcxMDgwNjgsaWlkPTI2ODgzMTQ0MSxwaWQ9MTIzOTY2OTIyLGV4cD0xNzEyNjk3MjI4NDI0LGN1cj10cnVlAaPVCyiGGxwFuqVeAAkedhRNJPsM"},{"name":"li_at","value":"AQEFAHQBAAAAAA8LLlsAAAGOqEALCwAAAY7xZpp0TQAAF3VybjpsaTptZW1iZXI6ODUzNjAyMTQ4v_AW4_OyuxAj0VjbSABWmozBwpeHa_F7KWbCiI9cCpkcfzWHta25JVg6N1Ada1GlfCck67OV4EUtE8u6ltOkpCnHHNkSs-5H-4oZSoCqG5MrHH289ZuA0bwGF_r_mWimcpsfmLQUT5R7tePO77i92CER62PFxINtP1krVdzYU49U3lPMH_Yey_RrUCT5x_9sZDxk2A"}],"scraping_day":"NO_DAY","api_key":"i7Y8VZqo1jkyCQ1sSseeOhM1Qv8ZvFv35Dl"}
+[2024-04-13T09:44:36Z] [INFO] New Cookies received: {"url":"https://www.linkedin.com/in/sajawal-fareedi/","email":"sajawalfareedi447@gmail.com","cookies":[{"name":"bscookie","value":"\"v=1&202310211240259903b7fa-3402-4202-8dd8-0bee0deec981AQE1mAtVv-peQZb8DBWPNjnQeVpWdjvK\""},{"name":"JSESSIONID","value":"\"ajax:4904300844858187340\""},{"name":"li_theme","value":"light"},{"name":"li_theme_set","value":"app"},{"name":"timezone","value":"Asia/Karachi"},{"name":"li_ep_auth_context","value":"AFhhcHA9YWNjb3VudENlbnRlckh1YixhaWQ9NzcxMDgwNjgsaWlkPTI2ODgzMTQ0MSxwaWQ9MTIzOTY2OTIyLGV4cD0xNzEyNjk3MjI4NDI0LGN1cj10cnVlAaPVCyiGGxwFuqVeAAkedhRNJPsM"},{"name":"li_at","value":"AQEFAHQBAAAAAA8LLlsAAAGOqEALCwAAAY7xZpp0TQAAF3VybjpsaTptZW1iZXI6ODUzNjAyMTQ4v_AW4_OyuxAj0VjbSABWmozBwpeHa_F7KWbCiI9cCpkcfzWHta25JVg6N1Ada1GlfCck67OV4EUtE8u6ltOkpCnHHNkSs-5H-4oZSoCqG5MrHH289ZuA0bwGF_r_mWimcpsfmLQUT5R7tePO77i92CER62PFxINtP1krVdzYU49U3lPMH_Yey_RrUCT5x_9sZDxk2A"}],"scraping_day":"NO_DAY","api_key":"i7Y8VZqo1jkyCQ1sSseeOhM1Qv8ZvFv35Dl"}
+[2024-04-13T09:44:38Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi447@gmail.com
+[2024-04-13T09:44:39Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi447@gmail.com
+[2024-04-13T09:44:48Z] [INFO] New Cookies received: {"url":"https://www.linkedin.com/in/sajawal-fareedi/","email":"sajawalfareedi448@gmail.com","cookies":[{"name":"bscookie","value":"\"v=1&202310211240259903b7fa-3402-4202-8dd8-0bee0deec981AQE1mAtVv-peQZb8DBWPNjnQeVpWdjvK\""},{"name":"JSESSIONID","value":"\"ajax:4904300844858187340\""},{"name":"li_theme","value":"light"},{"name":"li_theme_set","value":"app"},{"name":"timezone","value":"Asia/Karachi"},{"name":"li_ep_auth_context","value":"AFhhcHA9YWNjb3VudENlbnRlckh1YixhaWQ9NzcxMDgwNjgsaWlkPTI2ODgzMTQ0MSxwaWQ9MTIzOTY2OTIyLGV4cD0xNzEyNjk3MjI4NDI0LGN1cj10cnVlAaPVCyiGGxwFuqVeAAkedhRNJPsM"},{"name":"li_at","value":"AQEFAHQBAAAAAA8LLlsAAAGOqEALCwAAAY7xZpp0TQAAF3VybjpsaTptZW1iZXI6ODUzNjAyMTQ4v_AW4_OyuxAj0VjbSABWmozBwpeHa_F7KWbCiI9cCpkcfzWHta25JVg6N1Ada1GlfCck67OV4EUtE8u6ltOkpCnHHNkSs-5H-4oZSoCqG5MrHH289ZuA0bwGF_r_mWimcpsfmLQUT5R7tePO77i92CER62PFxINtP1krVdzYU49U3lPMH_Yey_RrUCT5x_9sZDxk2A"}],"scraping_day":"3","api_key":"i7Y8VZqo1jkyCQ1sSseeOhM1Qv8ZvFv35Dl"}
+[2024-04-13T09:44:49Z] [INFO] Updated Info for UUID: 05beebdb-ccbb-450d-b9eb-1c82a464f28f
+[2024-04-13T09:45:20Z] [INFO] Server is running on port 3000
+[2024-04-13T09:46:28Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:29Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:29Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:29Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:29Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:29Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:30Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:31Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:32Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:33Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:35Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:35Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:40Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:46:42Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:07Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:07Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:07Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:07Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:47:36Z] [INFO] Nothing to Update: sajawal-fareedi, sajawalfareedi448@gmail.com
+[2024-04-13T09:50:57Z] [INFO] Server is running on port 3000
+[2024-04-13T09:54:12Z] [INFO] Server is running on port 3000
+[2024-04-13T09:55:27Z] [INFO] Updated Info for UUID: 05beebdb-ccbb-450d-b9eb-1c82a464f28f
+[2024-04-13T09:56:18Z] [INFO] Updated Info for UUID: 05beebdb-ccbb-450d-b9eb-1c82a464f28f
+[2024-04-13T10:20:52Z] [INFO] Server is running on port 3000
+[2024-04-13T10:23:59Z] [INFO] Server is running on port 3000
+[2024-04-13T10:24:11Z] [INFO] Server is running on port 3000
+[2024-04-13T10:24:44Z] [INFO] Server is running on port 3000
+[2024-04-13T10:25:28Z] [INFO] New Customer Added: Sajawal Fareedi, sajawalfareedi448@gmail.com, urn:li:fsd_profile:ACoAADLg72QBzrv5WVKEJAY_-5mCgkNvhntZGj0
+[2024-04-13T10:32:50Z] [INFO] Server is running on port 3000
+[2024-04-13T10:38:31Z] [INFO] Server is running on port 3000
+[2024-04-13T10:38:57Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-fareedi/, sajawalfareedi449@gmail.com
+[2024-04-13T10:38:59Z] [INFO] Updated Email for UUID: 7fe83641-cde5-4f1b-a902-c461295ed361
+[2024-04-13T10:39:00Z] [INFO] Updated Scraping Day for UUID: 7fe83641-cde5-4f1b-a902-c461295ed361
+[2024-04-13T10:39:27Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:41:36Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:42:02Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra4488@gmail.com
+[2024-04-13T10:43:18Z] [INFO] Server is running on port 3000
+[2024-04-13T10:43:45Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-chopra/, sajawalchopra448@gmail.com
+[2024-04-13T10:44:05Z] [INFO] New Cookies received: https://www.linkedin.com/in/sajawal-fareedi/, sajawalfareedi448@gmail.com
+[2024-04-13T10:44:07Z] [INFO] Updated Email for UUID: 7fe83641-cde5-4f1b-a902-c461295ed361
+[2024-04-13T10:44:07Z] [INFO] Updated Scraping Day for UUID: 7fe83641-cde5-4f1b-a902-c461295ed361

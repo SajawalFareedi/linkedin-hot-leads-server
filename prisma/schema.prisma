@@ -11,6 +11,7 @@ model api {
   email   String @db.VarChar
   api_key String @unique(map: "api_unique") @db.VarChar
   created String @db.VarChar
+  uuid    String @db.VarChar
 }
 
 model cookie {

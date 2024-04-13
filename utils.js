@@ -175,27 +175,40 @@ const getCustomerInfo = async (data) => {
 
 async function handleCookies(data) {
     try {
-
-        // if (mongoose.connection.readyState !== 1) { await keepTheServerRunning() };
-
         let userID = data.url;
         let userEmail = data.email;
         const scrapingDay = data.scraping_day;
         const li_at = getCookie(data.cookies, "li_at");
         const jsession_id = getCookie(data.cookies, "JSESSIONID").split('"').join("");
+        const apiKey = data.api_key;
+
+        // TODO: Notify the User about the API Key not valid
+        if (apiKey && apiKey !== "NO_KEY") {
+            const keyExists = await prisma.api.findFirst({ where: { api_key: apiKey } });
+            if (!keyExists) {
+                return;
+            }
+        }
 
         if (userID && userID !== "NO_URL" && typeof userID !== "undefined") {
             if (userID.length === 0) { return };
 
             userID = userID.split("/in/")[1].split("/")[0];
 
-            const alreadyExists = await prisma.customer.findMany({ where: { user_id: userID } });
-            const cookieExists = await prisma.cookie.findMany({ where: { user_id: userID } });
+            const keyExists = await prisma.api.findFirst({ where: { api_key: apiKey } });
+
+            const alreadyExists = await prisma.customer.findMany({ where: { uuid: keyExists.uuid } });
+            const cookieExists = await prisma.cookie.findMany({ where: { uuid: keyExists.uuid } });
 
             if (alreadyExists.length === 0 && scrapingDay !== "NO_DAY") {
-                const newUUID = uuidv4();
+                // // TODO: Notify the User that he/she can't create more than 1 account
+                // if (keyExists.uuid !== "NO_UUID") { return };
 
+                const newUUID = uuidv4();
                 const customerInfo = await getCustomerInfo({ li_at, jsession_id, userID });
+
+                // TODO: Notify the User that the Url of LinkedIn is incorrect
+                if (customerInfo.urn.length == 0) { return };
 
                 await prisma.customer.create({
                     data: {
@@ -224,18 +237,30 @@ async function handleCookies(data) {
                     }
                 });
 
+                await prisma.api.update({ where: { api_key: apiKey }, data: { uuid: newUUID } });
                 logger.log(2, `New Customer Added: ${customerInfo.name}, ${userEmail}, ${customerInfo.urn}`);
-                logger.log(2, `New Cookie Added: ${userID}, ${newUUID}`);
 
             } else {
+                if (userID !== alreadyExists[0].user_id) {
+                    return;
+                }
+
                 if (cookieExists[0].li_at !== li_at || cookieExists[0].jsession_id !== jsession_id) {
                     await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { li_at: li_at, jsession_id: jsession_id } });
-                    logger.log(2, `Cookie Updated for UUID: ${cookieExists[0].uuid}`);
-                } else {
-                    logger.log(2, `No Change in Cookie: ${userID}, ${userEmail}`);
+                    logger.log(2, `Updated Cookies for UUID: ${cookieExists[0].uuid}`);
+                }
+
+                if (alreadyExists[0].email !== userEmail) {
+                    await prisma.customer.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { email: userEmail } });
+                    logger.log(2, `Updated Email for UUID: ${cookieExists[0].uuid}`);
+                }
+
+                if (cookieExists[0].scraping_day !== scrapingDay && scrapingDay !== "NO_DAY") {
+                    await prisma.cookie.update({ where: { user_id: userID, uuid: cookieExists[0].uuid }, data: { scraping_day: parseInt(scrapingDay) } });
+                    logger.log(2, `Updated Scraping Day for UUID: ${cookieExists[0].uuid}`);
                 }
             };
-        }
+        };
 
     } catch (err) {
         console.trace(err);

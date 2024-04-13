@@ -4,7 +4,8 @@ $ "C:\Users\BISMILLAH COMPUTERS\OneDrive\Upwork\clients\NilsGrammerstorf\floppy_
 CREATE TABLE "api" (
     "email" VARCHAR NOT NULL,
     "api_key" VARCHAR NOT NULL,
-    "created" VARCHAR NOT NULL
+    "created" VARCHAR NOT NULL,
+    "uuid" VARCHAR NOT NULL
 );
 
 -- CreateTable
@@ -63,4 +64,4 @@ CREATE UNIQUE INDEX "customer_unique" ON "customer"("uuid");
 -- CreateIndex
 CREATE UNIQUE INDEX "person_person_urn_idx" ON "person"("person_urn");
 
-Done in 0.72s.
+Done in 0.79s.
