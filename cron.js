@@ -1,14 +1,15 @@
 require("dotenv").config();
 
 const moment = require("moment");
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const { unlinkSync, readFileSync } = require("fs");
+const { Parser } = require('@json2csv/plainjs');
+const { readFileSync } = require("fs");
 const utils = require('./utils');
 const logger = require("./logger");
 const { PrismaClient } = require('@prisma/client');
 const sendGridMail = require("@sendgrid/mail");
 
 const prisma = new PrismaClient({ log: ["info", "warn", "error"] });
+const csvParser = new Parser();
 sendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 let CRON_STATUS = 0;
@@ -44,6 +45,17 @@ async function updateCookie(uuid, data) {
         logger.log(0, error);
     };
 };
+
+function isValidVanityName(str) {
+    if (typeof (str) !== 'string') { return false };
+    for (var i = 0; i < str.length; i++) { if (str.charCodeAt(i) > 127) { return false } };
+    return true;
+}
+
+function convertToCSV(arr) {
+    const array = [Object.keys(arr[0])].concat(arr);
+    return array.map(it => { return Object.values(it).toString() }).join('\n');
+}
 
 function isWithin7Days(dateString, isPost) {
     try {
@@ -198,6 +210,8 @@ async function getConnectionInfo(data, vanityName) {
             return connectionInfo;
         }
 
+        console.log(JSON.stringify(response.data))
+
         const included = response.data["included"];
 
         for (let i = 0; i < included.length; i++) {
@@ -222,6 +236,10 @@ async function getConnectionInfo(data, vanityName) {
                 }
             }
 
+            if (obj.entityUrn.startsWith("urn:li:fsd_invitation:")) {
+                connectionInfo["is_follower"] = "YES";
+            }
+
             if (Object.keys(obj).includes("createdAt")) {
                 connectionInfo["when_connected"] = moment(obj.createdAt).format("YYYY-MM-DD");
             };
@@ -230,7 +248,7 @@ async function getConnectionInfo(data, vanityName) {
         console.trace(error);
         logger.log(0, error);
     };
-    console.log(connectionInfo);
+
     return connectionInfo;
 }
 
@@ -315,7 +333,8 @@ async function getFreeViewersData(data) {
 
                 if (personData.length == 0) {
                     const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
-                    const connectionInfo = await getConnectionInfo(data, viewer.profile_url.split("/in/").at(-1).split("/")[0]);
+                    const vanityName = viewer.profile_url.split("/in/").at(-1).split("/")[0];
+                    const connectionInfo = await getConnectionInfo(data, isValidVanityName(vanityName) ? vanityName : viewer.person_urn.split(":").at(-1));
 
                     await prisma.person.create({
                         data: {
@@ -354,7 +373,6 @@ async function getFreeViewersData(data) {
     };
 };
 
-// TODO: Not able to get more than 10 viewers
 async function getPremiumViewersData(data) {
     try {
         const headers = {
@@ -366,7 +384,7 @@ async function getPremiumViewersData(data) {
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "x-li-lang": "en_US",
-            "x-li-page-instance": "urn:li:page:d_flagship3_leia_profile_views;zR1VyZsJQaWNibtZVPuZ4w==",
+            "x-li-page-instance": "urn:li:page:d_flagship3_leia_profile_views;kLRYnOn9Qae8Nj/G+S1uXA==",
             "x-li-pem-metadata": "Voyager - Premium - WVMP=analytics-entity-list-display",
             "x-restli-protocol-version": "2.0.0",
             "cookie": `li_at=${data.li_at}; JSESSIONID=\"${data.jsession_id}\"`,
@@ -374,15 +392,15 @@ async function getPremiumViewersData(data) {
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        let variables = "variables=(start:0,query:(selectedFilters:List((key:timeRange,value:List(past_2_weeks)))),analyticsEntityUrn:(activityUrn:urn%3Ali%3Adummy%3A-1),surfaceType:WVMP)&queryId=voyagerPremiumDashAnalyticsObject.09dfd4ecd107e545d3ad06c1c5d1cf6a"
-        let hasPagination = false;
-        let paginationToken = "";
+        let variables = "variables=(start:0,query:(selectedFilters:List((key:timeRange,value:List(past_2_weeks)))),analyticsEntityUrn:(activityUrn:urn%3Ali%3Adummy%3A-1),surfaceType:WVMP)&queryId=voyagerPremiumDashAnalyticsObject.12483411a143f06244a1088e0f33d55e";
+        // let hasPagination = false;
+        // let paginationToken = "";
         let start = 0;
 
         while (true) {
-            if (hasPagination) {
-                variables = `variables=(paginationToken:${paginationToken},start:${start},query:(selectedFilters:List((key:timeRange,value:List(past_2_weeks)))),analyticsEntityUrn:(activityUrn:urn%3Ali%3Adummy%3A-1),surfaceType:WVMP)&queryId=voyagerPremiumDashAnalyticsObject.09dfd4ecd107e545d3ad06c1c5d1cf6a`;
-            }
+            // if (hasPagination) {
+            variables = `variables=(paginationToken:null,start:${start},query:(selectedFilters:List((key:timeRange,value:List(past_2_weeks)))),analyticsEntityUrn:(activityUrn:urn%3Ali%3Adummy%3A-1),surfaceType:WVMP)&queryId=voyagerPremiumDashAnalyticsObject.12483411a143f06244a1088e0f33d55e`;
+            // }
 
             const url = `https://www.linkedin.com/voyager/api/graphql?${variables}`;
 
@@ -394,19 +412,17 @@ async function getPremiumViewersData(data) {
                 return;
             }
 
-            const premiumAnalytics = response.data.data.data.premiumDashAnalyticsObjectByAnalyticsEntity
-            paginationToken = premiumAnalytics.metadata.paginationToken;
-            const paging = premiumAnalytics.paging;
+            const premiumAnalytics = response.data.data.data.premiumDashAnalyticsObjectByAnalyticsEntity;
+            // paginationToken = premiumAnalytics.metadata.paginationToken;
+            // const paging = premiumAnalytics.paging;
             const viewerList = premiumAnalytics.elements;
             const included = response.data.included;
 
-            // console.log(JSON.stringify(response.data));
-
             let viewsin24Hrs = [];
 
-            if (paging.total > 10) {
-                hasPagination = true;
-            }
+            // if (paging.total > 10) {
+            //     hasPagination = true;
+            // }
 
             if (viewerList.length > 0) {
                 for (let x = 0; x < viewerList.length; x++) {
@@ -419,6 +435,10 @@ async function getPremiumViewersData(data) {
                     }
                 }
             }
+
+            // if (viewsin24Hrs.length == 0) {
+            //     break;
+            // }
 
             let viewersData = {};
             viewersData["uuid"] = data.uuid;
@@ -449,7 +469,8 @@ async function getPremiumViewersData(data) {
 
                     if (personData.length == 0) {
                         const jobTitle = await getJobTitle(viewer.person_urn.split(":").at(-1), data);
-                        const connectionInfo = await getConnectionInfo(data, viewer.profile_url.split("/in/").at(-1).split("/")[0]);
+                        const vanityName = viewer.profile_url.split("/in/").at(-1).split("/")[0];
+                        const connectionInfo = await getConnectionInfo(data, isValidVanityName(vanityName) ? vanityName : viewer.person_urn.split(":").at(-1));
 
                         await prisma.person.create({
                             data: {
@@ -482,8 +503,9 @@ async function getPremiumViewersData(data) {
                 }
             }
 
-            if (start >= paging.total) break;
-            if (start == 0 && paging.total <= 10) break;
+            // if (start >= paging.total) break;
+            // if (start == 0 && paging.total <= 10) break;
+            if (viewerList.length < 10 || included.length == 0) break;
             start += 10;
         }
 
@@ -802,27 +824,9 @@ async function sendDataToCustomer(customer) {
             )
         }
 
-        const csvWriter = createCsvWriter({
-            path: `./csv_files/${customer.uuid}.csv`,
-            header: [
-                { id: 'First Name', title: 'First Name' },
-                { id: 'Last Name', title: 'Last Name' },
-                { id: 'Profile Url', title: 'Profile Url' },
-                { id: 'Job Title', title: 'Job Title' },
-                { id: 'Profile Headline', title: 'Profile Headline' },
-                { id: 'Connection Degree', title: 'Connection Degree' },
-                { id: 'Is Follower', title: 'Is Follower' },
-                { id: 'When Connected', title: 'When Connected' },
-                { id: 'Reactions Count', title: 'Reactions Count' },
-                { id: 'Comments Count', title: 'Comments Count' },
-                { id: 'Profile View Count', title: 'Profile View Count' },
-                { id: 'Score', title: 'Score' }
-            ],
-            encoding: "utf8"
-        });
-
         csvData = csvData.sort(function (a, b) { return a["Score"] - b["Score"] }).reverse() // Sort by score in descending order
-        await csvWriter.writeRecords(csvData);
+        csvData = csvParser.parse(csvData);
+        csvData = Buffer.from(csvData).toString('base64');
 
         // Send email with CSV attachment
         const mailOptions = {
@@ -830,15 +834,16 @@ async function sendDataToCustomer(customer) {
             to: customer.email,
             subject: 'We found NEW LEADS on LinkedIn for you 🔥',
             text: `
+            Hi ${customer.name.split(' ')[0]},
+
             The CSV file with your hottest leads on LinkedIn from the last 7 days is attached.
             
             Check it out now!
             `,
             attachments: [
-
                 {
-                    content: readFileSync(`./csv_files/${customer.uuid}.csv`, { encoding: "base64" }),
-                    filename: 'linkedin_hot_leads.csv',
+                    content: csvData,
+                    filename: `Hot Leads - ${moment.utc().toDate().toDateString().split(" ").splice(1).join(" ")}.csv`,
                     type: 'text/csv',
                 }
             ]
@@ -854,7 +859,6 @@ async function sendDataToCustomer(customer) {
                 logger.log(0, error);
             } else {
                 logger.log(2, `Sent the data CSV file to customer: ${customer.name} - ${customer.email}`);
-                unlinkSync(`./csv_files/${customer.uuid}.csv`);
                 await prisma.person.deleteMany({ where: { uuid: customer.uuid, urn: customer.urn } });
             }
         });
@@ -916,8 +920,7 @@ async function cron(data) {
 // TODO: Don't repeat the same code...
 // TODO: try to use customer's timezone...
 // TODO: Reset "running" status if an error occurs...
-// TODO: Fix the finishedCrons data sending function... if the data is already sent to all customers... then stop the loop... - DONE
-// TODO: Handle last ran logic - DONE
+// TODO: Fix issue with CSV files reading
 
 async function main() {
     try {
@@ -963,7 +966,7 @@ async function main() {
             if (MAIN_CRON_RUNNING == 0) {
                 try {
                     logger.log(2, "Checking for customers to scrape today...");
-                    const cookies = await getCookies({ running: "NO" });
+                    const cookies = await getCookies({ running: "NO", scraping_day: moment.utc().day() });
 
                     if (cookies.length > 0) {
                         MAIN_CRON_RUNNING = 1;
@@ -971,13 +974,13 @@ async function main() {
                         let crons = [];
 
                         for (let i = 0; i < cookies.length; i++) {
-                            if (moment.utc().day() == cookies[i].scraping_day) {
-                                const customer = await prisma.customer.findFirst({ where: { uuid: cookies[i].uuid } });
+                            // if (moment.utc().day() == cookies[i].scraping_day) {
+                            const customer = await prisma.customer.findFirst({ where: { uuid: cookies[i].uuid } });
 
-                                if (moment.utc().date() !== moment(customer.last_ran).date()) {
-                                    crons.push(cron(cookies[i]));
-                                }
-                            };
+                            if (moment.utc().date() !== moment(customer.last_ran).date()) {
+                                crons.push(cron(cookies[i]));
+                            }
+                            // };
                         };
 
                         if (crons.length > 0) {

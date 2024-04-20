@@ -16,7 +16,7 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// let RUNNING = 0; if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
+let RUNNING = 0; if (RUNNING === 0) { utils.keepTheServerRunning(); RUNNING = 1; };
 
 sendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-    logger.log(2, `New Cookies received: ${req.body.url}, ${req.body.email}`);
+    // logger.log(2, `New Cookies received: ${req.body.url}, ${req.body.email}`);
     utils.handleCookies(req.body);
     res.json("Data recieved successfully!");
 });
@@ -64,27 +64,7 @@ app.post("/stripe-webhook", async (req, res) => {
             from: { name: 'Floppy App', email: process.env.MAIL_USER },
             to: email,
             subject: 'Your Floppy App License Key',
-            text: `
-            Thanks for subscribing to Floppy App!
-
-            Here's your License Key: ${hashedToken.substring(10, 45)}
-
-            Complete steps 1-8 to get your first report (Video):
-            1. Download the Floppy Chrome Extension
-            2. Copy the Floppy license key above
-            3. Insert the license key into the Chrome Extension
-            4. Click 'Verify'
-            5. Insert the LinkedIn URL of your profile
-            6. Enter your correct email address to receive the report
-            7. Choose a day you want to receive your report every week
-            8. Click 'Start'
-
-            Your first report will arrive within the next 24 hours.<br>
-            After this, we will send you a report every 7 days on the day you chose.
-
-            Thanks,
-            The Floppy Team
-            `,
+            html: `<p>Thanks for subscribing to Floppy App!</p><p>Here's your License Key: <strong>${hashedToken.substring(10, 45)}</strong></p><p>Complete steps 1-8 to get your first report (<a href="https://www.loom.com/share/6a0a10a77c7b4055a9d77ebd9af87e87?sid=007079d6-28bf-4ba0-99c1-451f13c89d84" target="_blank">Video</a>):</p><ol><li><a href="https://chromewebstore.google.com/detail/floppy-app/noafdngnlnenmkkhnlfniekginoimlne" target="_blank">Download the Floppy Chrome Extension from here</a></li><li>Copy the Floppy license key above</li><li>Insert the license key into the Chrome Extension</li><li>Click 'Submit'</li><li>Insert the LinkedIn URL of your profile</li><li>Enter your correct email address to receive the report</li><li>Choose a day you want to receive your report every week</li><li>Click 'Submit'</li></ol><p>After this, we will send you a report every 7 days on the day you chose.</p><p>Thanks,<br>The Floppy Team</p>`
         };
 
         sendGridMail.send(mailOptions, false, (error, result) => {

@@ -90,7 +90,7 @@ async function makeGetRequest(url, headers) {
 
     try {
         while (retries < 3) {
-            response = await axios.get(url, { headers: headers });
+            response = await axios.get(url, { headers: headers })
 
             if (response.status === 200) {
                 break;
