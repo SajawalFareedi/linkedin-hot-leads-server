@@ -11,6 +11,16 @@ function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 };
 
+function getCustomerSubscription(customerId, subscriptions) {
+    for (let subscription of subscriptions) {
+        if (subscription.customer == customerId) {
+            return subscription;
+        }
+    }
+
+    return null;
+};
+
 async function keepTheServerRunning() {
     try {
         while (true) {
@@ -271,3 +281,4 @@ async function handleCookies(data) {
 module.exports.handleCookies = handleCookies;
 module.exports.keepTheServerRunning = keepTheServerRunning;
 module.exports.makeGetRequest = makeGetRequest;
+module.exports.getCustomerSubscription = getCustomerSubscription;

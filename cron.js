@@ -1007,6 +1007,8 @@ async function main() {
         console.trace(error);
         logger.log(0, error);
         CRON_STATUS = 0;
+        PROFILE_CRON_RUNNING = 0;
+        MAIN_CRON_RUNNING = 0;
     };
 };
 
