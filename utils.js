@@ -28,7 +28,7 @@ async function keepTheServerRunning() {
                 cron();
             } catch (error) {
                 console.trace(error);
-                logger.log(0, error);
+                logger.log(0, `[KEEP_SERVER_RUNNING] - ${error}`);
             };
 
             await sleep(30);
@@ -37,7 +37,7 @@ async function keepTheServerRunning() {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[KEEP_SERVER_RUNNING] - ${error}`);
     };
 };
 
@@ -55,6 +55,8 @@ function getCookie(cookies, name) {
             return cookie.value;
         };
     };
+
+    return null;
 };
 
 /**
@@ -72,7 +74,7 @@ function parseJSON(str) {
         )
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[PARSE_JSON] - ${error}`);
     }
 }
 
@@ -90,7 +92,7 @@ function getIncluded(response) {
         return data.included;
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[GET_INCLUDED] - ${error}`);
     }
 }
 
@@ -100,17 +102,19 @@ async function makeGetRequest(url, headers) {
 
     try {
         while (retries < 3) {
-            response = await axios.get(url, { headers: headers })
+            response = await axios.get(url, { headers: headers }).catch((err) => { logger.log(0, `[MAKE_GET_REQUEST] - ${err}`); });
 
-            if (response.status === 200) {
-                break;
+            if (response) {
+                if (response.status === 200) {
+                    break;
+                }
             }
 
             retries += 1
         }
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[MAKE_GET_REQUEST] - ${error}`);
     }
 
     return response;
@@ -177,7 +181,7 @@ const getCustomerInfo = async (data) => {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[GET_CUSTOMER_INFO] - ${error}`);
     }
 
     return return_data;
@@ -187,10 +191,16 @@ async function handleCookies(data) {
     try {
         let userID = data.url;
         let userEmail = data.email;
-        const scrapingDay = data.scraping_day;
-        const li_at = getCookie(data.cookies, "li_at");
-        const jsession_id = getCookie(data.cookies, "JSESSIONID").split('"').join("");
-        const apiKey = data.api_key;
+        let scrapingDay = data.scraping_day;
+        let li_at = getCookie(data.cookies, "li_at");
+        let jsession_id = getCookie(data.cookies, "JSESSIONID");
+        let apiKey = data.api_key;
+
+        if (!jsession_id || !li_at) {
+            return;
+        }
+
+        jsession_id = jsession_id.split('"').join("");
 
         // TODO: Notify the User about the API Key not valid
         if (apiKey && apiKey !== "NO_KEY") {
@@ -251,6 +261,10 @@ async function handleCookies(data) {
                 logger.log(2, `New Customer Added: ${customerInfo.name}, ${userEmail}, ${customerInfo.urn}`);
 
             } else {
+                if (alreadyExists.length === 0) {
+                    return;
+                }
+
                 if (userID !== alreadyExists[0].user_id) {
                     return;
                 }
@@ -274,7 +288,7 @@ async function handleCookies(data) {
 
     } catch (err) {
         console.trace(err);
-        logger.log(0, err);
+        logger.log(0, `[HANDLE_COOKIES] - ${err}`);
     };
 };
 

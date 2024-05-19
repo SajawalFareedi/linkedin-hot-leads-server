@@ -1,8 +1,8 @@
 require("dotenv").config();
 
+const { v4: uuidv4 } = require('uuid');
 const moment = require("moment");
 const { Parser } = require('@json2csv/plainjs');
-const { readFileSync } = require("fs");
 const utils = require('./utils');
 const logger = require("./logger");
 const { PrismaClient } = require('@prisma/client');
@@ -31,7 +31,7 @@ async function getCookies(filters = null) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[GET_COOKIES] - ${error}`);
     };
 
     return null;
@@ -42,7 +42,7 @@ async function updateCookie(uuid, data) {
         return await prisma.cookie.update({ where: { uuid: uuid }, data: data });
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[UPDATE_COOKIES] - ${error}`);
     };
 };
 
@@ -83,7 +83,7 @@ function isWithin7Days(dateString, isPost) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[WITHIN_7_DAYS] - ${error}`);
     }
 
     return false;
@@ -114,7 +114,7 @@ function isWithin24Hrs(dateString, isPost) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[WITHIN_24_HOURS] - ${error}`);
     };
 
     return false;
@@ -172,7 +172,7 @@ async function getJobTitle(person_urn, data) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[GET_JOB_TITLE] - ${error}`);
     };
 
     return "NO_JOB_TITLE";
@@ -210,7 +210,7 @@ async function getConnectionInfo(data, vanityName) {
             return connectionInfo;
         }
 
-        console.log(JSON.stringify(response.data))
+        // console.log(JSON.stringify(response.data))
 
         const included = response.data["included"];
 
@@ -246,7 +246,7 @@ async function getConnectionInfo(data, vanityName) {
         };
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[GET_CONNECTION_INFO] - ${error}`);
     };
 
     return connectionInfo;
@@ -293,9 +293,13 @@ async function getFreeViewersData(data) {
                         for (let x = 0; x < items.length; x++) {
                             const item = items[x].content.analyticsEntityLockup;
 
-                            if (isWithin24Hrs(item.entityLockup.caption.text)) {
-                                if (item.ctaItem.actionData["*entityProfile"]) {
-                                    viewsin24Hrs.push(item.ctaItem.actionData["*entityProfile"])
+                            if (item) {
+                                if (item.ctaItem) {
+                                    if (isWithin24Hrs(item.entityLockup.caption.text)) {
+                                        if (item.ctaItem.actionData["*entityProfile"]) {
+                                            viewsin24Hrs.push(item.ctaItem.actionData["*entityProfile"])
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -340,6 +344,7 @@ async function getFreeViewersData(data) {
                         data: {
                             uuid: viewersData.uuid,
                             urn: viewersData.urn,
+                            p_uuid: uuidv4(),
                             person_urn: viewer.person_urn,
                             first_name: viewer.first_name,
                             last_name: viewer.last_name,
@@ -357,7 +362,7 @@ async function getFreeViewersData(data) {
                     });
                 } else {
                     await prisma.person.update({
-                        where: { person_urn: viewer.person_urn, uuid: viewersData.uuid },
+                        where: { person_urn: viewer.person_urn, uuid: viewersData.uuid, p_uuid: personData[0].p_uuid },
                         data: {
                             profile_view_count: viewer.profile_view_count + personData[0].profile_view_count,
                             score: viewer.score + personData[0].score
@@ -369,7 +374,7 @@ async function getFreeViewersData(data) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[FREE_VIEWERS_DATA] - ${error}`);
     };
 };
 
@@ -408,13 +413,19 @@ async function getPremiumViewersData(data) {
 
             if (!response) {
                 // TODO: Send an emergency notification to the Developer & Client
-                logger.log(1, "No response from linkeidn api for premium viewer's data");
+                logger.log(1, "No response from linkedin api for premium viewer's data");
                 return;
             }
 
             const premiumAnalytics = response.data.data.data.premiumDashAnalyticsObjectByAnalyticsEntity;
             // paginationToken = premiumAnalytics.metadata.paginationToken;
             // const paging = premiumAnalytics.paging;
+
+            if (!premiumAnalytics) {
+                logger.log(1, "Premium Viewer's data is null");
+                return;
+            };
+
             const viewerList = premiumAnalytics.elements;
             const included = response.data.included;
 
@@ -428,9 +439,13 @@ async function getPremiumViewersData(data) {
                 for (let x = 0; x < viewerList.length; x++) {
                     const item = viewerList[x].content.analyticsEntityLockup;
 
-                    if (isWithin24Hrs(item.entityLockup.caption.text)) {
-                        if (item.ctaItem.actionData["*entityProfile"]) {
-                            viewsin24Hrs.push(item.ctaItem.actionData["*entityProfile"])
+                    if (item) {
+                        if (item.ctaItem) {
+                            if (isWithin24Hrs(item.entityLockup.caption.text)) {
+                                if (item.ctaItem.actionData["*entityProfile"]) {
+                                    viewsin24Hrs.push(item.ctaItem.actionData["*entityProfile"])
+                                }
+                            }
                         }
                     }
                 }
@@ -476,6 +491,7 @@ async function getPremiumViewersData(data) {
                             data: {
                                 uuid: viewersData.uuid,
                                 urn: viewersData.urn,
+                                p_uuid: uuidv4(),
                                 person_urn: viewer.person_urn,
                                 first_name: viewer.first_name,
                                 last_name: viewer.last_name,
@@ -493,7 +509,7 @@ async function getPremiumViewersData(data) {
                         });
                     } else {
                         await prisma.person.update({
-                            where: { person_urn: viewer.person_urn, uuid: viewersData.uuid },
+                            where: { person_urn: viewer.person_urn, uuid: viewersData.uuid, p_uuid: personData[0].p_uuid },
                             data: {
                                 profile_view_count: viewer.profile_view_count + personData[0].profile_view_count,
                                 score: viewer.score + personData[0].score
@@ -511,7 +527,7 @@ async function getPremiumViewersData(data) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[PREMIUM_VIEWERS_DATA] - ${error}`);
     }
 }
 
@@ -584,7 +600,7 @@ async function getRecentEngagements(data) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[RECENT_ENGAGEMENTS] - ${error}`);
     }
 
     return postsIDs;
@@ -656,6 +672,7 @@ async function getComments(data, postID) {
                                 data: {
                                     uuid: data.uuid,
                                     urn: data.urn,
+                                    p_uuid: uuidv4(),
                                     person_urn: comment.commenter.actor["*profileUrn"],
                                     first_name: firstName,
                                     last_name: lastName,
@@ -673,7 +690,7 @@ async function getComments(data, postID) {
                             });
                         } else {
                             await prisma.person.update({
-                                where: { person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid },
+                                where: { person_urn: comment.commenter.actor["*profileUrn"], uuid: data.uuid, p_uuid: personData[0].p_uuid },
                                 data: {
                                     comments_count: personData[0].comments_count + 1,
                                     score: personData[0].score + 1
@@ -691,7 +708,7 @@ async function getComments(data, postID) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[GET_COMMENTS] - ${error}`);
     };
 };
 
@@ -759,6 +776,7 @@ async function getReactions(data, postID) {
                             data: {
                                 uuid: data.uuid,
                                 urn: data.urn,
+                                p_uuid: uuidv4(),
                                 person_urn: reaction.actorUrn,
                                 first_name: firstName,
                                 last_name: lastName,
@@ -776,7 +794,7 @@ async function getReactions(data, postID) {
                         });
                     } else {
                         await prisma.person.update({
-                            where: { person_urn: reaction.actorUrn, uuid: data.uuid },
+                            where: { person_urn: reaction.actorUrn, uuid: data.uuid, p_uuid: personData[0].p_uuid },
                             data: {
                                 reactions_count: personData[0].reactions_count + 1,
                                 score: personData[0].score + 1
@@ -792,7 +810,7 @@ async function getReactions(data, postID) {
         }
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[GET_REACTIONS] - ${error}`);
     }
 }
 
@@ -856,7 +874,7 @@ async function sendDataToCustomer(customer) {
             if (error) {
                 logger.log(0, `Error occured while trying to send the Email to customer: ${customer.uuid}`)
                 console.trace(error);
-                logger.log(0, error);
+                logger.log(0, `[SEND_EMAIL_INNER] - ${error}`);
             } else {
                 logger.log(2, `Sent the data CSV file to customer: ${customer.name} - ${customer.email}`);
                 await prisma.person.deleteMany({ where: { uuid: customer.uuid, urn: customer.urn } });
@@ -865,7 +883,7 @@ async function sendDataToCustomer(customer) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[SEND_MAIL_OUTER] - ${error}`);
     }
 };
 
@@ -889,7 +907,7 @@ async function profileViewCron(data, isLastProfile) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[PROFILE_VIEW_CRON] - ${error}`);
         PROFILE_CRON_RUNNING = 0;
     };
 };
@@ -912,7 +930,7 @@ async function cron(data) {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[MAIN_CRON] - ${error}`);
     };
 };
 
@@ -977,7 +995,19 @@ async function main() {
                             // if (moment.utc().day() == cookies[i].scraping_day) {
                             const customer = await prisma.customer.findFirst({ where: { uuid: cookies[i].uuid } });
 
-                            if (moment.utc().date() !== moment(customer.last_ran).date()) {
+                            if (customer.last_ran) {
+                                if (customer.last_ran.length !== 0) {
+                                    if (customer.last_ran !== "NULL") {
+                                        if (moment.utc().date() !== moment(customer.last_ran).date()) {
+                                            crons.push(cron(cookies[i]));
+                                        }
+                                    } else {
+                                        crons.push(cron(cookies[i]));
+                                    }
+                                } else {
+                                    crons.push(cron(cookies[i]));
+                                }
+                            } else {
                                 crons.push(cron(cookies[i]));
                             }
                             // };
@@ -995,7 +1025,7 @@ async function main() {
 
                 } catch (error) {
                     console.trace(error);
-                    logger.log(0, error);
+                    logger.log(0, `[MAIN_FUNC_INNER] - ${error}`);
                     MAIN_CRON_RUNNING = 0;
                 };
             };
@@ -1005,7 +1035,7 @@ async function main() {
 
     } catch (error) {
         console.trace(error);
-        logger.log(0, error);
+        logger.log(0, `[MAIN_FUNX_OUTER] - ${error}`);
         CRON_STATUS = 0;
         PROFILE_CRON_RUNNING = 0;
         MAIN_CRON_RUNNING = 0;

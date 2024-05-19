@@ -27,14 +27,13 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
-// TODO: Create a uuid for Person too...
-
 app.get("/", (req, res) => {
     res.send({ status: "Up & Running!" });
 });
 
 app.post("/", (req, res) => {
     // logger.log(2, `New Cookies received: ${req.body.url}, ${req.body.email}`);
+    // console.log(req.body);
     utils.handleCookies(req.body);
     res.json("Data recieved successfully!");
 });
@@ -128,7 +127,7 @@ app.post("/stripe-webhook", async (req, res) => {
                 if (error) {
                     logger.log(0, `Error occured while trying to send the API Key Email to customer: ${email}`)
                     console.trace(error);
-                    logger.log(0, error);
+                    logger.log(0, `[STRIPE_WEBHOOK] - ${error}`);
                 }
             });
         };

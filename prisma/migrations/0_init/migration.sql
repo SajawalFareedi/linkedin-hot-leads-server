@@ -49,7 +49,8 @@ CREATE TABLE "person" (
     "reactions_count" INTEGER,
     "comments_count" INTEGER,
     "profile_view_count" INTEGER,
-    "score" INTEGER
+    "score" INTEGER,
+    "p_uuid" VARCHAR NOT NULL
 );
 
 -- CreateIndex
@@ -62,6 +63,6 @@ CREATE UNIQUE INDEX "cookie_unique" ON "cookie"("uuid");
 CREATE UNIQUE INDEX "customer_unique" ON "customer"("uuid");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "person_person_urn_idx" ON "person"("person_urn");
+CREATE UNIQUE INDEX "person_p_uuid_idx" ON "person"("p_uuid");
 
 Done in 0.79s.
